@@ -100,6 +100,31 @@ class ContentUpdate(BaseModel):
     description: Optional[str] = None
     features: Optional[List[str]] = None
 
+class NavigationItem(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    label: str
+    href: str
+    order: int
+    dropdown_items: Optional[List[dict]] = None
+    is_external: bool = False
+
+class SMTPSettings(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    smtp_host: str
+    smtp_port: int
+    smtp_username: str
+    smtp_password: str
+    smtp_use_tls: bool = True
+    from_email: str
+    from_name: str
+
+class LegalContent(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    type: str  # "terms" or "privacy"
+    title: str
+    content: str
+    last_updated: datetime = Field(default_factory=datetime.utcnow)
+
 # Authentication functions
 def hash_password(password: str) -> str:
     """Hash password using SHA256"""
