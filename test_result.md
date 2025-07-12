@@ -276,10 +276,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Fix hosting plan names with correct 36 plan names"
-    - "Add admin authentication system"
-    - "Remove markup percentage display from plans"
-  stuck_tasks: []
+    - "Add system status integration with Uptime Kuma"
+    - "Verify markup percentages not exposed in API responses"
+  stuck_tasks: 
+    - "Verify markup percentages not exposed in API responses"
   test_all: false
   test_priority: "high_first"
 
@@ -290,3 +290,5 @@ agent_communication:
     message: "COMPLETED major implementations: 1) Fixed all 36 hosting plan names with correct names from user 2) Implemented JWT authentication for admin panel 3) Removed markup percentage display 4) Fixed plan centering 5) Added Terms/Privacy pages 6) All features tested and working. Ready for backend testing."
   - agent: "testing"
     message: "BACKEND TESTING COMPLETED: All 18 backend tests passed successfully. ✅ Hosting Plans API: All 36 plans verified with exact correct names as specified. ✅ Authentication System: Login with admin/admin123 working, JWT token verification working, protected endpoints properly secured. ✅ Legal Content API: Terms of Service and Privacy Policy endpoints working correctly. ✅ General API Health: Root endpoint, company info, features, and contact form all working. Backend is fully functional and ready for production."
+  - agent: "testing"
+    message: "LATEST TESTING RESULTS: ✅ NEW System Status Integration: /api/system-status endpoint working perfectly with Uptime Kuma integration. Returns proper status/text format and handles failures gracefully. ✅ Re-verified all 36 hosting plans with correct names. ✅ Re-verified authentication system fully functional. ❌ ISSUE: Markup percentages are exposed in API responses - all plans show markup_percentage field which may expose internal pricing strategy. 19/20 tests passed."
