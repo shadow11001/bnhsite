@@ -1,0 +1,822 @@
+/* Blue Nebula Hosting - Enhanced Blesta Theme */
+/* Built on the Bootstrap theme with Blue Nebula customizations */
+
+/* Body background - Blue Nebula Space Theme */
+body {
+    background: linear-gradient(135deg, #0f0f10 0%, #1e1b4b 50%, #312e81 100%) !important;
+    background-attachment: fixed !important;
+    color: #d1d5db !important;
+    min-height: 100vh !important;
+}
+
+/* Link colors - Blue Nebula Brand */
+a, a:hover {
+    color: #3b82f6 !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+a:hover {
+    color: #60a5fa !important;
+}
+
+/* Pagination style - Blue Nebula Colors */
+.pagination .page-item.active .page-link,
+div.pagination ul.pagination li.active .page-link,
+div.pagination ul.pagination li.active a {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+.pagination .page-link {
+    background: rgba(31, 41, 55, 0.8) !important;
+    border-color: #374151 !important;
+    color: #d1d5db !important;
+}
+
+.pagination .page-link:hover {
+    background: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+/* Header style - Blue Nebula Header */
+.header {
+    background: rgba(15, 15, 16, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.3) !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Title style - Blue Nebula Title Section */
+.title {
+    background: rgba(31, 41, 55, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.title h3 {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    font-weight: 600 !important;
+}
+
+/* Navigation bar style - Blue Nebula Navigation */
+.nav-content nav.navbar {
+    background: rgba(31, 41, 55, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2) !important;
+}
+
+.nav-content nav.navbar .navbar-nav > .active > a,
+nav.navbar .navbar-nav > .active > a:hover,
+nav.navbar .navbar-nav > .active > a:focus {
+    color: #3b82f6 !important;
+    background: rgba(59, 130, 246, 0.15) !important;
+    border-radius: 6px !important;
+}
+
+.nav-content nav.navbar .navbar-nav > li > a {
+    color: #d1d5db !important;
+    transition: all 0.3s ease !important;
+}
+
+@media (max-width: 767px) {
+    nav.navbar .navbar-nav .show .dropdown-menu > a {
+        color: #d1d5db !important;
+        background: rgba(31, 41, 55, 0.9) !important;
+    }
+
+    nav.navbar .navbar-nav .show .dropdown-menu > a:hover,
+    nav.navbar .navbar-nav .show .dropdown-menu > a:focus {
+        color: #3b82f6 !important;
+        background: rgba(59, 130, 246, 0.1) !important;
+    }
+}
+
+.nav-content nav.navbar .navbar-nav > li > a:hover {
+    color: #3b82f6 !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+    border-radius: 6px !important;
+}
+
+.nav-content nav.navbar .navbar-nav > .open > a,
+nav.navbar .navbar-nav > .open > a:hover,
+nav.navbar .navbar-nav > .open > a:focus {
+    color: #3b82f6 !important;
+    background: rgba(59, 130, 246, 0.15) !important;
+    border-radius: 6px !important;
+}
+
+/* Card style - Blue Nebula Cards */
+.card {
+    background: rgba(31, 41, 55, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+    color: #d1d5db !important;
+    margin-bottom: 20px !important;
+}
+
+.card-blesta > .card-header {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    border-bottom: none !important;
+    border-radius: 12px 12px 0 0 !important;
+    font-weight: 600 !important;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+    border-bottom: none !important;
+    border-radius: 12px 12px 0 0 !important;
+    font-weight: 600 !important;
+}
+
+.card-body {
+    color: #d1d5db !important;
+    background: transparent !important;
+}
+
+/* Highlight Colors - Blue Nebula Highlights */
+.list-group.list-options a.list-group-item:hover,
+.list-group.list-options a.list-group-item:focus,
+a.list-group-item:hover,
+a.list-group-item:focus {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+}
+
+a.list-group-item.active,
+a.list-group-item.active:hover,
+a.list-group-item.active:focus {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+    border-color: #3b82f6 !important;
+}
+
+.list-group-item {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border-color: #374151 !important;
+    color: #d1d5db !important;
+    border-radius: 8px !important;
+    margin-bottom: 5px !important;
+    transition: all 0.3s ease !important;
+}
+
+.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: #3b82f6 !important;
+}
+
+/* Table Styling - Blue Nebula Tables */
+.table, table {
+    background: transparent !important;
+    color: #d1d5db !important;
+    border-collapse: separate !important;
+    border-spacing: 0 4px !important;
+}
+
+.table thead th, table thead th {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 12px 16px !important;
+    font-weight: 600 !important;
+    border-radius: 8px 8px 0 0 !important;
+}
+
+.table tbody td, table tbody td {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border: none !important;
+    padding: 12px 16px !important;
+    color: #d1d5db !important;
+    vertical-align: middle !important;
+}
+
+/* Settings Link Text Color */
+.list-group-item.credits {
+    color: #3b82f6 !important;
+}
+
+.top-focus-box {
+    background: rgba(59, 130, 246, 0.1) !important;
+    border: 1px solid #3b82f6 !important;
+    border-radius: 8px !important;
+    color: #d1d5db !important;
+}
+
+.list-group-item h4 {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+/* Top navigation style - Blue Nebula Top Nav */
+.top-nav .dropdown a.dropdown-toggle,
+.top-nav .dropdown a.dropdown-toggle:focus {
+    color: #d1d5db !important;
+}
+
+.top-nav .dropdown a.dropdown-toggle:hover {
+    color: #3b82f6 !important;
+}
+
+/* Bootstrap theme overrides - Blue Nebula Brand Colors */
+.bg-primary {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+}
+
+.text-primary {
+    color: #3b82f6 !important;
+}
+
+.border-primary {
+    border-color: #3b82f6 !important;
+}
+
+.badge-primary {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+}
+
+.btn-primary {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    border-color: #3b82f6 !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-primary:hover {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
+    border-color: #2563eb !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3) !important;
+}
+
+.btn-primary:disabled, .btn-primary.disabled {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    opacity: 0.6 !important;
+}
+
+.btn-outline-primary {
+    color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    background: transparent !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+}
+
+.btn-outline-primary:hover {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    border-color: #3b82f6 !important;
+}
+
+.alert-primary {
+    color: #3b82f6 !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+    border-color: #3b82f6 !important;
+    border-radius: 8px !important;
+}
+
+/* Secondary colors - Blue Nebula Secondary */
+.bg-secondary {
+    background: rgba(55, 65, 81, 0.8) !important;
+}
+
+.text-secondary {
+    color: #d1d5db !important;
+}
+
+.border-secondary {
+    border-color: #374151 !important;
+}
+
+.badge-secondary {
+    color: #d1d5db !important;
+    background: rgba(55, 65, 81, 0.8) !important;
+}
+
+.btn-secondary {
+    color: #d1d5db !important;
+    background: rgba(55, 65, 81, 0.8) !important;
+    border-color: #374151 !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+}
+
+.btn-secondary:hover {
+    color: #ffffff !important;
+    background: rgba(55, 65, 81, 0.9) !important;
+    border-color: #3b82f6 !important;
+}
+
+.btn-secondary:disabled, .btn-secondary.disabled {
+    background: rgba(55, 65, 81, 0.8) !important;
+    opacity: 0.6 !important;
+}
+
+.btn-outline-secondary {
+    color: #d1d5db !important;
+    border-color: #374151 !important;
+    background: transparent !important;
+    border-radius: 8px !important;
+}
+
+.btn-outline-secondary:hover {
+    color: #ffffff !important;
+    background: rgba(55, 65, 81, 0.8) !important;
+    border-color: #374151 !important;
+}
+
+.alert-secondary {
+    color: #d1d5db !important;
+    background: rgba(55, 65, 81, 0.2) !important;
+    border-color: #374151 !important;
+    border-radius: 8px !important;
+}
+
+/* Success colors - Blue Nebula Success Green */
+.bg-success {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+}
+
+.text-success {
+    color: #10b981 !important;
+}
+
+.border-success {
+    border-color: #10b981 !important;
+}
+
+.badge-success {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+}
+
+.btn-success {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    border-color: #10b981 !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+}
+
+.btn-success:hover {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #059669, #047857) !important;
+    border-color: #059669 !important;
+}
+
+.btn-success:disabled, .btn-success.disabled {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    opacity: 0.6 !important;
+}
+
+.btn-outline-success {
+    color: #10b981 !important;
+    border-color: #10b981 !important;
+    background: transparent !important;
+    border-radius: 8px !important;
+}
+
+.btn-outline-success:hover {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    border-color: #10b981 !important;
+}
+
+.alert-success {
+    color: #10b981 !important;
+    background: rgba(16, 185, 129, 0.1) !important;
+    border-color: #10b981 !important;
+    border-radius: 8px !important;
+}
+
+/* Info colors - Blue Nebula Info Blue */
+.bg-info {
+    background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
+}
+
+.text-info {
+    color: #06b6d4 !important;
+}
+
+.border-info {
+    border-color: #06b6d4 !important;
+}
+
+.badge-info {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
+}
+
+.btn-info {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
+    border-color: #06b6d4 !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+}
+
+.btn-info:hover {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #0891b2, #0e7490) !important;
+    border-color: #0891b2 !important;
+}
+
+.btn-info:disabled, .btn-info.disabled {
+    background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
+    opacity: 0.6 !important;
+}
+
+.btn-outline-info {
+    color: #06b6d4 !important;
+    border-color: #06b6d4 !important;
+    background: transparent !important;
+    border-radius: 8px !important;
+}
+
+.btn-outline-info:hover {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
+    border-color: #06b6d4 !important;
+}
+
+.alert-info {
+    color: #06b6d4 !important;
+    background: rgba(6, 182, 212, 0.1) !important;
+    border-color: #06b6d4 !important;
+    border-radius: 8px !important;
+}
+
+/* Warning colors - Blue Nebula Warning Yellow */
+.bg-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+}
+
+.text-warning {
+    color: #f59e0b !important;
+}
+
+.border-warning {
+    border-color: #f59e0b !important;
+}
+
+.badge-warning {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+}
+
+.btn-warning {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    border-color: #f59e0b !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+}
+
+.btn-warning:hover {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #d97706, #b45309) !important;
+    border-color: #d97706 !important;
+}
+
+.btn-warning:disabled, .btn-warning.disabled {
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    opacity: 0.6 !important;
+}
+
+.btn-outline-warning {
+    color: #f59e0b !important;
+    border-color: #f59e0b !important;
+    background: transparent !important;
+    border-radius: 8px !important;
+}
+
+.btn-outline-warning:hover {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    border-color: #f59e0b !important;
+}
+
+.alert-warning {
+    color: #f59e0b !important;
+    background: rgba(245, 158, 11, 0.1) !important;
+    border-color: #f59e0b !important;
+    border-radius: 8px !important;
+}
+
+/* Danger colors - Blue Nebula Danger Red */
+.bg-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+}
+
+.text-danger {
+    color: #ef4444 !important;
+}
+
+.border-danger {
+    border-color: #ef4444 !important;
+}
+
+.badge-danger {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+}
+
+.btn-danger {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    border-color: #ef4444 !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+}
+
+.btn-danger:hover {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+    border-color: #dc2626 !important;
+}
+
+.btn-danger:disabled, .btn-danger.disabled {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    opacity: 0.6 !important;
+}
+
+.btn-outline-danger {
+    color: #ef4444 !important;
+    border-color: #ef4444 !important;
+    background: transparent !important;
+    border-radius: 8px !important;
+}
+
+.btn-outline-danger:hover {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    border-color: #ef4444 !important;
+}
+
+.alert-danger {
+    color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+    border-color: #ef4444 !important;
+    border-radius: 8px !important;
+}
+
+/* Light colors - Blue Nebula Light */
+.bg-light {
+    background: rgba(249, 250, 251, 0.1) !important;
+}
+
+.text-light {
+    color: #d1d5db !important;
+}
+
+.border-light {
+    border-color: #374151 !important;
+}
+
+.badge-light {
+    color: #374151 !important;
+    background: rgba(249, 250, 251, 0.9) !important;
+}
+
+.btn-light {
+    color: #374151 !important;
+    background: rgba(249, 250, 251, 0.9) !important;
+    border-color: #d1d5db !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+}
+
+.btn-light:hover {
+    color: #1f2937 !important;
+    background: rgba(249, 250, 251, 1) !important;
+    border-color: #9ca3af !important;
+}
+
+.btn-light:disabled, .btn-light.disabled {
+    background: rgba(249, 250, 251, 0.9) !important;
+    opacity: 0.6 !important;
+}
+
+.btn-outline-light {
+    color: #d1d5db !important;
+    border-color: #374151 !important;
+    background: transparent !important;
+    border-radius: 8px !important;
+}
+
+.btn-outline-light:hover {
+    color: #1f2937 !important;
+    background: rgba(249, 250, 251, 0.9) !important;
+    border-color: #d1d5db !important;
+}
+
+.alert-light {
+    color: #374151 !important;
+    background: rgba(249, 250, 251, 0.1) !important;
+    border-color: #374151 !important;
+    border-radius: 8px !important;
+}
+
+/* Additional Blue Nebula Enhancements */
+
+/* Form Controls */
+.form-control, input, textarea, select {
+    background: rgba(55, 65, 81, 0.8) !important;
+    border: 1px solid #374151 !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+}
+
+.form-control:focus, input:focus, textarea:focus, select:focus {
+    background: rgba(55, 65, 81, 0.9) !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+    color: #ffffff !important;
+}
+
+.form-control::placeholder, input::placeholder, textarea::placeholder {
+    color: #9ca3af !important;
+}
+
+label, .form-label {
+    color: #d1d5db !important;
+    font-weight: 600 !important;
+}
+
+/* Dropdown Menus */
+.dropdown-menu {
+    background: rgba(31, 41, 55, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid #374151 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dropdown-item {
+    color: #d1d5db !important;
+    transition: all 0.3s ease !important;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: #3b82f6 !important;
+}
+
+/* Modal */
+.modal-content {
+    background: rgba(31, 41, 55, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    color: #d1d5db !important;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+    border-bottom: none !important;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.modal-body {
+    color: #d1d5db !important;
+}
+
+.modal-footer {
+    background: transparent !important;
+    border-top: 1px solid #374151 !important;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background: rgba(31, 41, 55, 0.6) !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    border: none !important;
+}
+
+.breadcrumb-item a {
+    color: #3b82f6 !important;
+    text-decoration: none !important;
+}
+
+.breadcrumb-item.active {
+    color: #d1d5db !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3b82f6;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2563eb;
+}
+
+/* Text Selection */
+::selection {
+    background: rgba(59, 130, 246, 0.3);
+    color: #ffffff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container-md {
+        padding: 15px !important;
+    }
+    
+    .card {
+        margin-bottom: 15px !important;
+    }
+    
+    .btn {
+        padding: 10px 20px !important;
+        font-size: 14px !important;
+    }
+    
+    .navbar-collapse {
+        background: rgba(31, 41, 55, 0.95) !important;
+        border-radius: 8px !important;
+        padding: 15px !important;
+        margin-top: 10px !important;
+        border: 1px solid #374151 !important;
+    }
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.7 !important;
+    pointer-events: none !important;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Blue Nebula Specific Classes */
+.blue-nebula-gradient {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+}
+
+.blue-nebula-text {
+    color: #3b82f6 !important;
+}
+
+.blue-nebula-bg {
+    background: rgba(59, 130, 246, 0.1) !important;
+}
+
+.blue-nebula-border {
+    border-color: #3b82f6 !important;
+}
+
+/* Text Colors */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+p, span, div, td, th, li {
+    color: #d1d5db !important;
+}
+
+/* Focus States */
+*:focus {
+    outline: 2px solid #3b82f6 !important;
+    outline-offset: 2px !important;
+}

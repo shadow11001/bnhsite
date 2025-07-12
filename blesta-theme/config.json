@@ -1,0 +1,18 @@
+{
+    "version": "2.0.0",
+    "name": "Blue Nebula Bootstrap",
+    "description": "Blue Nebula Hosting theme built on Bootstrap 4.6 with space theme and custom branding.",
+    "authors": [
+        {
+            "name": "Blue Nebula Hosting",
+            "url": "https://bluenebulahosting.com"
+        },
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "require": {
+        "blesta": ">=5.0.0"
+    }
+}
