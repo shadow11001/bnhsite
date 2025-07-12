@@ -433,6 +433,75 @@ class BlueNebulaAPITester:
                 
         return all_passed
 
+    def test_system_status(self):
+        """Test system status endpoint with Uptime Kuma integration"""
+        try:
+            response = requests.get(f"{self.api_url}/system-status", timeout=15)
+            success = response.status_code == 200
+            
+            if success:
+                status_data = response.json()
+                
+                # Verify required fields are present
+                has_status = 'status' in status_data
+                has_text = 'text' in status_data
+                
+                if has_status and has_text:
+                    status_value = status_data.get('status')
+                    text_value = status_data.get('text')
+                    
+                    # Verify status is one of expected values
+                    valid_statuses = ['operational', 'degraded', 'down', 'unknown']
+                    status_valid = status_value in valid_statuses
+                    
+                    # Verify text is not empty
+                    text_valid = isinstance(text_value, str) and len(text_value) > 0
+                    
+                    success = status_valid and text_valid
+                    details = f"Status: {status_value}, Text: {text_value}"
+                else:
+                    success = False
+                    details = "Missing required fields (status, text)"
+            else:
+                details = f"HTTP {response.status_code}"
+                
+            self.log_test("System Status (Uptime Kuma Integration)", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("System Status (Uptime Kuma Integration)", False, str(e))
+            return False
+
+    def test_markup_not_exposed(self, plans):
+        """Test that markup percentages are not exposed in API responses"""
+        if not plans:
+            self.log_test("Markup Not Exposed Test", False, "No plans to test")
+            return False
+            
+        markup_exposed = False
+        exposed_plans = []
+        
+        for plan in plans:
+            # Check if markup_percentage is present in the response
+            if 'markup_percentage' in plan:
+                markup_exposed = True
+                exposed_plans.append(f"{plan.get('plan_name')} ({plan.get('markup_percentage')}%)")
+        
+        # For this test, we want markup_percentage to NOT be exposed to users
+        # However, looking at the backend code, markup_percentage is included in the HostingPlan model
+        # So we need to check if this is intentional or if it should be filtered out
+        
+        # Based on the review request, markup should not be exposed to users
+        success = not markup_exposed
+        
+        if markup_exposed:
+            details = f"Markup exposed in {len(exposed_plans)} plans: {exposed_plans[:3]}{'...' if len(exposed_plans) > 3 else ''}"
+        else:
+            details = "No markup percentages exposed in API responses"
+            
+        self.log_test("Markup Percentages Not Exposed", success, details)
+        return success
+
     def test_plan_pricing_and_features(self, plans):
         """Test plan pricing is within expected range and features are correct"""
         if not plans:
