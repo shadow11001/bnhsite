@@ -133,6 +133,33 @@ DEFAULT_ADMIN_PASSWORD = hash_password("admin123")  # Change this!
 async def root():
     return {"message": "Blue Nebula Hosting API", "status": "online"}
 
+@api_router.post("/login", response_model=Token)
+async def login(login_request: LoginRequest):
+    """Admin login endpoint"""
+    try:
+        # Simple authentication (in production, use proper user management)
+        if (login_request.username == DEFAULT_ADMIN_USERNAME and 
+            verify_password(login_request.password, DEFAULT_ADMIN_PASSWORD)):
+            
+            access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+            access_token = create_access_token(
+                data={"sub": login_request.username}, expires_delta=access_token_expires
+            )
+            return {"access_token": access_token, "token_type": "bearer"}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect username or password",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/verify-token")
+async def verify_token(current_user: str = Depends(get_current_user)):
+    """Verify if token is valid"""
+    return {"valid": True, "user": current_user}
+
 @api_router.get("/hosting-plans", response_model=List[HostingPlan])
 async def get_hosting_plans(plan_type: Optional[str] = None):
     """Get all hosting plans or filter by type"""
