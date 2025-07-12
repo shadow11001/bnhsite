@@ -104,6 +104,28 @@ body::before {
     transition: transform 0.3s ease;
 }
 
+/* Footer logo styling */
+.footer-logo-image {
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    object-fit: contain;
+}
+
+.footer-logo .logo-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+}
+
+.footer-logo .company-name {
+    font-size: 1.2rem;
+}
+
+.footer-logo .company-tagline {
+    font-size: 0.8rem;
+}
+
 /* ============================================================================
    NAVIGATION
    ========================================================================== */
