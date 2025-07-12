@@ -84,9 +84,19 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
                 <div class="logo">
                     <a href="<?php echo $this->Html->safe($this->base_uri);?>">
                         <div class="logo-content">
+                            <?php
+                            if (file_exists($this->view_dir . 'images/logo.png')) {
+                            ?>
+                            <img src="<?php echo $this->view_dir;?>images/logo.png" alt="Blue Nebula Hosting" class="logo-image" />
+                            <?php
+                            } else {
+                            ?>
                             <div class="logo-icon">
                                 <span class="logo-text">BN</span>
                             </div>
+                            <?php
+                            }
+                            ?>
                             <div class="logo-text-wrapper">
                                 <div class="company-name">Blue Nebula</div>
                                 <div class="company-tagline">Hosting</div>
