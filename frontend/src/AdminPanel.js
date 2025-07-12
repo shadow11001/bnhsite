@@ -1224,6 +1224,7 @@ const AdminPanel = () => {
               { key: 'company', label: 'Company Info', icon: '🏢' },
               { key: 'legal', label: 'Legal Pages', icon: '📄' },
               { key: 'contact', label: 'Contact & SMTP', icon: '📧' },
+              { key: 'promo', label: 'Promo Codes', icon: '🎟️' },
               { key: 'settings', label: 'Site Settings', icon: '⚙️' }
             ].map(tab => (
               <button
