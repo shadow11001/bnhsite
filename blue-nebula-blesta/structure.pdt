@@ -329,7 +329,17 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
                     <div class="col-md-3">
                         <div class="footer-logo">
                             <div class="logo-content">
+                                <?php
+                                if (file_exists($this->view_dir . 'images/logo.png')) {
+                                ?>
+                                <img src="<?php echo $this->view_dir;?>images/logo.png" alt="Blue Nebula Hosting" class="footer-logo-image" />
+                                <?php
+                                } else {
+                                ?>
                                 <div class="logo-icon">BN</div>
+                                <?php
+                                }
+                                ?>
                                 <div class="logo-text-wrapper">
                                     <div class="company-name">Blue Nebula</div>
                                     <div class="company-tagline">Hosting</div>
@@ -342,9 +352,9 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
                         <div class="footer-section">
                             <h5>Services</h5>
                             <ul class="footer-links">
-                                <li><a href="#">Shared Hosting</a></li>
-                                <li><a href="#">VPS Hosting</a></li>
-                                <li><a href="#">GameServers</a></li>
+                                <li><a href="https://billing.bluenebulahosting.com/order/main/index/Shared-Hosting">Shared Hosting</a></li>
+                                <li><a href="https://billing.bluenebulahosting.com/order/main/index/VPS-Hosting">VPS Hosting</a></li>
+                                <li><a href="https://billing.bluenebulahosting.com/order/main/index/GameServer-Hosting">GameServers</a></li>
                             </ul>
                         </div>
                     </div>
@@ -355,7 +365,7 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
                                 <li><a href="<?php echo $this->Html->safe($this->base_uri);?>">Client Portal</a></li>
                                 <li><a href="https://panel.bluenebulahosting.com" target="_blank">Game Panel</a></li>
                                 <li><a href="https://status.bluenebulahosting.com/status/bnh" target="_blank">System Status</a></li>
-                                <li><a href="#">Contact Us</a></li>
+                                <li><a href="https://bluenebulahosting.com#contact">Contact Us</a></li>
                             </ul>
                         </div>
                     </div>
@@ -363,16 +373,15 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
                         <div class="footer-section">
                             <h5>Company</h5>
                             <ul class="footer-links">
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Terms of Service</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="https://bluenebulahosting.com#about">About Us</a></li>
+                                <li><a href="https://bluenebulahosting.com#terms">Terms of Service</a></li>
+                                <li><a href="https://bluenebulahosting.com#privacy">Privacy Policy</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="row footer-bottom">
                     <div class="col-md-12">
-                        <hr />
                         <p class="text-center">&copy; <?php echo date('Y');?> Blue Nebula Hosting. All rights reserved. | Powered by <a href="http://www.blesta.com/">Blesta</a></p>
                     </div>
                 </div>
