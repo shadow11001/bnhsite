@@ -1,0 +1,26 @@
+    <div class="col-md-<?php echo ((isset($num_cards) ? $num_cards : 0) < 4) ? (((isset($num_cards) ? $num_cards : 0) < 3) ? 6 : 4) : 3; ?>">
+        <?php
+        echo !empty($card->uri) ? '<a href="' . $this->Html->safe($card->uri) . '">': '';
+
+        if ((isset($card->callback_type) ? $card->callback_type : null) == 'html') {
+        ?>
+        <div id="<?php (print (isset($card->card_id) ? $this->Html->safe($card->card_id) : null));?>" class="blue-nebula-card" style="background: rgba(31, 41, 55, 0.9) !important; color: #d1d5db !important; border: 1px solid #374151 !important; border-radius: 12px !important; padding: 20px !important;">
+            <?php echo (isset($card->value) ? $card->value : null);?>
+        </div>
+        <?php
+        } else {
+            // Override Blesta colors with Blue Nebula theme colors
+            $blue_nebula_style = 'background: rgba(31, 41, 55, 0.9) !important; color: #d1d5db !important; border: 1px solid #374151 !important; border-radius: 12px !important; padding: 20px !important; transition: all 0.3s ease !important; margin-bottom: 20px !important;';
+        ?>
+        <div id="<?php (print (isset($card->card_id) ? $this->Html->safe($card->card_id) : null));?>" class="card blue-nebula-card" style="<?php echo $blue_nebula_style; ?>">
+            <div class="card-content" style="background: transparent !important;">
+                <div class="card-value" style="color: #ffffff !important; font-size: 2rem !important; font-weight: 700 !important; margin-bottom: 8px !important;"><?php (print (isset($card->value) ? $this->Html->safe($card->value) : null));?></div>
+                <div class="card-label" style="color: #d1d5db !important; font-size: 0.9rem !important;"><?php (print (isset($card->label) ? $this->Html->safe($card->label) : null));?></div>
+            </div>
+        </div>
+        <?php
+        }
+
+        echo !empty($card->link) ? '</a>': '';
+        ?>
+    </div>
