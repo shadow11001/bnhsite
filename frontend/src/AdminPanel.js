@@ -897,46 +897,145 @@ const AdminPanel = () => {
 
   // Site Settings
   const SiteSettings = () => {
+    const [settings, setSettings] = useState({
+      uptime_kuma_api_key: 'uk1_USvIQkci-6cYMA5VcOksKY7B1TzT7ul2zrvFOniq',
+      uptime_kuma_url: 'https://status.bluenebulahosting.com/status/bnh',
+      status_update_interval: 30,
+      site_title: 'Blue Nebula Hosting',
+      site_description: 'Professional hosting solutions with enterprise-grade infrastructure'
+    });
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+      loadSiteSettings();
+    }, []);
+
+    const loadSiteSettings = async () => {
+      try {
+        const response = await axios.get(`${API}/site-settings`, { headers: getAuthHeaders() });
+        setSettings(prev => ({ ...prev, ...response.data }));
+      } catch (error) {
+        console.error('Error loading site settings:', error);
+      }
+    };
+
+    const saveSiteSettings = async () => {
+      setIsLoading(true);
+      try {
+        await axios.put(`${API}/site-settings`, settings, { headers: getAuthHeaders() });
+        alert('Site settings updated successfully! Some changes may require a server restart.');
+      } catch (error) {
+        alert('Error updating site settings: ' + error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     return (
       <div className="bg-gray-800 rounded-lg p-6">
         <h3 className="text-xl font-bold text-white mb-6">Site Settings</h3>
         
         <div className="grid lg:grid-cols-2 gap-6">
           <div className="bg-gray-700 rounded-lg p-4">
-            <h4 className="text-white font-semibold mb-4">Logo & Branding</h4>
+            <h4 className="text-white font-semibold mb-4">System Status Configuration</h4>
             <div className="space-y-4">
               <div>
-                <label className="block text-gray-300 mb-2">Logo Instructions</label>
-                <div className="bg-gray-600 rounded p-3 text-sm text-gray-300">
-                  <p>Upload your logo as <code className="bg-gray-800 px-1 rounded">logo.png</code> to the website root directory.</p>
-                  <p className="mt-2">Recommended size: 64x64 pixels or larger (square format works best)</p>
-                </div>
+                <label className="block text-gray-300 mb-2">Uptime Kuma API Key</label>
+                <input
+                  type="text"
+                  value={settings.uptime_kuma_api_key}
+                  onChange={(e) => setSettings({...settings, uptime_kuma_api_key: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none font-mono text-sm"
+                  placeholder="uk1_..."
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Status Page URL</label>
+                <input
+                  type="url"
+                  value={settings.uptime_kuma_url}
+                  onChange={(e) => setSettings({...settings, uptime_kuma_url: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                  placeholder="https://status.yourdomain.com/status/page"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Update Interval (seconds)</label>
+                <input
+                  type="number"
+                  min="10"
+                  max="300"
+                  value={settings.status_update_interval}
+                  onChange={(e) => setSettings({...settings, status_update_interval: parseInt(e.target.value)})}
+                  className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                />
+                <p className="text-xs text-gray-400 mt-1">How often to check status (10-300 seconds)</p>
               </div>
             </div>
           </div>
           
           <div className="bg-gray-700 rounded-lg p-4">
-            <h4 className="text-white font-semibold mb-4">System Status</h4>
+            <h4 className="text-white font-semibold mb-4">Site Information</h4>
             <div className="space-y-4">
               <div>
-                <label className="block text-gray-300 mb-2">Uptime Kuma Integration</label>
-                <div className="bg-gray-600 rounded p-3 text-sm text-gray-300">
-                  <p>✅ API Key: <code className="text-xs">uk1_USvIQkci-6cYMA5VcOksKY7B1TzT7ul2zrvFOniq</code></p>
-                  <p className="mt-2">✅ Status URL: status.bluenebulahosting.com/status/bnh</p>
-                  <p className="mt-2">Status updates automatically every 30 seconds</p>
+                <label className="block text-gray-300 mb-2">Site Title</label>
+                <input
+                  type="text"
+                  value={settings.site_title}
+                  onChange={(e) => setSettings({...settings, site_title: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Site Description</label>
+                <textarea
+                  rows={3}
+                  value={settings.site_description}
+                  onChange={(e) => setSettings({...settings, site_description: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                />
+              </div>
+              
+              <div className="bg-gray-600 rounded p-3">
+                <h5 className="text-white font-medium mb-2">Logo Upload Instructions</h5>
+                <div className="text-sm text-gray-300 space-y-1">
+                  <p>• Upload your logo as <code className="bg-gray-800 px-1 rounded">logo.png</code> to the website root directory</p>
+                  <p>• Recommended size: 64x64 pixels (square format)</p>
+                  <p>• Supported formats: PNG (preferred), JPG, SVG</p>
+                  <p>• Logo will appear in header and footer automatically</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
         
-        <div className="mt-6 bg-yellow-600/20 border border-yellow-600 rounded-lg p-4">
-          <h4 className="text-yellow-300 font-semibold mb-2">⚠️ Important Notes</h4>
-          <ul className="text-yellow-200 text-sm space-y-1">
-            <li>• Changes to navigation and content are applied immediately</li>
-            <li>• SMTP settings require server restart to take effect</li>
-            <li>• Always test SMTP connection before relying on contact forms</li>
-            <li>• Legal pages should be reviewed by a legal professional</li>
+        <div className="mt-6 flex space-x-4">
+          <button
+            onClick={saveSiteSettings}
+            disabled={isLoading}
+            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
+          >
+            {isLoading ? 'Saving...' : 'Save Settings'}
+          </button>
+          
+          <button
+            onClick={loadSiteSettings}
+            className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+          >
+            Reset to Current
+          </button>
+        </div>
+        
+        <div className="mt-6 bg-blue-600/20 border border-blue-600 rounded-lg p-4">
+          <h4 className="text-blue-300 font-semibold mb-2">💡 Pro Tips</h4>
+          <ul className="text-blue-200 text-sm space-y-1">
+            <li>• Test your status page URL before saving to ensure it's accessible</li>
+            <li>• Lower update intervals provide more real-time status but use more resources</li>
+            <li>• Changes to API keys require backend restart to take effect</li>
+            <li>• Always keep a backup of your API keys in a secure location</li>
           </ul>
         </div>
       </div>
