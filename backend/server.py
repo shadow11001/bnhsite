@@ -397,6 +397,13 @@ async def get_content(section: str):
                     "title": "Privacy Policy",
                     "content": "Privacy Policy content will be updated by the administrator."
                 }
+            elif section == "hero":
+                return {
+                    "section": "hero",
+                    "title": "Fast, Reliable, and Affordable",
+                    "subtitle": "Hosting Solutions—Starting at $1/mo",
+                    "description": "Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions with 24/7 support, 99.9% uptime guarantee, and professional managed services for shared hosting, VPS, and GameServers."
+                }
             return {"section": section, "message": "No custom content found"}
         return content
     except Exception as e:
