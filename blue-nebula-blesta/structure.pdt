@@ -16,15 +16,11 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
         ?>
         <link rel="shortcut icon" href="<?php echo $this->Html->safe($client_icon);?>" />
         <?php
-        } elseif (file_exists($this->view_dir . 'images/favicon.png')) {
+        } else {
         ?>
         <link rel="shortcut icon" href="<?php echo $this->view_dir;?>images/favicon.png" />
         <link rel="icon" type="image/png" href="<?php echo $this->view_dir;?>images/favicon.png" />
         <link rel="apple-touch-icon" href="<?php echo $this->view_dir;?>images/favicon.png" />
-        <?php
-        } else {
-        ?>
-        <link rel="shortcut icon" href="<?php echo $this->view_dir;?>images/favicon.ico" />
         <?php
         }
         ?>
