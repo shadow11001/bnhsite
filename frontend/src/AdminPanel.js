@@ -420,19 +420,29 @@ const AdminPanel = () => {
         </div>
         
         <div className="mb-6">
-          <nav className="flex space-x-4">
-            <button
-              onClick={() => setActiveTab('plans')}
-              className={`px-4 py-2 rounded ${activeTab === 'plans' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
-            >
-              Hosting Plans
-            </button>
-            <button
-              onClick={() => setActiveTab('company')}
-              className={`px-4 py-2 rounded ${activeTab === 'company' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
-            >
-              Company Info
-            </button>
+          <nav className="flex flex-wrap gap-2">
+            {[
+              { key: 'plans', label: 'Hosting Plans', icon: '📦' },
+              { key: 'content', label: 'Website Content', icon: '📝' },
+              { key: 'navigation', label: 'Navigation Menu', icon: '🧭' },
+              { key: 'company', label: 'Company Info', icon: '🏢' },
+              { key: 'legal', label: 'Legal Pages', icon: '📄' },
+              { key: 'contact', label: 'Contact & SMTP', icon: '📧' },
+              { key: 'settings', label: 'Site Settings', icon: '⚙️' }
+            ].map(tab => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`px-4 py-2 rounded flex items-center gap-2 transition-colors ${
+                  activeTab === tab.key 
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                }`}
+              >
+                <span>{tab.icon}</span>
+                <span className="hidden sm:inline">{tab.label}</span>
+              </button>
+            ))}
           </nav>
         </div>
         
