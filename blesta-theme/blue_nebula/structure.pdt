@@ -280,9 +280,32 @@
     <!-- Additional JavaScript -->
     <script>
         $(document).ready(function() {
-            // Fix mobile menu toggle
-            $('.navbar-toggle').on('click', function() {
-                $('.navbar-collapse').toggleClass('in');
+            // CRITICAL: Fix mobile menu toggle functionality
+            $('.navbar-toggle').off('click').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                var $collapse = $('.navbar-collapse');
+                
+                if ($collapse.hasClass('in')) {
+                    $collapse.removeClass('in').hide();
+                } else {
+                    $collapse.addClass('in').show();
+                }
+                
+                console.log('Mobile menu toggled');
+            });
+            
+            // Close mobile menu when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.navbar').length) {
+                    $('.navbar-collapse').removeClass('in').hide();
+                }
+            });
+            
+            // Close mobile menu when clicking on a link
+            $('.navbar-nav a').on('click', function() {
+                $('.navbar-collapse').removeClass('in').hide();
             });
             
             // Auto-hide alerts after 5 seconds
@@ -290,27 +313,70 @@
                 $('.alert').fadeOut('slow');
             }, 5000);
             
-            // Add smooth scrolling
-            $('a[href^="#"]').on('click', function(event) {
-                var target = $(this.getAttribute('href'));
-                if (target.length) {
-                    event.preventDefault();
-                    $('html, body').stop().animate({
-                        scrollTop: target.offset().top - 70
-                    }, 1000);
+            // Force all text to be visible by removing problematic styles
+            $('*').css({
+                'text-shadow': 'none',
+                'background-color': function(index, value) {
+                    if (value === 'white' || value === '#ffffff' || value === 'rgb(255, 255, 255)') {
+                        return '#1f2937';
+                    }
+                    return value;
                 }
             });
             
-            // Enhance form styling
-            $('input, textarea, select').addClass('form-control');
+            // Fix form styling
+            $('input, textarea, select').each(function() {
+                $(this).addClass('form-control');
+                if ($(this).css('background-color') === 'rgb(255, 255, 255)' || $(this).css('background-color') === 'white') {
+                    $(this).css('background-color', 'rgba(55, 65, 81, 0.9)');
+                    $(this).css('color', '#ffffff');
+                }
+            });
+            
+            // Fix package/order page visibility
+            $('.package, .service, .order-form, .checkout-form, .cart, .summary').each(function() {
+                $(this).css({
+                    'background-color': '#1f2937',
+                    'color': '#d1d5db',
+                    'border': '1px solid #374151',
+                    'border-radius': '12px',
+                    'padding': '20px'
+                });
+            });
             
             // Add loading state to buttons on form submit
             $('form').on('submit', function() {
                 $(this).find('button[type="submit"], input[type="submit"]').prop('disabled', true).addClass('loading');
             });
             
-            // Fix visibility issues on order pages
-            $('body').addClass('blesta-ready');
+            // Fix cart page visibility
+            if (window.location.pathname.includes('cart') || window.location.pathname.includes('order')) {
+                $('body').addClass('cart-page');
+                
+                // Force all elements to be visible on cart/order pages
+                $('*').each(function() {
+                    var $this = $(this);
+                    if ($this.css('color') === 'rgb(255, 255, 255)' && 
+                        ($this.css('background-color') === 'rgb(255, 255, 255)' || 
+                         $this.css('background-color') === 'white' || 
+                         $this.css('background-color') === 'transparent')) {
+                        $this.css('background-color', '#1f2937');
+                    }
+                });
+            }
+            
+            // Debug: Log when elements are not visible
+            $('*').each(function() {
+                var $this = $(this);
+                if ($this.css('color') === $this.css('background-color')) {
+                    console.log('Invisible element detected:', $this);
+                    $this.css('background-color', '#1f2937');
+                    $this.css('color', '#d1d5db');
+                }
+            });
+            
+            console.log('Blue Nebula theme JavaScript loaded successfully');
+        });
         });
         });
     </script>
