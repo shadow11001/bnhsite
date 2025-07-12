@@ -358,11 +358,11 @@ async def initialize_data():
             }
         ]
         
-        # Performance VPS Plans (9 plans - exact names from pricing table)
+        # Performance VPS Plans (9 plans - correct names from user)
         performance_vps_plans = [
             {
                 "plan_type": "performance_vps",
-                "plan_name": "Prime",
+                "plan_name": "Probe",
                 "base_price": 6.0,
                 "cpu_cores": 1,
                 "memory_gb": 1,
@@ -373,7 +373,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "performance_vps",
-                "plan_name": "Horizon",
+                "plan_name": "Rover",
                 "base_price": 12.0,
                 "cpu_cores": 1,
                 "memory_gb": 2,
@@ -384,7 +384,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "performance_vps",
-                "plan_name": "Lantern",
+                "plan_name": "Lander",
                 "base_price": 24.0,
                 "cpu_cores": 2,
                 "memory_gb": 4,
@@ -395,7 +395,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "performance_vps",
-                "plan_name": "Summit",
+                "plan_name": "Satellite",
                 "base_price": 48.0,
                 "cpu_cores": 3,
                 "memory_gb": 8,
@@ -417,7 +417,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "performance_vps",
-                "plan_name": "Quasar",
+                "plan_name": "Outpost",
                 "base_price": 144.0,
                 "cpu_cores": 6,
                 "memory_gb": 24,
@@ -439,7 +439,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "performance_vps",
-                "plan_name": "Galaxy",
+                "plan_name": "Colony",
                 "base_price": 256.0,
                 "cpu_cores": 12,
                 "memory_gb": 48,
@@ -450,7 +450,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "performance_vps",
-                "plan_name": "Spaceway",
+                "plan_name": "Spaceport",
                 "base_price": 320.0,
                 "cpu_cores": 16,
                 "memory_gb": 58,
