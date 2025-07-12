@@ -64,6 +64,7 @@ body::before {
     height: 40px;
     border-radius: 8px;
     object-fit: contain;
+    display: block;
 }
 
 .logo-icon {
@@ -78,6 +79,7 @@ body::before {
     font-size: 18px;
     color: #ffffff;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
 }
 
 .logo-text-wrapper {
@@ -91,6 +93,7 @@ body::before {
     font-weight: 700;
     color: #ffffff;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
 }
 
 .logo a:hover .logo-content {
@@ -104,6 +107,7 @@ body::before {
     height: 35px;
     border-radius: 6px;
     object-fit: contain;
+    display: block;
 }
 
 .footer-logo .logo-icon {
