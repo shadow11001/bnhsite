@@ -10,6 +10,70 @@ const AdminPanel = () => {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('plans');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [loginData, setLoginData] = useState({ username: '', password: '' });
+  const [loginError, setLoginError] = useState('');
+
+  // Check authentication on component mount
+  useEffect(() => {
+    checkAuthentication();
+  }, []);
+
+  const checkAuthentication = async () => {
+    const token = localStorage.getItem('admin_token');
+    if (!token) {
+      setAuthLoading(false);
+      return;
+    }
+
+    try {
+      const response = await axios.get(`${API}/verify-token`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (response.data.valid) {
+        setIsAuthenticated(true);
+        await fetchData();
+      } else {
+        localStorage.removeItem('admin_token');
+      }
+    } catch (error) {
+      localStorage.removeItem('admin_token');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoginError('');
+    
+    try {
+      const response = await axios.post(`${API}/login`, loginData);
+      const { access_token } = response.data;
+      
+      localStorage.setItem('admin_token', access_token);
+      setIsAuthenticated(true);
+      await fetchData();
+      setLoginData({ username: '', password: '' });
+    } catch (error) {
+      setLoginError(error.response?.data?.detail || 'Login failed');
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('admin_token');
+    setIsAuthenticated(false);
+    setHostingPlans([]);
+    setCompanyInfo({});
+  };
+
+  // Get auth token for API requests
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('admin_token');
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
 
   useEffect(() => {
     fetchData();
