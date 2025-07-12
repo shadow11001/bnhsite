@@ -738,6 +738,26 @@ label, .form-label {
     display: none !important;
 }
 
+/* Fix any white backgrounds that might appear */
+.bg-white, .bg-light, [style*="background: white"], [style*="background-color: white"] {
+    background: transparent !important;
+    color: #d1d5db !important;
+}
+
+/* Ensure all content blends with space background */
+.container-md, .container-fluid {
+    background: transparent !important;
+}
+
+.row {
+    background: transparent !important;
+}
+
+/* Fix any remaining elements that don't blend */
+.content-wrapper, .main-content, .page-content {
+    background: transparent !important;
+}
+
 /* ============================================================================
    UTILITIES
    ========================================================================== */
