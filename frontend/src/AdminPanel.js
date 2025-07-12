@@ -72,19 +72,31 @@ const AdminPanel = () => {
     if (!isAuthenticated) return;
     
     try {
-      const [plansResponse, companyResponse, navigationResponse, smtpResponse, heroResponse] = await Promise.all([
-        axios.get(`${API}/hosting-plans`),
+      // First get the admin plans (with markup data) and public plans
+      const [adminPlansResponse, companyResponse, navigationResponse, smtpResponse, heroResponse, termsResponse, privacyResponse] = await Promise.all([
+        axios.get(`${API}/hosting-plans`, { headers: getAuthHeaders() }), // This will get admin version with full data
         axios.get(`${API}/company-info`),
         axios.get(`${API}/navigation`, { headers: getAuthHeaders() }),
         axios.get(`${API}/smtp-settings`, { headers: getAuthHeaders() }),
-        axios.get(`${API}/content/hero`)
+        axios.get(`${API}/content/hero`),
+        axios.get(`${API}/legal/terms`),
+        axios.get(`${API}/legal/privacy`)
       ]);
       
-      setHostingPlans(plansResponse.data);
+      setHostingPlans(adminPlansResponse.data);
       setCompanyInfo(companyResponse.data);
       setNavigationItems(navigationResponse.data);
       setSmtpSettings(smtpResponse.data);
-      setWebsiteContent(prev => ({ ...prev, hero: heroResponse.data }));
+      setWebsiteContent(prev => ({ 
+        ...prev, 
+        hero: heroResponse.data,
+        terms: termsResponse.data,
+        privacy: privacyResponse.data
+      }));
+      setLegalContent({
+        terms: termsResponse.data,
+        privacy: privacyResponse.data
+      });
     } catch (error) {
       console.error('Error fetching data:', error);
       if (error.response?.status === 401) {
