@@ -580,22 +580,31 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
                     $('*[style*="background"], *[style*="color"]').each(function() {
                         var $el = $(this);
                         var style = $el.attr('style') || '';
-                        var computedBg = window.getComputedStyle(this).backgroundColor;
-                        
-                        // Check for white backgrounds
-                        if (bgColor === 'rgb(255, 255, 255)' || bgColor === 'white' || 
-                            computedBg === 'rgb(255, 255, 255)' || computedBg === 'white') {
+                        // Check for white backgrounds in inline styles
+                        if (style.includes('background: white') || 
+                            style.includes('background: #fff') || 
+                            style.includes('background: #ffffff') ||
+                            style.includes('background-color: white') ||
+                            style.includes('background-color: #fff') ||
+                            style.includes('background-color: #ffffff')) {
+                            
                             $el.css({
+                                'background': 'rgba(31, 41, 55, 0.9)',
                                 'background-color': 'rgba(31, 41, 55, 0.9)',
-                                'color': '#d1d5db'
+                                'color': '#d1d5db',
+                                'border': '1px solid #374151',
+                                'border-radius': '12px',
+                                'padding': '20px'
                             });
                         }
                         
-                        // Fix text visibility
-                        var textColor = $el.css('color');
-                        if ((textColor === 'rgb(255, 255, 255)' || textColor === 'white') && 
-                            (bgColor === 'rgb(255, 255, 255)' || bgColor === 'white')) {
-                            $el.css('color', '#d1d5db');
+                        // Fix white text on white background
+                        if ((style.includes('color: white') || style.includes('color: #fff') || style.includes('color: #ffffff')) &&
+                            (style.includes('background: white') || style.includes('background: #fff') || style.includes('background: #ffffff'))) {
+                            $el.css({
+                                'background': 'rgba(31, 41, 55, 0.9)',
+                                'color': '#d1d5db'
+                            });
                         }
                     });
                     
