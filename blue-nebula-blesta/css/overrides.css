@@ -59,6 +59,13 @@ body::before {
     text-decoration: none;
 }
 
+.logo-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
 .logo-icon {
     width: 40px;
     height: 40px;
