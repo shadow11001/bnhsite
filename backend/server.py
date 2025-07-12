@@ -213,6 +213,37 @@ async def verify_token(current_user: str = Depends(get_current_user)):
     """Verify if token is valid"""
     return {"valid": True, "user": current_user}
 
+# Site Settings Management
+@api_router.get("/site-settings")
+async def get_site_settings(current_user: str = Depends(get_current_user)):
+    """Get site settings - admin only"""
+    try:
+        settings = await db.site_settings.find_one()
+        if not settings:
+            return {
+                "uptime_kuma_api_key": UPTIME_KUMA_API_KEY,
+                "uptime_kuma_url": f"{UPTIME_KUMA_BASE_URL}/status/bnh",
+                "status_update_interval": 30,
+                "site_title": "Blue Nebula Hosting",
+                "site_description": "Professional hosting solutions with enterprise-grade infrastructure"
+            }
+        return settings
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/site-settings")
+async def update_site_settings(settings_data: dict, current_user: str = Depends(get_current_user)):
+    """Update site settings - admin only"""
+    try:
+        await db.site_settings.update_one(
+            {},
+            {"$set": settings_data},
+            upsert=True
+        )
+        return {"message": "Site settings updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/admin/hosting-plans", response_model=List[HostingPlan])
 async def get_admin_hosting_plans(current_user: str = Depends(get_current_user)):
     """Get all hosting plans with markup data - admin only"""
