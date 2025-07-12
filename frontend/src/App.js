@@ -798,6 +798,8 @@ const Home = () => {
           
           {/* Pricing Promo Banner */}
           <PromoCodeBanner location="pricing" />
+          {/* Pricing Promo Banner */}
+          <PromoCodeBanner location="pricing" />
           <HostingPlans 
             plans={hostingPlans} 
             title="SSD Shared Hosting" 
