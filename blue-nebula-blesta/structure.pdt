@@ -91,14 +91,16 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
                     <a href="<?php echo $this->Html->safe($this->base_uri);?>">
                         <div class="logo-content">
                             <?php
-                            if (file_exists($this->view_dir . 'images/logo.png')) {
+                            $logo_path = $this->view_dir . 'images/logo.png';
+                            if (file_exists($logo_path)) {
                             ?>
                             <img src="<?php echo $this->view_dir;?>images/logo.png" alt="Blue Nebula Hosting" class="logo-image" />
                             <?php
                             } else {
                             ?>
+                            <!-- Logo file not found at: <?php echo $logo_path; ?> -->
                             <div class="logo-icon">
-                                <span class="logo-text">BN</span>
+                                <span class="logo-text">BNH</span>
                             </div>
                             <?php
                             }
