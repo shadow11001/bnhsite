@@ -74,7 +74,7 @@ const AdminPanel = () => {
     try {
       // First get the admin plans (with markup data) and public plans
       const [adminPlansResponse, companyResponse, navigationResponse, smtpResponse, heroResponse, termsResponse, privacyResponse] = await Promise.all([
-        axios.get(`${API}/hosting-plans`, { headers: getAuthHeaders() }), // This will get admin version with full data
+        axios.get(`${API}/admin/hosting-plans`, { headers: getAuthHeaders() }), // Admin endpoint with full data
         axios.get(`${API}/company-info`),
         axios.get(`${API}/navigation`, { headers: getAuthHeaders() }),
         axios.get(`${API}/smtp-settings`, { headers: getAuthHeaders() }),
