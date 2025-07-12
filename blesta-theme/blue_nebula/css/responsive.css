@@ -1,0 +1,152 @@
+/* Blue Nebula - Responsive CSS for mobile devices */
+
+/* Mobile-first responsive design */
+@media (max-width: 767px) {
+    /* Header adjustments */
+    .navbar-brand div {
+        font-size: 16px !important;
+    }
+    
+    .navbar-brand div div:first-child {
+        font-size: 14px !important;
+    }
+    
+    /* Content spacing */
+    .container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+    
+    /* Card adjustments */
+    .card, .panel, .well {
+        margin-bottom: 15px !important;
+        padding: 15px !important;
+    }
+    
+    /* Button sizing */
+    .btn {
+        padding: 10px 16px !important;
+        font-size: 14px !important;
+        margin-bottom: 10px !important;
+        display: block !important;
+        width: 100% !important;
+    }
+    
+    /* Table responsiveness */
+    .table-responsive {
+        border: none !important;
+    }
+    
+    /* Form adjustments */
+    .form-control {
+        margin-bottom: 15px !important;
+    }
+    
+    /* Footer adjustments */
+    .footer .col-md-3 {
+        margin-bottom: 30px !important;
+        text-align: center !important;
+    }
+    
+    /* Alert adjustments */
+    .alert {
+        margin-bottom: 15px !important;
+        padding: 12px !important;
+        font-size: 14px !important;
+    }
+    
+    /* Navigation adjustments */
+    .navbar-nav {
+        margin: 0 !important;
+    }
+    
+    .navbar-nav li a {
+        padding: 12px 15px !important;
+    }
+    
+    /* Pricing table adjustments */
+    .package, .service-card {
+        margin-bottom: 20px !important;
+    }
+    
+    /* Hide background animation on mobile for better performance */
+    body::after {
+        display: none !important;
+    }
+}
+
+/* Tablet adjustments */
+@media (min-width: 768px) and (max-width: 991px) {
+    .container {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+    
+    .btn {
+        margin-bottom: 10px !important;
+    }
+    
+    .footer .col-md-3 {
+        margin-bottom: 20px !important;
+    }
+}
+
+/* Large screen adjustments */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px !important;
+    }
+    
+    /* Enhanced spacing for large screens */
+    .card, .panel {
+        margin-bottom: 25px !important;
+    }
+}
+
+/* Print styles */
+@media print {
+    body::before,
+    body::after {
+        display: none !important;
+    }
+    
+    .navbar,
+    .footer,
+    .btn,
+    .alert {
+        display: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    .card, .panel {
+        border: 1px solid #ccc !important;
+        background: white !important;
+        box-shadow: none !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --primary-blue: #0066cc !important;
+        --text-secondary: #ffffff !important;
+        --border-color: #ffffff !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    body::after {
+        animation: none !important;
+    }
+}
