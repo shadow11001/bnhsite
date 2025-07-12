@@ -1,7 +1,6 @@
-/* Blue Nebula Hosting - Blesta Template CSS */
-/* Complete rewrite to fix all visibility and functionality issues */
+/* Blue Nebula Hosting - Comprehensive Blesta Theme Fix */
+/* Based on GitHub examples - targeting specific visibility and functionality issues */
 
-/* CSS Variables for consistent theming */
 :root {
     --primary-blue: #3b82f6;
     --primary-purple: #8b5cf6;
@@ -19,96 +18,132 @@
     --card-gradient: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
 }
 
-/* CRITICAL: Force all text to be visible */
-* {
-    color: var(--text-secondary) !important;
+/* CRITICAL: Override ALL Blesta default styles that cause invisibility */
+*, *:before, *:after {
+    box-sizing: border-box !important;
 }
 
-/* Global Body Styling */
-body, html {
+html, body {
     background: var(--gradient-bg) !important;
     color: var(--text-secondary) !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
     min-height: 100vh !important;
     margin: 0 !important;
-    background-attachment: fixed !important;
+    padding: 0 !important;
 }
 
-/* Remove ALL default Bootstrap backgrounds that cause invisibility */
-.container, .container-fluid, .row, .col-md-12, .col-md-6, .col-md-4, .col-md-3, .col-md-8, .col-md-9,
-.col-sm-12, .col-sm-6, .col-sm-4, .col-sm-3, .col-sm-8, .col-sm-9,
-.col-xs-12, .col-xs-6, .col-xs-4, .col-xs-3, .col-xs-8, .col-xs-9,
-.main-content, #main, .content, .page-content {
+/* FORCE TEXT VISIBILITY - Override all Blesta defaults */
+body, div, p, span, td, th, li, label, a,
+h1, h2, h3, h4, h5, h6,
+.text, .description, .content, .package, .service,
+.well, .panel, .form-group, .control-label,
+.order-form, .checkout-form, .cart, .summary {
+    color: var(--text-secondary) !important;
+    background-color: transparent !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+}
+
+/* CRITICAL: Fix all container backgrounds that cause white-on-white text */
+.container, .container-fluid, .row, 
+[class*="col-"], .main-content, #main, .content,
+.well, .panel, .panel-body, .panel-default,
+.card, .card-body, .page-content, .section {
     background: transparent !important;
 }
 
-/* Fix ALL white backgrounds that cause text invisibility */
-.bg-white, .bg-light, .well, .panel-default, .panel-body,
-.card, .card-body, .package, .service, .order-form,
-.checkout-form, .cart, .summary, .invoice {
+/* Force visibility on problematic Blesta elements */
+.bg-white, .bg-light, .bg-default,
+.panel-default, .panel-body, .well,
+.order-summary, .package, .service,
+.form-horizontal, .form-group {
     background: var(--card-bg) !important;
     color: var(--text-secondary) !important;
     border: 1px solid var(--border-color) !important;
-    border-radius: 12px !important;
-    padding: 20px !important;
-    margin-bottom: 20px !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    margin-bottom: 15px !important;
 }
 
-/* Header Styling */
+/* HEADER AND NAVIGATION */
 .navbar, .header, #header {
     background: rgba(15, 15, 16, 0.95) !important;
     backdrop-filter: blur(10px) !important;
     border-bottom: 1px solid rgba(59, 130, 246, 0.2) !important;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
-    border-radius: 0 !important;
+    position: relative !important;
+    z-index: 1000 !important;
 }
 
 .navbar-brand, .logo, .brand {
     color: var(--text-primary) !important;
     text-decoration: none !important;
+    display: flex !important;
+    align-items: center !important;
 }
 
-/* Mobile Menu - CRITICAL FIX */
+/* MOBILE MENU - Complete fix based on examples */
 .navbar-toggle {
+    display: block !important;
     background: transparent !important;
     border: 2px solid var(--text-secondary) !important;
     border-radius: 4px !important;
-    padding: 4px 6px !important;
-    margin-top: 8px !important;
-    margin-bottom: 8px !important;
+    padding: 6px 8px !important;
+    margin: 8px 15px 8px 0 !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 1001 !important;
 }
 
 .navbar-toggle .icon-bar {
-    background: var(--text-secondary) !important;
     display: block !important;
-    width: 22px !important;
+    width: 20px !important;
     height: 2px !important;
+    background: var(--text-secondary) !important;
     border-radius: 1px !important;
-    margin: 4px 0 !important;
+    margin: 3px 0 !important;
+    transition: all 0.3s ease !important;
 }
 
-.navbar-toggle:hover, .navbar-toggle:focus {
+.navbar-toggle:hover,
+.navbar-toggle:focus,
+.navbar-toggle.active {
     background: rgba(59, 130, 246, 0.1) !important;
     border-color: var(--primary-blue) !important;
 }
 
-.navbar-toggle:hover .icon-bar, .navbar-toggle:focus .icon-bar {
+.navbar-toggle:hover .icon-bar,
+.navbar-toggle:focus .icon-bar,
+.navbar-toggle.active .icon-bar {
     background: var(--primary-blue) !important;
 }
 
-/* Mobile Menu Collapse - CRITICAL FIX */
+/* Mobile menu collapse - Critical fix */
+.navbar-collapse {
+    display: none !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: rgba(15, 15, 16, 0.98) !important;
+    border: 1px solid var(--border-color) !important;
+    border-top: none !important;
+    border-radius: 0 0 8px 8px !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+    z-index: 999 !important;
+}
+
+.navbar-collapse.in {
+    display: block !important;
+}
+
 @media (max-width: 767px) {
-    .navbar-collapse {
-        background: rgba(15, 15, 16, 0.98) !important;
-        border: 1px solid var(--border-color) !important;
-        border-radius: 8px !important;
-        padding: 15px !important;
-        margin-top: 10px !important;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
-    }
-    
     .navbar-nav {
         margin: 0 !important;
+        padding: 15px !important;
     }
     
     .navbar-nav li {
@@ -116,82 +151,84 @@ body, html {
     }
     
     .navbar-nav li a {
-        color: var(--text-secondary) !important;
-        padding: 12px 15px !important;
-        border-radius: 6px !important;
         display: block !important;
+        padding: 12px 15px !important;
+        color: var(--text-secondary) !important;
         text-decoration: none !important;
+        border-radius: 6px !important;
         transition: all 0.3s ease !important;
     }
     
-    .navbar-nav li a:hover, .navbar-nav li a:focus {
+    .navbar-nav li a:hover,
+    .navbar-nav li a:focus {
         background: rgba(59, 130, 246, 0.1) !important;
         color: var(--primary-blue) !important;
     }
 }
 
-/* Navigation Links */
-.navbar-nav .nav-link, .nav-link, .navigation a {
-    color: var(--text-secondary) !important;
-    transition: all 0.3s ease !important;
-    text-decoration: none !important;
+@media (min-width: 768px) {
+    .navbar-toggle {
+        display: none !important;
+    }
+    
+    .navbar-collapse {
+        display: block !important;
+        position: static !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
 }
 
-.navbar-nav .nav-link:hover, .nav-link:hover, .navigation a:hover {
-    color: var(--primary-blue) !important;
-}
-
-/* HEADINGS - Force visibility */
-h1, h2, h3, h4, h5, h6 {
-    color: var(--text-primary) !important;
-    font-weight: 600 !important;
-}
-
-/* PARAGRAPHS and TEXT - Force visibility */
-p, span, div, td, th, li, label, .description, .help-block {
-    color: var(--text-secondary) !important;
-}
-
-/* FORMS - Complete fix */
+/* FORM ELEMENTS - Complete overhaul */
 .form-control, input, textarea, select {
     background: rgba(55, 65, 81, 0.9) !important;
     border: 1px solid var(--border-color) !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
     color: var(--text-primary) !important;
-    padding: 12px 16px !important;
+    padding: 10px 15px !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
     transition: all 0.3s ease !important;
 }
 
 .form-control:focus, input:focus, textarea:focus, select:focus {
     border-color: var(--primary-blue) !important;
     outline: none !important;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
     background: rgba(55, 65, 81, 1) !important;
 }
 
 .form-control::placeholder, input::placeholder, textarea::placeholder {
     color: var(--text-muted) !important;
-    opacity: 1 !important;
+    opacity: 0.7 !important;
 }
 
 .form-label, label, .control-label {
     color: var(--text-primary) !important;
     font-weight: 600 !important;
-    margin-bottom: 8px !important;
+    margin-bottom: 6px !important;
     display: block !important;
 }
 
 .form-group {
     margin-bottom: 20px !important;
+    background: transparent !important;
 }
 
-/* SELECT DROPDOWN - Critical fix */
+/* SELECT DROPDOWN - Fix visibility */
 select.form-control {
-    background-image: linear-gradient(45deg, transparent 50%, var(--text-secondary) 50%), linear-gradient(135deg, var(--text-secondary) 50%, transparent 50%) !important;
-    background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px) !important;
+    background-image: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    cursor: pointer !important;
+    padding-right: 30px !important;
+    background-image: linear-gradient(45deg, transparent 50%, var(--text-secondary) 50%), 
+                      linear-gradient(135deg, var(--text-secondary) 50%, transparent 50%) !important;
+    background-position: calc(100% - 15px) 50%, calc(100% - 10px) 50% !important;
     background-size: 5px 5px, 5px 5px !important;
     background-repeat: no-repeat !important;
-    padding-right: 40px !important;
 }
 
 select.form-control option {
@@ -200,17 +237,20 @@ select.form-control option {
     padding: 8px !important;
 }
 
-/* BUTTONS - Complete redesign */
+/* BUTTON STYLING */
 .btn, button, input[type="submit"], input[type="button"], .button {
-    border-radius: 8px !important;
-    padding: 12px 24px !important;
-    font-weight: 600 !important;
-    transition: all 0.3s ease !important;
-    border: none !important;
-    cursor: pointer !important;
-    text-decoration: none !important;
     display: inline-block !important;
+    padding: 10px 20px !important;
     font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    border: none !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    margin-bottom: 5px !important;
 }
 
 .btn-primary, .btn-main, .primary-btn {
@@ -221,33 +261,105 @@ select.form-control option {
 .btn-primary:hover, .btn-main:hover, .primary-btn:hover {
     background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3) !important;
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3) !important;
     color: var(--text-primary) !important;
 }
 
-.btn-secondary, .btn-outline, .btn-default {
+.btn-secondary, .btn-default, .btn-outline {
     background: transparent !important;
     border: 2px solid var(--primary-blue) !important;
     color: var(--primary-blue) !important;
 }
 
-.btn-secondary:hover, .btn-outline:hover, .btn-default:hover {
+.btn-secondary:hover, .btn-default:hover, .btn-outline:hover {
     background: var(--primary-blue) !important;
     color: var(--text-primary) !important;
 }
 
 .btn-success {
-    background: linear-gradient(135deg, var(--accent-green), #059669) !important;
+    background: var(--accent-green) !important;
     color: var(--text-primary) !important;
 }
 
 .btn-danger {
-    background: linear-gradient(135deg, var(--accent-red), #dc2626) !important;
+    background: var(--accent-red) !important;
     color: var(--text-primary) !important;
 }
 
-/* PACKAGE/ORDER PAGES - Critical fixes */
-.package, .service, .order-summary, .checkout-summary {
+/* PACKAGE/SERVICE CARDS - Based on examples */
+.package, .service, .product {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+    color: var(--text-secondary) !important;
+    transition: all 0.3s ease !important;
+}
+
+.package:hover, .service:hover, .product:hover {
+    border-color: var(--primary-blue) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+.package h1, .package h2, .package h3, .package h4,
+.service h1, .service h2, .service h3, .service h4,
+.product h1, .product h2, .product h3, .product h4 {
+    color: var(--text-primary) !important;
+    margin-bottom: 10px !important;
+}
+
+.package .price, .service .price, .product .price,
+.price, .amount, .total, .cost {
+    color: var(--primary-blue) !important;
+    font-weight: 700 !important;
+    font-size: 1.5em !important;
+}
+
+.package-description, .service-description, .product-description,
+.description {
+    color: var(--text-secondary) !important;
+    line-height: 1.5 !important;
+    margin: 10px 0 !important;
+}
+
+/* ORDER FORM - Critical fixes based on examples */
+.order-form, .checkout-form {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    padding: 25px !important;
+    margin-bottom: 25px !important;
+    color: var(--text-secondary) !important;
+}
+
+.order-summary, .checkout-summary {
+    background: var(--card-bg) !important;
+    border: 2px solid var(--primary-blue) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.summary-line {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 8px 0 !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    color: var(--text-secondary) !important;
+}
+
+.summary-line:last-child {
+    border-bottom: none !important;
+    font-weight: 700 !important;
+    font-size: 18px !important;
+    color: var(--text-primary) !important;
+}
+
+/* CART PAGE - Complete fix based on examples */
+.cart, .cart-container {
     background: var(--card-bg) !important;
     border: 1px solid var(--border-color) !important;
     border-radius: 12px !important;
@@ -256,23 +368,7 @@ select.form-control option {
     color: var(--text-secondary) !important;
 }
 
-.package h1, .package h2, .package h3, .package h4, .package h5, .package h6 {
-    color: var(--text-primary) !important;
-}
-
-.package .price, .service .price, .amount, .total {
-    color: var(--primary-blue) !important;
-    font-weight: 700 !important;
-    font-size: 1.5em !important;
-}
-
-.package-description, .service-description {
-    color: var(--text-secondary) !important;
-    margin: 10px 0 !important;
-}
-
-/* CART PAGE - Complete fix */
-.cart-item, .line-item, .order-item {
+.cart-item, .line-item {
     background: rgba(55, 65, 81, 0.6) !important;
     border: 1px solid var(--border-color) !important;
     border-radius: 8px !important;
@@ -281,25 +377,40 @@ select.form-control option {
     color: var(--text-secondary) !important;
 }
 
-.cart-item h4, .line-item h4, .order-item h4 {
-    color: var(--text-primary) !important;
-    margin-bottom: 10px !important;
+.cart-item:last-child, .line-item:last-child {
+    margin-bottom: 0 !important;
 }
 
-.cart-summary, .order-summary, .invoice-summary {
+.cart-item h4, .line-item h4 {
+    color: var(--text-primary) !important;
+    margin-bottom: 8px !important;
+}
+
+.cart-item .price, .line-item .price {
+    color: var(--primary-blue) !important;
+    font-weight: 700 !important;
+}
+
+.cart-empty, .empty-cart {
+    text-align: center !important;
+    padding: 40px !important;
     background: var(--card-bg) !important;
     border: 1px solid var(--border-color) !important;
     border-radius: 12px !important;
-    padding: 20px !important;
     color: var(--text-secondary) !important;
 }
 
-/* TABLE FIXES */
+.cart-empty h3, .empty-cart h3 {
+    color: var(--text-primary) !important;
+    margin-bottom: 15px !important;
+}
+
+/* TABLE STYLING */
 .table, table {
     background: transparent !important;
     color: var(--text-secondary) !important;
     border-collapse: separate !important;
-    border-spacing: 0 4px !important;
+    border-spacing: 0 !important;
     width: 100% !important;
 }
 
@@ -307,32 +418,33 @@ select.form-control option {
     background: var(--card-gradient) !important;
     color: var(--text-primary) !important;
     border: none !important;
-    padding: 12px 16px !important;
+    padding: 12px 15px !important;
     font-weight: 600 !important;
+    text-align: left !important;
 }
 
 .table tbody td, table tbody td {
     background: rgba(55, 65, 81, 0.6) !important;
     border: none !important;
-    padding: 12px 16px !important;
-    vertical-align: middle !important;
+    padding: 12px 15px !important;
     color: var(--text-secondary) !important;
+    vertical-align: middle !important;
 }
 
 .table tbody tr:hover td, table tbody tr:hover td {
-    background: rgba(59, 130, 246, 0.15) !important;
+    background: rgba(59, 130, 246, 0.1) !important;
 }
 
-/* RANGE SLIDER - Complete fix */
+/* RANGE SLIDER - Fix based on examples */
 input[type="range"] {
     -webkit-appearance: none !important;
     appearance: none !important;
+    width: 100% !important;
     height: 8px !important;
     background: var(--border-color) !important;
     border-radius: 4px !important;
     outline: none !important;
-    width: 100% !important;
-    margin: 10px 0 !important;
+    margin: 15px 0 !important;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -344,6 +456,7 @@ input[type="range"]::-webkit-slider-thumb {
     border-radius: 50% !important;
     cursor: pointer !important;
     border: 2px solid var(--text-primary) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
 }
 
 input[type="range"]::-moz-range-thumb {
@@ -353,35 +466,49 @@ input[type="range"]::-moz-range-thumb {
     border-radius: 50% !important;
     cursor: pointer !important;
     border: 2px solid var(--text-primary) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* RADIO BUTTONS AND CHECKBOXES */
+input[type="radio"], input[type="checkbox"] {
+    margin-right: 8px !important;
+    transform: scale(1.2) !important;
+    accent-color: var(--primary-blue) !important;
+}
+
+input[type="radio"] + label, input[type="checkbox"] + label {
+    cursor: pointer !important;
+    color: var(--text-secondary) !important;
 }
 
 /* ALERTS AND MESSAGES */
 .alert, .message, .notification {
     border-radius: 8px !important;
-    padding: 16px 20px !important;
+    padding: 15px 20px !important;
     border: none !important;
     margin-bottom: 20px !important;
+    font-weight: 500 !important;
 }
 
-.alert-success {
+.alert-success, .success {
     background: rgba(16, 185, 129, 0.2) !important;
     color: var(--accent-green) !important;
     border-left: 4px solid var(--accent-green) !important;
 }
 
-.alert-danger, .alert-error {
+.alert-danger, .alert-error, .error {
     background: rgba(239, 68, 68, 0.2) !important;
     color: var(--accent-red) !important;
     border-left: 4px solid var(--accent-red) !important;
 }
 
-.alert-warning {
+.alert-warning, .warning {
     background: rgba(245, 158, 11, 0.2) !important;
     color: var(--accent-yellow) !important;
     border-left: 4px solid var(--accent-yellow) !important;
 }
 
-.alert-info {
+.alert-info, .info {
     background: rgba(59, 130, 246, 0.2) !important;
     color: var(--primary-blue) !important;
     border-left: 4px solid var(--primary-blue) !important;
@@ -393,85 +520,39 @@ input[type="range"]::-moz-range-thumb {
     backdrop-filter: blur(10px) !important;
     border: 1px solid var(--border-color) !important;
     border-radius: 8px !important;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2) !important;
+    padding: 5px 0 !important;
 }
 
 .dropdown-menu li a {
     color: var(--text-secondary) !important;
-    padding: 10px 15px !important;
+    padding: 8px 15px !important;
+    display: block !important;
+    text-decoration: none !important;
     transition: all 0.3s ease !important;
 }
 
-.dropdown-menu li a:hover {
+.dropdown-menu li a:hover, .dropdown-menu li a:focus {
     background: rgba(59, 130, 246, 0.1) !important;
     color: var(--primary-blue) !important;
-}
-
-/* RADIO BUTTONS AND CHECKBOXES */
-input[type="radio"], input[type="checkbox"] {
-    margin-right: 8px !important;
-    transform: scale(1.3) !important;
-    accent-color: var(--primary-blue) !important;
-}
-
-/* LINKS */
-a {
-    color: var(--primary-blue) !important;
-    text-decoration: none !important;
-    transition: color 0.3s ease !important;
-}
-
-a:hover, a:focus {
-    color: var(--secondary-blue) !important;
-    text-decoration: none !important;
 }
 
 /* BREADCRUMB */
 .breadcrumb {
     background: rgba(31, 41, 55, 0.6) !important;
     border-radius: 8px !important;
-    padding: 12px 16px !important;
+    padding: 10px 15px !important;
     border: none !important;
+    margin-bottom: 20px !important;
 }
 
 .breadcrumb a {
     color: var(--primary-blue) !important;
+    text-decoration: none !important;
 }
 
 .breadcrumb .active {
     color: var(--text-secondary) !important;
-}
-
-/* MODAL FIXES */
-.modal-content {
-    background: rgba(31, 41, 55, 0.95) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: 12px !important;
-}
-
-.modal-header {
-    background: var(--card-gradient) !important;
-    color: var(--text-primary) !important;
-    border-bottom: none !important;
-    border-radius: 12px 12px 0 0 !important;
-}
-
-.modal-body {
-    color: var(--text-secondary) !important;
-    background: transparent !important;
-}
-
-/* PROGRESS BARS */
-.progress {
-    background: rgba(55, 65, 81, 0.6) !important;
-    border-radius: 8px !important;
-    height: 20px !important;
-}
-
-.progress-bar {
-    background: var(--card-gradient) !important;
-    border-radius: 8px !important;
 }
 
 /* PAGINATION */
@@ -480,6 +561,7 @@ a:hover, a:focus {
     border: 1px solid var(--border-color) !important;
     color: var(--text-secondary) !important;
     padding: 8px 12px !important;
+    text-decoration: none !important;
 }
 
 .pagination .page-link:hover {
@@ -496,10 +578,11 @@ a:hover, a:focus {
 
 /* BADGES AND LABELS */
 .badge, .label {
-    padding: 6px 12px !important;
-    border-radius: 20px !important;
-    font-size: 12px !important;
+    padding: 4px 8px !important;
+    border-radius: 12px !important;
+    font-size: 11px !important;
     font-weight: 600 !important;
+    text-transform: uppercase !important;
 }
 
 .badge-success, .label-success {
@@ -517,22 +600,77 @@ a:hover, a:focus {
     color: var(--text-primary) !important;
 }
 
+.badge-info, .label-info {
+    background: var(--primary-blue) !important;
+    color: var(--text-primary) !important;
+}
+
+/* MODAL */
+.modal-content {
+    background: rgba(31, 41, 55, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    color: var(--text-secondary) !important;
+}
+
+.modal-header {
+    background: var(--card-gradient) !important;
+    color: var(--text-primary) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 15px 20px !important;
+}
+
+.modal-body {
+    padding: 20px !important;
+    color: var(--text-secondary) !important;
+}
+
+.modal-footer {
+    background: transparent !important;
+    border-top: 1px solid var(--border-color) !important;
+    padding: 15px 20px !important;
+}
+
 /* FOOTER */
 .footer, #footer {
     background: rgba(15, 15, 16, 0.95) !important;
     border-top: 1px solid rgba(59, 130, 246, 0.2) !important;
     color: var(--text-muted) !important;
     padding: 30px 0 !important;
-    margin-top: 50px !important;
+    margin-top: 40px !important;
+}
+
+.footer a, #footer a {
+    color: var(--primary-blue) !important;
+    text-decoration: none !important;
+}
+
+.footer a:hover, #footer a:hover {
+    color: var(--secondary-blue) !important;
+}
+
+/* LINKS */
+a {
+    color: var(--primary-blue) !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+a:hover, a:focus {
+    color: var(--secondary-blue) !important;
+    text-decoration: none !important;
 }
 
 /* RESPONSIVE DESIGN */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .container {
-        padding: 10px !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
     }
     
-    .card, .panel, .package {
+    .package, .service, .order-form, .cart {
         margin-bottom: 15px !important;
         padding: 15px !important;
     }
@@ -541,16 +679,19 @@ a:hover, a:focus {
         display: block !important;
         width: 100% !important;
         margin-bottom: 10px !important;
-        padding: 12px !important;
     }
     
     .table-responsive {
         border: none !important;
         overflow-x: auto !important;
     }
+    
+    .summary-line {
+        font-size: 14px !important;
+    }
 }
 
-/* CUSTOM SCROLLBAR */
+/* SCROLLBAR STYLING */
 ::-webkit-scrollbar {
     width: 8px !important;
 }
@@ -566,6 +707,46 @@ a:hover, a:focus {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--secondary-blue) !important;
+}
+
+/* LOADING STATES */
+.loading {
+    opacity: 0.6 !important;
+    pointer-events: none !important;
+}
+
+.loading::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: 20px !important;
+    height: 20px !important;
+    margin-top: -10px !important;
+    margin-left: -10px !important;
+    border: 2px solid var(--border-color) !important;
+    border-top: 2px solid var(--primary-blue) !important;
+    border-radius: 50% !important;
+    animation: spin 1s linear infinite !important;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* EMERGENCY FIXES - Override any remaining visibility issues */
+.invisible-text {
+    color: var(--text-secondary) !important;
+    background: var(--card-bg) !important;
+}
+
+.force-visible {
+    color: var(--text-secondary) !important;
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    padding: 10px !important;
+    border-radius: 6px !important;
 }
 
 /* Header Styling */
