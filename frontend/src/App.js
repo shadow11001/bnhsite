@@ -4,6 +4,61 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import AdminPanel from "./AdminPanel";
 
+// Legal Page Component
+const LegalPage = ({ type }) => {
+  const [content, setContent] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await axios.get(`${API}/content/${type}`);
+        setContent(response.data);
+      } catch (error) {
+        console.error('Error fetching content:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchContent();
+  }, [type]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-900">
+      <Header />
+      <div className="pt-20 pb-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700">
+            <h1 className="text-4xl font-bold text-white mb-8">
+              {content?.title || (type === 'terms' ? 'Terms of Service' : 'Privacy Policy')}
+            </h1>
+            <div className="prose prose-invert max-w-none">
+              <div className="text-gray-300 whitespace-pre-wrap">
+                {content?.content || `${content?.title || (type === 'terms' ? 'Terms of Service' : 'Privacy Policy')} content will be updated by the administrator.`}
+              </div>
+            </div>
+            <div className="mt-8 pt-8 border-t border-gray-700">
+              <a href="/" className="text-blue-400 hover:text-blue-300 transition-colors">
+                ← Back to Home
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
