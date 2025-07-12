@@ -30,6 +30,9 @@
     <!-- Order and Cart Specific CSS -->
     <link href="<?php echo $this->view_dir;?>css/order_cart.css" rel="stylesheet">
     
+    <!-- AJAX, Slider, and Cart Fixes CSS -->
+    <link href="<?php echo $this->view_dir;?>css/ajax_slider_cart.css" rel="stylesheet">
+    
     <!-- Responsive CSS -->
     <link href="<?php echo $this->view_dir;?>css/responsive.css" rel="stylesheet">
     
