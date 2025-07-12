@@ -893,7 +893,7 @@ label, .form-label {
     border-color: #3b82f6 !important;
 }
 
-/* Text Colors */
+/* Text Colors and Readability Fixes */
 h1, h2, h3, h4, h5, h6 {
     color: #ffffff !important;
     font-weight: 600 !important;
@@ -901,6 +901,54 @@ h1, h2, h3, h4, h5, h6 {
 
 p, span, div, td, th, li {
     color: #d1d5db !important;
+}
+
+/* Main page service card fixes */
+.card-body p, .card-body span, .card-body div {
+    color: #d1d5db !important;
+}
+
+.card-body h1, .card-body h2, .card-body h3, .card-body h4, .card-body h5, .card-body h6 {
+    color: #ffffff !important;
+}
+
+.card-text, .text-muted {
+    color: #9ca3af !important;
+}
+
+/* Service icons and buttons on main page */
+.fas, .far, .fa {
+    color: inherit !important;
+}
+
+/* Ensure all buttons are visible */
+.btn {
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: #ffffff !important;
+}
+
+.btn-secondary {
+    background: rgba(55, 65, 81, 0.8) !important;
+    color: #d1d5db !important;
+}
+
+/* Force visibility for all interactive elements */
+a {
+    color: #3b82f6 !important;
+}
+
+a:hover {
+    color: #60a5fa !important;
 }
 
 /* Focus States */
