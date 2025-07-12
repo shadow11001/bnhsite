@@ -1,5 +1,5 @@
 /* Blue Nebula Hosting - Blesta Template CSS */
-/* Matches the main website space theme design */
+/* Complete rewrite to fix all visibility and functionality issues */
 
 /* CSS Variables for consistent theming */
 :root {
@@ -10,7 +10,7 @@
     --accent-red: #ef4444;
     --accent-yellow: #f59e0b;
     --dark-bg: #0f0f10;
-    --card-bg: rgba(31, 41, 55, 0.8);
+    --card-bg: #1f2937;
     --border-color: #374151;
     --text-primary: #ffffff;
     --text-secondary: #d1d5db;
@@ -19,91 +19,553 @@
     --card-gradient: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
 }
 
-/* Global Body Styling */
-body {
-    background: var(--gradient-bg) !important;
-    color: var(--text-primary) !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
-    min-height: 100vh;
-    margin: 0;
-    background-attachment: fixed;
-}
-
-/* Fix missing images with placeholder styling */
-img {
-    background: var(--card-bg) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: 8px !important;
-}
-
-img[src=""], img:not([src]), img[src$="placeholder"] {
-    background: var(--card-gradient) !important;
-    color: var(--text-primary) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-weight: 600 !important;
-    position: relative !important;
-}
-
-img[src=""]:before, img:not([src]):before {
-    content: "🖼️ Image" !important;
-    position: absolute !important;
-    color: var(--text-primary) !important;
-}
-
-/* Ensure all text is readable */
+/* CRITICAL: Force all text to be visible */
 * {
-    text-shadow: none !important;
-}
-
-.text-white {
-    color: var(--text-primary) !important;
-}
-
-.text-dark {
     color: var(--text-secondary) !important;
 }
 
-/* Fix form elements visibility */
-.form-group {
-    margin-bottom: 20px !important;
+/* Global Body Styling */
+body, html {
+    background: var(--gradient-bg) !important;
+    color: var(--text-secondary) !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    background-attachment: fixed !important;
 }
 
-.help-block, .error-message {
-    color: var(--accent-red) !important;
-    font-size: 14px !important;
-    margin-top: 5px !important;
-}
-
-.success-message {
-    color: var(--accent-green) !important;
-}
-
-/* Remove default Bootstrap backgrounds */
-.container, .container-fluid, .row, .col-md-12, .main-content, #main {
+/* Remove ALL default Bootstrap backgrounds that cause invisibility */
+.container, .container-fluid, .row, .col-md-12, .col-md-6, .col-md-4, .col-md-3, .col-md-8, .col-md-9,
+.col-sm-12, .col-sm-6, .col-sm-4, .col-sm-3, .col-sm-8, .col-sm-9,
+.col-xs-12, .col-xs-6, .col-xs-4, .col-xs-3, .col-xs-8, .col-xs-9,
+.main-content, #main, .content, .page-content {
     background: transparent !important;
 }
 
-/* Fix any white backgrounds that make text invisible */
-.bg-white {
-    background: var(--card-bg) !important;
-}
-
-.bg-light {
-    background: rgba(55, 65, 81, 0.6) !important;
-}
-
-.bg-dark {
-    background: var(--dark-bg) !important;
-}
-
-/* Ensure proper text contrast everywhere */
-.well, .jumbotron, .hero-unit {
+/* Fix ALL white backgrounds that cause text invisibility */
+.bg-white, .bg-light, .well, .panel-default, .panel-body,
+.card, .card-body, .package, .service, .order-form,
+.checkout-form, .cart, .summary, .invoice {
     background: var(--card-bg) !important;
     color: var(--text-secondary) !important;
     border: 1px solid var(--border-color) !important;
     border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+/* Header Styling */
+.navbar, .header, #header {
+    background: rgba(15, 15, 16, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+    border-radius: 0 !important;
+}
+
+.navbar-brand, .logo, .brand {
+    color: var(--text-primary) !important;
+    text-decoration: none !important;
+}
+
+/* Mobile Menu - CRITICAL FIX */
+.navbar-toggle {
+    background: transparent !important;
+    border: 2px solid var(--text-secondary) !important;
+    border-radius: 4px !important;
+    padding: 4px 6px !important;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+}
+
+.navbar-toggle .icon-bar {
+    background: var(--text-secondary) !important;
+    display: block !important;
+    width: 22px !important;
+    height: 2px !important;
+    border-radius: 1px !important;
+    margin: 4px 0 !important;
+}
+
+.navbar-toggle:hover, .navbar-toggle:focus {
+    background: rgba(59, 130, 246, 0.1) !important;
+    border-color: var(--primary-blue) !important;
+}
+
+.navbar-toggle:hover .icon-bar, .navbar-toggle:focus .icon-bar {
+    background: var(--primary-blue) !important;
+}
+
+/* Mobile Menu Collapse - CRITICAL FIX */
+@media (max-width: 767px) {
+    .navbar-collapse {
+        background: rgba(15, 15, 16, 0.98) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        padding: 15px !important;
+        margin-top: 10px !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    .navbar-nav {
+        margin: 0 !important;
+    }
+    
+    .navbar-nav li {
+        margin-bottom: 5px !important;
+    }
+    
+    .navbar-nav li a {
+        color: var(--text-secondary) !important;
+        padding: 12px 15px !important;
+        border-radius: 6px !important;
+        display: block !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .navbar-nav li a:hover, .navbar-nav li a:focus {
+        background: rgba(59, 130, 246, 0.1) !important;
+        color: var(--primary-blue) !important;
+    }
+}
+
+/* Navigation Links */
+.navbar-nav .nav-link, .nav-link, .navigation a {
+    color: var(--text-secondary) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+}
+
+.navbar-nav .nav-link:hover, .nav-link:hover, .navigation a:hover {
+    color: var(--primary-blue) !important;
+}
+
+/* HEADINGS - Force visibility */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+}
+
+/* PARAGRAPHS and TEXT - Force visibility */
+p, span, div, td, th, li, label, .description, .help-block {
+    color: var(--text-secondary) !important;
+}
+
+/* FORMS - Complete fix */
+.form-control, input, textarea, select {
+    background: rgba(55, 65, 81, 0.9) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    color: var(--text-primary) !important;
+    padding: 12px 16px !important;
+    transition: all 0.3s ease !important;
+}
+
+.form-control:focus, input:focus, textarea:focus, select:focus {
+    border-color: var(--primary-blue) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    background: rgba(55, 65, 81, 1) !important;
+}
+
+.form-control::placeholder, input::placeholder, textarea::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 1 !important;
+}
+
+.form-label, label, .control-label {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+    margin-bottom: 8px !important;
+    display: block !important;
+}
+
+.form-group {
+    margin-bottom: 20px !important;
+}
+
+/* SELECT DROPDOWN - Critical fix */
+select.form-control {
+    background-image: linear-gradient(45deg, transparent 50%, var(--text-secondary) 50%), linear-gradient(135deg, var(--text-secondary) 50%, transparent 50%) !important;
+    background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px) !important;
+    background-size: 5px 5px, 5px 5px !important;
+    background-repeat: no-repeat !important;
+    padding-right: 40px !important;
+}
+
+select.form-control option {
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+    padding: 8px !important;
+}
+
+/* BUTTONS - Complete redesign */
+.btn, button, input[type="submit"], input[type="button"], .button {
+    border-radius: 8px !important;
+    padding: 12px 24px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 14px !important;
+}
+
+.btn-primary, .btn-main, .primary-btn {
+    background: var(--card-gradient) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-primary:hover, .btn-main:hover, .primary-btn:hover {
+    background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-secondary, .btn-outline, .btn-default {
+    background: transparent !important;
+    border: 2px solid var(--primary-blue) !important;
+    color: var(--primary-blue) !important;
+}
+
+.btn-secondary:hover, .btn-outline:hover, .btn-default:hover {
+    background: var(--primary-blue) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--accent-green), #059669) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--accent-red), #dc2626) !important;
+    color: var(--text-primary) !important;
+}
+
+/* PACKAGE/ORDER PAGES - Critical fixes */
+.package, .service, .order-summary, .checkout-summary {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+    color: var(--text-secondary) !important;
+}
+
+.package h1, .package h2, .package h3, .package h4, .package h5, .package h6 {
+    color: var(--text-primary) !important;
+}
+
+.package .price, .service .price, .amount, .total {
+    color: var(--primary-blue) !important;
+    font-weight: 700 !important;
+    font-size: 1.5em !important;
+}
+
+.package-description, .service-description {
+    color: var(--text-secondary) !important;
+    margin: 10px 0 !important;
+}
+
+/* CART PAGE - Complete fix */
+.cart-item, .line-item, .order-item {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    margin-bottom: 15px !important;
+    color: var(--text-secondary) !important;
+}
+
+.cart-item h4, .line-item h4, .order-item h4 {
+    color: var(--text-primary) !important;
+    margin-bottom: 10px !important;
+}
+
+.cart-summary, .order-summary, .invoice-summary {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    color: var(--text-secondary) !important;
+}
+
+/* TABLE FIXES */
+.table, table {
+    background: transparent !important;
+    color: var(--text-secondary) !important;
+    border-collapse: separate !important;
+    border-spacing: 0 4px !important;
+    width: 100% !important;
+}
+
+.table thead th, table thead th {
+    background: var(--card-gradient) !important;
+    color: var(--text-primary) !important;
+    border: none !important;
+    padding: 12px 16px !important;
+    font-weight: 600 !important;
+}
+
+.table tbody td, table tbody td {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border: none !important;
+    padding: 12px 16px !important;
+    vertical-align: middle !important;
+    color: var(--text-secondary) !important;
+}
+
+.table tbody tr:hover td, table tbody tr:hover td {
+    background: rgba(59, 130, 246, 0.15) !important;
+}
+
+/* RANGE SLIDER - Complete fix */
+input[type="range"] {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    height: 8px !important;
+    background: var(--border-color) !important;
+    border-radius: 4px !important;
+    outline: none !important;
+    width: 100% !important;
+    margin: 10px 0 !important;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    width: 20px !important;
+    height: 20px !important;
+    background: var(--primary-blue) !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    border: 2px solid var(--text-primary) !important;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px !important;
+    height: 20px !important;
+    background: var(--primary-blue) !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    border: 2px solid var(--text-primary) !important;
+}
+
+/* ALERTS AND MESSAGES */
+.alert, .message, .notification {
+    border-radius: 8px !important;
+    padding: 16px 20px !important;
+    border: none !important;
+    margin-bottom: 20px !important;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: var(--accent-green) !important;
+    border-left: 4px solid var(--accent-green) !important;
+}
+
+.alert-danger, .alert-error {
+    background: rgba(239, 68, 68, 0.2) !important;
+    color: var(--accent-red) !important;
+    border-left: 4px solid var(--accent-red) !important;
+}
+
+.alert-warning {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: var(--accent-yellow) !important;
+    border-left: 4px solid var(--accent-yellow) !important;
+}
+
+.alert-info {
+    background: rgba(59, 130, 246, 0.2) !important;
+    color: var(--primary-blue) !important;
+    border-left: 4px solid var(--primary-blue) !important;
+}
+
+/* DROPDOWN MENUS */
+.dropdown-menu {
+    background: rgba(31, 41, 55, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dropdown-menu li a {
+    color: var(--text-secondary) !important;
+    padding: 10px 15px !important;
+    transition: all 0.3s ease !important;
+}
+
+.dropdown-menu li a:hover {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: var(--primary-blue) !important;
+}
+
+/* RADIO BUTTONS AND CHECKBOXES */
+input[type="radio"], input[type="checkbox"] {
+    margin-right: 8px !important;
+    transform: scale(1.3) !important;
+    accent-color: var(--primary-blue) !important;
+}
+
+/* LINKS */
+a {
+    color: var(--primary-blue) !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+a:hover, a:focus {
+    color: var(--secondary-blue) !important;
+    text-decoration: none !important;
+}
+
+/* BREADCRUMB */
+.breadcrumb {
+    background: rgba(31, 41, 55, 0.6) !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    border: none !important;
+}
+
+.breadcrumb a {
+    color: var(--primary-blue) !important;
+}
+
+.breadcrumb .active {
+    color: var(--text-secondary) !important;
+}
+
+/* MODAL FIXES */
+.modal-content {
+    background: rgba(31, 41, 55, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+}
+
+.modal-header {
+    background: var(--card-gradient) !important;
+    color: var(--text-primary) !important;
+    border-bottom: none !important;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.modal-body {
+    color: var(--text-secondary) !important;
+    background: transparent !important;
+}
+
+/* PROGRESS BARS */
+.progress {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border-radius: 8px !important;
+    height: 20px !important;
+}
+
+.progress-bar {
+    background: var(--card-gradient) !important;
+    border-radius: 8px !important;
+}
+
+/* PAGINATION */
+.pagination .page-link {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-secondary) !important;
+    padding: 8px 12px !important;
+}
+
+.pagination .page-link:hover {
+    background: var(--primary-blue) !important;
+    border-color: var(--primary-blue) !important;
+    color: var(--text-primary) !important;
+}
+
+.pagination .active .page-link {
+    background: var(--card-gradient) !important;
+    border-color: var(--primary-blue) !important;
+    color: var(--text-primary) !important;
+}
+
+/* BADGES AND LABELS */
+.badge, .label {
+    padding: 6px 12px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+.badge-success, .label-success {
+    background: var(--accent-green) !important;
+    color: var(--text-primary) !important;
+}
+
+.badge-danger, .label-danger {
+    background: var(--accent-red) !important;
+    color: var(--text-primary) !important;
+}
+
+.badge-warning, .label-warning {
+    background: var(--accent-yellow) !important;
+    color: var(--text-primary) !important;
+}
+
+/* FOOTER */
+.footer, #footer {
+    background: rgba(15, 15, 16, 0.95) !important;
+    border-top: 1px solid rgba(59, 130, 246, 0.2) !important;
+    color: var(--text-muted) !important;
+    padding: 30px 0 !important;
+    margin-top: 50px !important;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px !important;
+    }
+    
+    .card, .panel, .package {
+        margin-bottom: 15px !important;
+        padding: 15px !important;
+    }
+    
+    .btn {
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 10px !important;
+        padding: 12px !important;
+    }
+    
+    .table-responsive {
+        border: none !important;
+        overflow-x: auto !important;
+    }
+}
+
+/* CUSTOM SCROLLBAR */
+::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--card-bg) !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-blue) !important;
+    border-radius: 4px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-blue) !important;
 }
 
 /* Header Styling */
