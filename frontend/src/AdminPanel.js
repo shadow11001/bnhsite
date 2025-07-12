@@ -422,8 +422,12 @@ const AdminPanel = () => {
     };
 
     useEffect(() => {
-      loadSectionContent(selectedSection);
-    }, [selectedSection]);
+      if (selectedSection && websiteContent[selectedSection]) {
+        setSectionContent(websiteContent[selectedSection]);
+      } else {
+        loadSectionContent(selectedSection);
+      }
+    }, [selectedSection, websiteContent]);
 
     const updateSectionContent = async () => {
       setIsLoading(true);
