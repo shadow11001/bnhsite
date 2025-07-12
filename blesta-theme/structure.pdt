@@ -177,6 +177,34 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
                 color: #d1d5db !important;
             }
             
+            /* Force all text elements to be visible */
+            * {
+                color: inherit !important;
+            }
+            
+            h1, h2, h3, h4, h5, h6 {
+                color: #ffffff !important;
+            }
+            
+            p, span, div, li, label {
+                color: #d1d5db !important;
+            }
+            
+            /* Main page service cards fix */
+            .card-body, .card-text, .card-title {
+                color: #d1d5db !important;
+            }
+            
+            .card-body h1, .card-body h2, .card-body h3, .card-body h4, .card-body h5, .card-body h6 {
+                color: #ffffff !important;
+            }
+            
+            /* Fix white backgrounds */
+            .bg-white, .bg-light {
+                background: rgba(31, 41, 55, 0.9) !important;
+                color: #d1d5db !important;
+            }
+            
             /* Cart and Order Form Enhancements */
             .cart-summary, .order-summary, .checkout-summary {
                 background: rgba(31, 41, 55, 0.9) !important;
