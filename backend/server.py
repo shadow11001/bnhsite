@@ -537,11 +537,11 @@ async def initialize_data():
             }
         ]
         
-        # Performance GameServer Plans (9 plans - exact names from pricing table)
+        # Performance GameServer Plans (9 plans - correct names from user)
         performance_gameserver_plans = [
             {
                 "plan_type": "performance_gameserver",
-                "plan_name": "Prime",
+                "plan_name": "Supernova",
                 "base_price": 6.0,
                 "cpu_cores": 1,
                 "memory_gb": 1,
@@ -553,7 +553,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "performance_gameserver",
-                "plan_name": "Horizon",
+                "plan_name": "Neutron Star",
                 "base_price": 12.0,
                 "cpu_cores": 1,
                 "memory_gb": 2,
@@ -565,7 +565,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "performance_gameserver",
-                "plan_name": "Lantern",
+                "plan_name": "Pulsar",
                 "base_price": 24.0,
                 "cpu_cores": 2,
                 "memory_gb": 4,
@@ -577,7 +577,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "performance_gameserver",
-                "plan_name": "Summit",
+                "plan_name": "Magnetar",
                 "base_price": 48.0,
                 "cpu_cores": 3,
                 "memory_gb": 8,
@@ -589,7 +589,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "performance_gameserver",
-                "plan_name": "Station",
+                "plan_name": "Black Hole",
                 "base_price": 96.0,
                 "cpu_cores": 4,
                 "memory_gb": 16,
@@ -613,7 +613,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "performance_gameserver",
-                "plan_name": "Base",
+                "plan_name": "Nebula",
                 "base_price": 192.0,
                 "cpu_cores": 8,
                 "memory_gb": 32,
@@ -625,7 +625,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "performance_gameserver",
-                "plan_name": "Galaxy",
+                "plan_name": "Star Cluster",
                 "base_price": 256.0,
                 "cpu_cores": 12,
                 "memory_gb": 48,
@@ -637,7 +637,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "performance_gameserver",
-                "plan_name": "Spaceway",
+                "plan_name": "Cosmos",
                 "base_price": 320.0,
                 "cpu_cores": 16,
                 "memory_gb": 58,
