@@ -49,23 +49,6 @@ const AdminPanel = () => {
     }
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoginError('');
-    
-    try {
-      const response = await axios.post(`${API}/login`, loginData);
-      const { access_token } = response.data;
-      
-      localStorage.setItem('admin_token', access_token);
-      setIsAuthenticated(true);
-      await fetchData();
-      setLoginData({ username: '', password: '' });
-    } catch (error) {
-      setLoginError(error.response?.data?.detail || 'Login failed');
-    }
-  };
-
   const handleLogout = () => {
     localStorage.removeItem('admin_token');
     setIsAuthenticated(false);
