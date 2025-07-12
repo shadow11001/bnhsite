@@ -572,6 +572,65 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
             $(document).ready(function() {
                 console.log('Blue Nebula Blesta theme initialized');
                 
+                // AGGRESSIVE WHITE BACKGROUND FIXES
+                function forceThemeStyles() {
+                    // Fix any remaining white backgrounds
+                    $('*').each(function() {
+                        var $el = $(this);
+                        var bgColor = $el.css('background-color');
+                        var computedBg = window.getComputedStyle(this).backgroundColor;
+                        
+                        // Check for white backgrounds
+                        if (bgColor === 'rgb(255, 255, 255)' || bgColor === 'white' || 
+                            computedBg === 'rgb(255, 255, 255)' || computedBg === 'white') {
+                            $el.css({
+                                'background-color': 'rgba(31, 41, 55, 0.9)',
+                                'color': '#d1d5db'
+                            });
+                        }
+                        
+                        // Fix text visibility
+                        var textColor = $el.css('color');
+                        if ((textColor === 'rgb(255, 255, 255)' || textColor === 'white') && 
+                            (bgColor === 'rgb(255, 255, 255)' || bgColor === 'white')) {
+                            $el.css('color', '#d1d5db');
+                        }
+                    });
+                    
+                    // Force service cards to have proper styling
+                    $('.card, .well, .panel, .jumbotron').each(function() {
+                        $(this).css({
+                            'background-color': 'rgba(31, 41, 55, 0.9)',
+                            'color': '#d1d5db',
+                            'border': '1px solid #374151',
+                            'border-radius': '12px'
+                        });
+                    });
+                    
+                    // Force all text elements
+                    $('p, span, div, li, label, small').each(function() {
+                        var $el = $(this);
+                        if (!$el.is('h1, h2, h3, h4, h5, h6')) {
+                            $el.css('color', '#d1d5db');
+                        }
+                    });
+                    
+                    // Force headers
+                    $('h1, h2, h3, h4, h5, h6').css({
+                        'color': '#ffffff',
+                        'font-weight': '600'
+                    });
+                    
+                    console.log('Theme styles forced');
+                }
+                
+                // Run immediately and on changes
+                forceThemeStyles();
+                
+                // Run again after a short delay to catch dynamically loaded content
+                setTimeout(forceThemeStyles, 500);
+                setTimeout(forceThemeStyles, 1000);
+                
                 // Enhanced Mobile Menu
                 $('.navbar-toggler').on('click', function(e) {
                     e.preventDefault();
@@ -640,6 +699,9 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
                             'color': '#d1d5db'
                         });
                     });
+                    
+                    // Run force theme styles again for cart pages
+                    setTimeout(forceThemeStyles, 100);
                 }
                 
                 // Form enhancements
@@ -692,6 +754,18 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
                             });
                         }
                     });
+                });
+                
+                // Watch for dynamic content changes
+                var observer = new MutationObserver(function(mutations) {
+                    setTimeout(forceThemeStyles, 100);
+                });
+                
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true,
+                    attributes: true,
+                    attributeFilter: ['style', 'class']
                 });
                 
                 console.log('Blue Nebula theme enhancements loaded successfully');
