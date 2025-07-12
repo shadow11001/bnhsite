@@ -284,7 +284,7 @@ async def get_features():
     }
 
 @api_router.put("/content")
-async def update_content(content_update: ContentUpdate):
+async def update_content(content_update: ContentUpdate, current_user: str = Depends(get_current_user)):
     """Update website content - for admin use"""
     try:
         update_data = content_update.dict(exclude_unset=True)
