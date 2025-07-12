@@ -751,7 +751,157 @@ a.list-group-item.active:focus {
     background: linear-gradient(90deg, transparent, #3b82f6, #8b5cf6, transparent) !important;
 }
 
-/* Additional Blue Nebula Enhancements */
+/* ORDER AND CART PAGE COMPREHENSIVE FIXES */
+.order-form, .checkout-form, .cart-container, .order-container,
+.configuration-form, .package-selection, .billing-form {
+    background: rgba(31, 41, 55, 0.9) !important;
+    color: #d1d5db !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+}
+
+.order-summary, .cart-summary, .checkout-summary, .package-summary {
+    background: rgba(31, 41, 55, 0.9) !important;
+    border: 2px solid #3b82f6 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    color: #d1d5db !important;
+}
+
+.summary-table, .order-table, .cart-table {
+    background: transparent !important;
+    color: #d1d5db !important;
+}
+
+.summary-table th, .order-table th, .cart-table th {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+}
+
+.summary-table td, .order-table td, .cart-table td {
+    background: rgba(55, 65, 81, 0.6) !important;
+    color: #d1d5db !important;
+}
+
+/* PACKAGE/PLAN SELECTION CARDS */
+.package-card, .plan-card, .service-card, .hosting-plan {
+    background: rgba(31, 41, 55, 0.9) !important;
+    border: 2px solid #374151 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    color: #d1d5db !important;
+    transition: all 0.3s ease !important;
+}
+
+.package-card:hover, .plan-card:hover, .service-card:hover, .hosting-plan:hover {
+    border-color: #3b82f6 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2) !important;
+}
+
+.package-card.selected, .plan-card.selected, .service-card.selected, .hosting-plan.selected {
+    border-color: #3b82f6 !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* FORCE ALL FORM ELEMENTS */
+.form-control, input, textarea, select, .input-group {
+    background: rgba(55, 65, 81, 0.8) !important;
+    border: 1px solid #374151 !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+}
+
+.form-control:focus, input:focus, textarea:focus, select:focus {
+    background: rgba(55, 65, 81, 0.9) !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+    color: #ffffff !important;
+}
+
+/* DROPDOWN STYLING */
+.dropdown-menu, select option {
+    background: rgba(31, 41, 55, 0.95) !important;
+    color: #d1d5db !important;
+    border: 1px solid #374151 !important;
+}
+
+.dropdown-item:hover, select option:hover {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: #3b82f6 !important;
+}
+
+/* PAYMENT METHOD SECTION */
+.payment-methods, .payment-section {
+    background: rgba(31, 41, 55, 0.9) !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    color: #d1d5db !important;
+}
+
+/* CONTACT INFORMATION SECTION */
+.contact-info, .billing-info, .account-info {
+    background: rgba(31, 41, 55, 0.9) !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    color: #d1d5db !important;
+}
+
+/* SLIDER ENHANCEMENTS */
+input[type="range"] {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    width: 100% !important;
+    height: 8px !important;
+    background: rgba(55, 65, 81, 0.8) !important;
+    border-radius: 4px !important;
+    outline: none !important;
+    margin: 15px 0 !important;
+    cursor: pointer !important;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    width: 20px !important;
+    height: 20px !important;
+    background: #3b82f6 !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* BUTTON ENHANCEMENTS */
+.btn {
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: #ffffff !important;
+}
+
+.btn-secondary {
+    background: rgba(55, 65, 81, 0.8) !important;
+    color: #d1d5db !important;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: #ffffff !important;
+}
 
 /* Form Controls */
 .form-control, input, textarea, select {
