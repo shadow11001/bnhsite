@@ -260,10 +260,10 @@ class BlueNebulaAPITester:
     def test_contact_submission(self):
         """Test contact form submission"""
         test_contact = {
-            "name": f"Test User {datetime.now().strftime('%H%M%S')}",
-            "email": "test@example.com",
-            "subject": "API Test Contact",
-            "message": "This is a test message from the API test suite."
+            "name": f"John Smith {datetime.now().strftime('%H%M%S')}",
+            "email": "john.smith@bluehost.com",
+            "subject": "Hosting Inquiry",
+            "message": "I'm interested in your VPS hosting plans. Can you provide more details about the performance options?"
         }
         
         try:
@@ -286,6 +286,152 @@ class BlueNebulaAPITester:
         except Exception as e:
             self.log_test("Contact Form Submission", False, str(e))
             return False
+
+    def test_admin_login(self):
+        """Test admin authentication with credentials admin/admin123"""
+        login_data = {
+            "username": "admin",
+            "password": "admin123"
+        }
+        
+        try:
+            response = requests.post(f"{self.api_url}/login", json=login_data, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                result = response.json()
+                has_token = 'access_token' in result and 'token_type' in result
+                token_type_correct = result.get('token_type') == 'bearer'
+                
+                if has_token and token_type_correct:
+                    self.auth_token = result['access_token']
+                    success = True
+                    details = f"Token type: {result.get('token_type')}, Token length: {len(result.get('access_token', ''))}"
+                else:
+                    success = False
+                    details = "Invalid token response format"
+            else:
+                details = f"HTTP {response.status_code}"
+                
+            self.log_test("Admin Login (admin/admin123)", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Admin Login (admin/admin123)", False, str(e))
+            return False
+
+    def test_token_verification(self):
+        """Test JWT token verification"""
+        if not self.auth_token:
+            self.log_test("Token Verification", False, "No auth token available")
+            return False
+            
+        headers = {"Authorization": f"Bearer {self.auth_token}"}
+        
+        try:
+            response = requests.get(f"{self.api_url}/verify-token", headers=headers, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                result = response.json()
+                is_valid = result.get('valid') == True
+                has_user = 'user' in result
+                success = is_valid and has_user
+                details = f"Valid: {result.get('valid')}, User: {result.get('user')}"
+            else:
+                details = f"HTTP {response.status_code}"
+                
+            self.log_test("JWT Token Verification", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("JWT Token Verification", False, str(e))
+            return False
+
+    def test_protected_endpoints(self):
+        """Test that protected endpoints require authentication"""
+        if not self.auth_token:
+            self.log_test("Protected Endpoints Test", False, "No auth token available")
+            return False
+            
+        # Test updating hosting plan (should require auth)
+        headers = {"Authorization": f"Bearer {self.auth_token}"}
+        test_update = {"base_price": 99.99}
+        
+        try:
+            # First get a plan ID
+            plans_response = requests.get(f"{self.api_url}/hosting-plans", timeout=10)
+            if plans_response.status_code != 200:
+                self.log_test("Protected Endpoints Test", False, "Cannot get plans for testing")
+                return False
+                
+            plans = plans_response.json()
+            if not plans:
+                self.log_test("Protected Endpoints Test", False, "No plans available for testing")
+                return False
+                
+            test_plan_id = plans[0]['id']
+            
+            # Test with valid token
+            response = requests.put(f"{self.api_url}/hosting-plans/{test_plan_id}", 
+                                  json=test_update, headers=headers, timeout=10)
+            auth_success = response.status_code == 200
+            
+            # Test without token (should fail)
+            response_no_auth = requests.put(f"{self.api_url}/hosting-plans/{test_plan_id}", 
+                                          json=test_update, timeout=10)
+            no_auth_fails = response_no_auth.status_code == 401
+            
+            # Test company info update (should require auth)
+            company_update = {"description": "Test update"}
+            company_response = requests.put(f"{self.api_url}/company-info", 
+                                          json=company_update, headers=headers, timeout=10)
+            company_auth_success = company_response.status_code == 200
+            
+            success = auth_success and no_auth_fails and company_auth_success
+            details = f"Plan update with auth: {auth_success}, without auth fails: {no_auth_fails}, company update: {company_auth_success}"
+            
+            self.log_test("Protected Endpoints Authentication", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Protected Endpoints Authentication", False, str(e))
+            return False
+
+    def test_legal_content_endpoints(self):
+        """Test Terms of Service and Privacy Policy endpoints"""
+        endpoints = [
+            ("terms", "Terms of Service"),
+            ("privacy", "Privacy Policy")
+        ]
+        
+        all_passed = True
+        
+        for endpoint, expected_title in endpoints:
+            try:
+                response = requests.get(f"{self.api_url}/content/{endpoint}", timeout=10)
+                success = response.status_code == 200
+                
+                if success:
+                    content = response.json()
+                    has_section = content.get('section') == endpoint
+                    has_title = 'title' in content
+                    title_correct = expected_title.lower() in content.get('title', '').lower()
+                    
+                    success = has_section and has_title and title_correct
+                    details = f"Section: {content.get('section')}, Title: {content.get('title')}"
+                else:
+                    details = f"HTTP {response.status_code}"
+                    
+                self.log_test(f"Legal Content - {expected_title}", success, details)
+                if not success:
+                    all_passed = False
+                    
+            except Exception as e:
+                self.log_test(f"Legal Content - {expected_title}", False, str(e))
+                all_passed = False
+                
+        return all_passed
 
     def test_plan_pricing_and_features(self, plans):
         """Test plan pricing is within expected range and features are correct"""
