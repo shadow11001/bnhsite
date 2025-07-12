@@ -164,7 +164,7 @@ nav.navbar .navbar-nav > .active > a:focus {
    CARDS AND CONTENT
    ========================================================================== */
 
-/* Override white background cards */
+/* Override white background cards and fix bright colors */
 .card {
     background: rgba(31, 41, 55, 0.9) !important;
     border: 1px solid #374151 !important;
@@ -173,6 +173,26 @@ nav.navbar .navbar-nav > .active > a:focus {
     color: #d1d5db !important;
     margin-bottom: 20px;
     transition: all 0.3s ease;
+}
+
+/* Fix bright blue cards that don't blend */
+.card[style*="background-color: #007bff"],
+.card[style*="background: #007bff"],
+.card[style*="background-color: blue"],
+.card[style*="background: blue"],
+.card[style*="background-color: #0066cc"],
+.card[style*="background: #0066cc"] {
+    background: rgba(31, 41, 55, 0.9) !important;
+    border: 1px solid #3b82f6 !important;
+}
+
+/* Subtle accent for service cards */
+.card:nth-child(odd) {
+    border-left: 3px solid #3b82f6;
+}
+
+.card:nth-child(even) {
+    border-left: 3px solid #8b5cf6;
 }
 
 .card:hover {
@@ -207,7 +227,16 @@ nav.navbar .navbar-nav > .active > a:focus {
     font-size: 0.9rem;
 }
 
-/* Fix cards with inline styles */
+/* Override any bright or clashing colors in cards */
+.card * {
+    color: inherit !important;
+}
+
+.card h1, .card h2, .card h3, .card h4, .card h5, .card h6 {
+    color: #ffffff !important;
+}
+
+/* Fix cards with inline styles that have bright colors */
 .card[style*="background"] {
     background: rgba(31, 41, 55, 0.9) !important;
 }
