@@ -461,11 +461,11 @@ async def initialize_data():
             }
         ]
         
-        # Standard GameServer Plans (6 plans - exact names from pricing table)
+        # Standard GameServer Plans (6 plans - correct names from user)
         standard_gameserver_plans = [
             {
                 "plan_type": "standard_gameserver",
-                "plan_name": "F-1",
+                "plan_name": "Stardust",
                 "base_price": 10.0,
                 "cpu_cores": 1,
                 "memory_gb": 2,
@@ -477,7 +477,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "standard_gameserver",
-                "plan_name": "Lunar", 
+                "plan_name": "Flare", 
                 "base_price": 20.0,
                 "cpu_cores": 2,
                 "memory_gb": 4,
@@ -489,7 +489,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "standard_gameserver",
-                "plan_name": "Solar",
+                "plan_name": "Comet",
                 "base_price": 40.0,
                 "cpu_cores": 4,
                 "memory_gb": 8,
@@ -501,7 +501,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "standard_gameserver",
-                "plan_name": "VIA",
+                "plan_name": "Nova",
                 "base_price": 80.0,
                 "cpu_cores": 6,
                 "memory_gb": 16,
@@ -513,7 +513,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "standard_gameserver",
-                "plan_name": "Silver",
+                "plan_name": "White Dwarf",
                 "base_price": 160.0,
                 "cpu_cores": 8,
                 "memory_gb": 32,
@@ -525,7 +525,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "standard_gameserver",
-                "plan_name": "Galactic",
+                "plan_name": "Red Giant",
                 "base_price": 320.0,
                 "cpu_cores": 12,
                 "memory_gb": 48,
