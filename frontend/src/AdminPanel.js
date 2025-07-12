@@ -1111,50 +1111,62 @@ const AdminPanel = () => {
           <div>
             <h2 className="text-2xl font-bold text-white mb-6">Manage Hosting Plans</h2>
             
-            <div className="grid gap-6">
-              {['ssd_shared', 'hdd_shared', 'standard_vps', 'performance_vps', 'standard_gameserver', 'performance_gameserver'].map(planType => {
-                const typePlans = hostingPlans.filter(p => p.plan_type === planType);
-                if (typePlans.length === 0) return null;
-                
-                return (
-                  <div key={planType} className="bg-gray-800 rounded-lg p-6">
-                    <h3 className="text-xl font-bold text-white mb-4 capitalize">
-                      {planType.replace('_', ' ')}
-                    </h3>
-                    
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {typePlans.map(plan => (
-                        <div key={plan.id} className="bg-gray-700 rounded-lg p-4">
-                          <div className="flex justify-between items-start mb-2">
-                            <h4 className="font-bold text-white">{plan.plan_name}</h4>
-                            {plan.popular && (
-                              <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs">Popular</span>
-                            )}
+            {hostingPlans.length === 0 ? (
+              <div className="bg-gray-800 rounded-lg p-6 text-center">
+                <div className="text-gray-400 mb-4">Loading hosting plans...</div>
+                <div className="text-sm text-gray-500">If this persists, check console for errors.</div>
+              </div>
+            ) : (
+              <div className="grid gap-6">
+                {['ssd_shared', 'hdd_shared', 'standard_vps', 'performance_vps', 'standard_gameserver', 'performance_gameserver'].map(planType => {
+                  const typePlans = hostingPlans.filter(p => p.plan_type === planType);
+                  if (typePlans.length === 0) return null;
+                  
+                  return (
+                    <div key={planType} className="bg-gray-800 rounded-lg p-6">
+                      <h3 className="text-xl font-bold text-white mb-4 capitalize">
+                        {planType.replace('_', ' ')} ({typePlans.length} plans)
+                      </h3>
+                      
+                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {typePlans.map(plan => (
+                          <div key={plan.id} className="bg-gray-700 rounded-lg p-4">
+                            <div className="flex justify-between items-start mb-2">
+                              <h4 className="font-bold text-white">{plan.plan_name}</h4>
+                              {plan.popular && (
+                                <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs">Popular</span>
+                              )}
+                            </div>
+                            
+                            <div className="text-blue-400 font-bold text-lg mb-2">
+                              ${plan.base_price}/mo
+                            </div>
+                            
+                            <div className="text-gray-300 text-sm mb-4">
+                              {plan.cpu_cores && <div>CPU: {plan.cpu_cores} vCPU</div>}
+                              {plan.memory_gb && <div>RAM: {plan.memory_gb} GB</div>}
+                              {plan.disk_gb && <div>Disk: {plan.disk_gb} GB {plan.disk_type}</div>}
+                              {plan.markup_percentage > 0 && (
+                                <div className="text-yellow-400 text-xs mt-1">
+                                  Markup: {plan.markup_percentage}%
+                                </div>
+                              )}
+                            </div>
+                            
+                            <button
+                              onClick={() => setSelectedPlan(plan)}
+                              className="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            >
+                              Edit Plan
+                            </button>
                           </div>
-                          
-                          <div className="text-blue-400 font-bold text-lg mb-2">
-                            ${plan.base_price}/mo
-                          </div>
-                          
-                          <div className="text-gray-300 text-sm mb-4">
-                            {plan.cpu_cores && <div>CPU: {plan.cpu_cores} vCPU</div>}
-                            {plan.memory_gb && <div>RAM: {plan.memory_gb} GB</div>}
-                            {plan.disk_gb && <div>Disk: {plan.disk_gb} GB</div>}
-                          </div>
-                          
-                          <button
-                            onClick={() => setSelectedPlan(plan)}
-                            className="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                          >
-                            Edit Plan
-                          </button>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
         
