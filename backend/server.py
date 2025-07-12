@@ -54,6 +54,21 @@ class HostingPlan(BaseModel):
     popular: bool = False
     markup_percentage: int = 0
 
+class PublicHostingPlan(BaseModel):
+    """Public-facing hosting plan model without internal markup information"""
+    id: str
+    plan_type: str
+    plan_name: str
+    base_price: float
+    cpu_cores: Optional[int] = None
+    memory_gb: Optional[int] = None
+    disk_gb: Optional[int] = None
+    disk_type: str = "SSD"
+    bandwidth: Optional[str] = None
+    supported_games: Optional[List[str]] = None
+    features: List[str] = []
+    popular: bool = False
+
 class CompanyInfo(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str = "Blue Nebula Hosting"
