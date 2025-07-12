@@ -474,7 +474,9 @@ const AdminPanel = () => {
 
     const loadSectionContent = async (section) => {
       try {
+        console.log('Loading section content for:', section);
         const response = await axios.get(`${API}/content/${section}`);
+        console.log('Section content loaded:', response.data);
         setSectionContent(response.data);
       } catch (error) {
         console.error('Error loading section content:', error);
@@ -482,9 +484,14 @@ const AdminPanel = () => {
     };
 
     useEffect(() => {
-      if (selectedSection && websiteContent[selectedSection]) {
+      console.log('Content editor: selectedSection changed to:', selectedSection);
+      console.log('Current websiteContent:', websiteContent);
+      
+      if (websiteContent && websiteContent[selectedSection]) {
+        console.log('Using cached content for', selectedSection);
         setSectionContent(websiteContent[selectedSection]);
       } else {
+        console.log('Loading fresh content for', selectedSection);
         loadSectionContent(selectedSection);
       }
     }, [selectedSection, websiteContent]);
