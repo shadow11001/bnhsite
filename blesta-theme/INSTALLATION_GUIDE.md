@@ -6,15 +6,18 @@ Your complete Blue Nebula Blesta theme includes:
 
 ```
 blue_nebula/
-├── config.json                 # Theme configuration
-├── structure.pdt              # Main template structure
+├── config.json                    # Theme configuration
+├── structure.pdt                  # Main template with logo integration
 ├── css/
-│   ├── blue_nebula.css        # Main theme CSS
-│   ├── critical_fixes.css     # Critical visibility fixes
-│   └── responsive.css         # Mobile responsive styles
+│   ├── blue_nebula.css            # Main theme CSS with icon fixes
+│   ├── order_cart.css             # Order and cart page fixes
+│   ├── ajax_slider_cart.css       # AJAX forms, sliders, cart functionality
+│   └── responsive.css             # Mobile responsive styles
 ├── images/
-│   └── favicon.ico            # Blue Nebula favicon (placeholder)
-└── js/                        # JavaScript files (optional)
+│   ├── logo.png                   # Blue Nebula logo (replace with actual)
+│   ├── favicon.ico                # Favicon (replace with actual)
+│   └── favicon.png                # PNG favicon (replace with actual)
+└── js/                            # JavaScript files (optional)
 ```
 
 ## 🚀 Installation Instructions
