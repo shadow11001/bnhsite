@@ -572,12 +572,14 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
             $(document).ready(function() {
                 console.log('Blue Nebula Blesta theme initialized');
                 
-                // AGGRESSIVE WHITE BACKGROUND FIXES
+                // SUPER AGGRESSIVE WHITE BACKGROUND FIXES
                 function forceThemeStyles() {
-                    // Fix any remaining white backgrounds
-                    $('*').each(function() {
+                    console.log('Running aggressive theme fixes...');
+                    
+                    // Fix any elements with inline white backgrounds
+                    $('*[style*="background"], *[style*="color"]').each(function() {
                         var $el = $(this);
-                        var bgColor = $el.css('background-color');
+                        var style = $el.attr('style') || '';
                         var computedBg = window.getComputedStyle(this).backgroundColor;
                         
                         // Check for white backgrounds
