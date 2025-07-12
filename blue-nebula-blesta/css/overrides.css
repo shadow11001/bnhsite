@@ -224,9 +224,9 @@ nav.navbar .navbar-nav > .active > a:focus {
    ========================================================================== */
 
 .title {
-    background: rgba(31, 41, 55, 0.9) !important;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(31, 41, 55, 0.9) 50%, rgba(139, 92, 246, 0.2) 100%) !important;
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.3);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 1 !important; /* Lower z-index to not block dropdowns */
