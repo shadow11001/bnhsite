@@ -796,6 +796,8 @@ const Home = () => {
             </p>
           </div>
           
+          {/* Pricing Promo Banner */}
+          <PromoCodeBanner location="pricing" />
           <HostingPlans 
             plans={hostingPlans} 
             title="SSD Shared Hosting" 
