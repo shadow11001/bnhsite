@@ -72,33 +72,93 @@ const AdminPanel = () => {
     if (!isAuthenticated) return;
     
     try {
-      // First get the admin plans (with markup data) and public plans
-      const [adminPlansResponse, companyResponse, navigationResponse, smtpResponse, heroResponse, termsResponse, privacyResponse] = await Promise.all([
-        axios.get(`${API}/admin/hosting-plans`, { headers: getAuthHeaders() }), // Admin endpoint with full data
-        axios.get(`${API}/company-info`),
-        axios.get(`${API}/navigation`, { headers: getAuthHeaders() }),
-        axios.get(`${API}/smtp-settings`, { headers: getAuthHeaders() }),
-        axios.get(`${API}/content/hero`),
-        axios.get(`${API}/legal/terms`),
-        axios.get(`${API}/legal/privacy`)
-      ]);
+      console.log('Fetching admin data...');
       
-      setHostingPlans(adminPlansResponse.data);
-      setCompanyInfo(companyResponse.data);
-      setNavigationItems(navigationResponse.data);
-      setSmtpSettings(smtpResponse.data);
-      setWebsiteContent(prev => ({ 
-        ...prev, 
-        hero: heroResponse.data,
-        terms: termsResponse.data,
-        privacy: privacyResponse.data
-      }));
-      setLegalContent({
-        terms: termsResponse.data,
-        privacy: privacyResponse.data
-      });
+      // Fetch admin hosting plans
+      try {
+        const adminPlansResponse = await axios.get(`${API}/admin/hosting-plans`, { headers: getAuthHeaders() });
+        console.log('Hosting plans loaded:', adminPlansResponse.data.length, 'plans');
+        setHostingPlans(adminPlansResponse.data);
+      } catch (error) {
+        console.error('Error loading hosting plans:', error);
+      }
+      
+      // Fetch company info
+      try {
+        const companyResponse = await axios.get(`${API}/company-info`);
+        console.log('Company info loaded:', companyResponse.data);
+        setCompanyInfo(companyResponse.data);
+      } catch (error) {
+        console.error('Error loading company info:', error);
+      }
+      
+      // Fetch navigation (with fallback to default)
+      try {
+        const navigationResponse = await axios.get(`${API}/navigation`, { headers: getAuthHeaders() });
+        console.log('Navigation loaded:', navigationResponse.data);
+        setNavigationItems(navigationResponse.data);
+      } catch (error) {
+        console.error('Error loading navigation, using default:', error);
+        // Set default navigation
+        setNavigationItems([
+          { id: '1', label: 'Home', href: '#home', order: 1, is_external: false },
+          { 
+            id: '2', 
+            label: 'Hosting', 
+            href: '#hosting', 
+            order: 2, 
+            is_external: false,
+            dropdown_items: [
+              { label: 'Shared Hosting', href: '#hosting' },
+              { label: 'VPS Hosting', href: '#vps' },
+              { label: 'GameServer Hosting', href: '#gameservers' }
+            ]
+          },
+          { id: '3', label: 'About', href: '#about', order: 3, is_external: false },
+          { id: '4', label: 'Contact', href: '#contact', order: 4, is_external: false }
+        ]);
+      }
+      
+      // Fetch SMTP settings
+      try {
+        const smtpResponse = await axios.get(`${API}/smtp-settings`, { headers: getAuthHeaders() });
+        console.log('SMTP settings loaded:', smtpResponse.data);
+        setSmtpSettings(smtpResponse.data);
+      } catch (error) {
+        console.error('Error loading SMTP settings:', error);
+      }
+      
+      // Fetch content sections
+      try {
+        const heroResponse = await axios.get(`${API}/content/hero`);
+        console.log('Hero content loaded:', heroResponse.data);
+        setWebsiteContent(prev => ({ ...prev, hero: heroResponse.data }));
+      } catch (error) {
+        console.error('Error loading hero content:', error);
+      }
+      
+      // Fetch legal content
+      try {
+        const [termsResponse, privacyResponse] = await Promise.all([
+          axios.get(`${API}/legal/terms`),
+          axios.get(`${API}/legal/privacy`)
+        ]);
+        console.log('Legal content loaded');
+        setLegalContent({
+          terms: termsResponse.data,
+          privacy: privacyResponse.data
+        });
+        setWebsiteContent(prev => ({ 
+          ...prev, 
+          terms: termsResponse.data,
+          privacy: privacyResponse.data
+        }));
+      } catch (error) {
+        console.error('Error loading legal content:', error);
+      }
+      
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetching admin data:', error);
       if (error.response?.status === 401) {
         handleLogout();
       }
