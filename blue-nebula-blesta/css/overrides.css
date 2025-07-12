@@ -1,0 +1,492 @@
+/* Blue Nebula Hosting - Custom Overrides CSS */
+/* Clean, focused styling that only overrides what's necessary */
+
+/* ============================================================================
+   BACKGROUND AND LAYOUT
+   ========================================================================== */
+
+/* Space theme background */
+body {
+    background: linear-gradient(135deg, #0f0f10 0%, #1e1b4b 50%, #312e81 100%) !important;
+    background-attachment: fixed !important;
+    color: #d1d5db !important;
+    min-height: 100vh;
+}
+
+/* Animated stars effect */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.2), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: sparkle 30s linear infinite;
+    z-index: -1;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+@keyframes sparkle {
+    from { transform: translateX(0); }
+    to { transform: translateX(200px); }
+}
+
+/* ============================================================================
+   HEADER AND LOGO
+   ========================================================================== */
+
+.header {
+    background: rgba(15, 15, 16, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Blue Nebula Logo Styling */
+.logo-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.logo-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.company-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.company-tagline {
+    font-size: 0.9rem;
+    color: #8b5cf6;
+    font-weight: 500;
+}
+
+.logo a:hover .logo-content {
+    transform: translateY(-1px);
+    transition: transform 0.3s ease;
+}
+
+/* ============================================================================
+   NAVIGATION
+   ========================================================================== */
+
+.nav-content nav.navbar {
+    background: rgba(31, 41, 55, 0.9) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.nav-content nav.navbar .navbar-nav > .active > a,
+nav.navbar .navbar-nav > .active > a:hover,
+nav.navbar .navbar-nav > .active > a:focus {
+    color: #3b82f6 !important;
+    background: rgba(59, 130, 246, 0.15) !important;
+    border-radius: 6px;
+}
+
+.nav-content nav.navbar .navbar-nav > li > a {
+    color: #d1d5db !important;
+    transition: all 0.3s ease;
+}
+
+.nav-content nav.navbar .navbar-nav > li > a:hover {
+    color: #3b82f6 !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+    border-radius: 6px;
+}
+
+/* Mobile menu enhancements */
+.navbar-toggler {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+}
+
+/* ============================================================================
+   TITLE SECTION
+   ========================================================================== */
+
+.title {
+    background: rgba(31, 41, 55, 0.9) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title h3 {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+}
+
+/* ============================================================================
+   CARDS AND CONTENT
+   ========================================================================== */
+
+/* Override white background cards */
+.card {
+    background: rgba(31, 41, 55, 0.9) !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+    color: #d1d5db !important;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    border-color: #3b82f6 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2) !important;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+    border-bottom: none !important;
+    border-radius: 12px 12px 0 0 !important;
+    font-weight: 600;
+}
+
+.card-body {
+    background: transparent !important;
+    color: #d1d5db !important;
+}
+
+/* Card content styling */
+.card-value {
+    color: #ffffff !important;
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 8px;
+}
+
+.card-label {
+    color: #d1d5db !important;
+    font-size: 0.9rem;
+}
+
+/* Fix cards with inline styles */
+.card[style*="background"] {
+    background: rgba(31, 41, 55, 0.9) !important;
+}
+
+/* ============================================================================
+   TEXT AND TYPOGRAPHY
+   ========================================================================== */
+
+/* Ensure text is readable */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+p, span, div, li, label, small {
+    color: #d1d5db !important;
+}
+
+/* Links */
+a {
+    color: #3b82f6 !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #60a5fa !important;
+}
+
+/* ============================================================================
+   FORMS AND INPUTS
+   ========================================================================== */
+
+.form-control, input, textarea, select {
+    background: rgba(55, 65, 81, 0.8) !important;
+    border: 1px solid #374151 !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, input:focus, textarea:focus, select:focus {
+    background: rgba(55, 65, 81, 0.9) !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+    color: #ffffff !important;
+}
+
+.form-control::placeholder, input::placeholder, textarea::placeholder {
+    color: #9ca3af !important;
+}
+
+label, .form-label {
+    color: #d1d5db !important;
+    font-weight: 600;
+}
+
+/* ============================================================================
+   BUTTONS
+   ========================================================================== */
+
+.btn {
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
+    border-color: #2563eb !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3) !important;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    border-color: #10b981 !important;
+    color: #ffffff !important;
+}
+
+.btn-secondary {
+    background: rgba(55, 65, 81, 0.8) !important;
+    border-color: #374151 !important;
+    color: #d1d5db !important;
+}
+
+/* ============================================================================
+   TABLES
+   ========================================================================== */
+
+.table, table {
+    background: transparent !important;
+    color: #d1d5db !important;
+}
+
+.table thead th, table thead th {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+    border: none !important;
+    font-weight: 600;
+}
+
+.table tbody td, table tbody td {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border: none !important;
+    color: #d1d5db !important;
+}
+
+.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: #3b82f6 !important;
+}
+
+/* ============================================================================
+   LIST GROUPS
+   ========================================================================== */
+
+.list-group-item {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border-color: #374151 !important;
+    color: #d1d5db !important;
+    border-radius: 8px !important;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+}
+
+.list-group-item.active {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+    border-color: #3b82f6 !important;
+}
+
+/* ============================================================================
+   MODALS AND DROPDOWNS
+   ========================================================================== */
+
+.modal-content {
+    background: rgba(31, 41, 55, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    color: #d1d5db !important;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+    border-bottom: none !important;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.dropdown-menu {
+    background: rgba(31, 41, 55, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid #374151 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dropdown-item {
+    color: #d1d5db !important;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: #3b82f6 !important;
+}
+
+/* ============================================================================
+   FOOTER
+   ========================================================================== */
+
+.footer {
+    background: rgba(15, 15, 16, 0.95) !important;
+    border-top: 2px solid rgba(59, 130, 246, 0.3) !important;
+    color: #9ca3af !important;
+    padding: 30px 0 !important;
+    margin-top: 50px !important;
+    backdrop-filter: blur(10px);
+    position: relative;
+}
+
+.footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #3b82f6, #8b5cf6, transparent);
+}
+
+.footer hr {
+    border: none !important;
+    border-top: 1px solid rgba(59, 130, 246, 0.2) !important;
+    background: transparent !important;
+    margin: 20px 0 !important;
+}
+
+.footer p {
+    color: #9ca3af !important;
+    background: transparent !important;
+    margin: 0 !important;
+}
+
+.footer a {
+    color: #3b82f6 !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: #60a5fa !important;
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .company-name {
+        font-size: 1.2rem;
+    }
+    
+    .company-tagline {
+        font-size: 0.8rem;
+    }
+    
+    .logo-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+    
+    .navbar-collapse {
+        background: rgba(31, 41, 55, 0.95) !important;
+        border-radius: 8px !important;
+        padding: 15px !important;
+        margin-top: 10px !important;
+        border: 1px solid #374151 !important;
+    }
+}
+
+/* ============================================================================
+   UTILITIES
+   ========================================================================== */
+
+/* Text selection */
+::selection {
+    background: rgba(59, 130, 246, 0.3);
+    color: #ffffff;
+}
+
+/* Focus states */
+*:focus {
+    outline: 2px solid #3b82f6 !important;
+    outline-offset: 2px !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3b82f6;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2563eb;
+}
