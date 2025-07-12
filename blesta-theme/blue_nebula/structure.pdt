@@ -448,7 +448,108 @@
                 console.log('Visibility fixes applied');
             }
             
-            // CART PAGE SPECIFIC FIXES
+            // SLIDER FIXES - VPS Hosting and other sliders
+            function fixSliders() {
+                // Find all range sliders and enhance them
+                $('input[type="range"]').each(function() {
+                    var $slider = $(this);
+                    
+                    // Add classes for styling
+                    $slider.addClass('vps-slider');
+                    
+                    // Create value display if it doesn't exist
+                    if (!$slider.next('.slider-value').length) {
+                        $slider.after('<span class="slider-value">$' + $slider.val() + '</span>');
+                    }
+                    
+                    // Add event listeners for real-time updates
+                    $slider.off('input change').on('input change', function() {
+                        var value = $(this).val();
+                        $(this).next('.slider-value').text('$' + value);
+                        
+                        // Trigger AJAX update if needed
+                        if ($(this).data('ajax-url')) {
+                            updatePricing($(this));
+                        }
+                    });
+                    
+                    // Fix styling
+                    $slider.css({
+                        'background': '#374151',
+                        'height': '10px',
+                        'border-radius': '5px',
+                        'outline': 'none',
+                        'margin': '20px 0',
+                        'cursor': 'pointer',
+                        'width': '100%'
+                    });
+                });
+                
+                console.log('Sliders fixed and enhanced');
+            }
+            
+            // AJAX FORM FIXES
+            function fixAjaxForms() {
+                // Enhance all forms with AJAX capabilities
+                $('form').each(function() {
+                    var $form = $(this);
+                    
+                    // Add AJAX submission if not already present
+                    if (!$form.data('ajax-enhanced')) {
+                        $form.data('ajax-enhanced', true);
+                        
+                        $form.on('submit', function(e) {
+                            var action = $form.attr('action');
+                            var method = $form.attr('method') || 'POST';
+                            
+                            // Only AJAX-ify if it's a local form
+                            if (!action || action.indexOf(window.location.hostname) !== -1) {
+                                e.preventDefault();
+                                
+                                // Add loading state
+                                $form.addClass('ajax-loading');
+                                var $submitBtn = $form.find('button[type="submit"], input[type="submit"]');
+                                var originalText = $submitBtn.text() || $submitBtn.val();
+                                $submitBtn.prop('disabled', true).text('Loading...');
+                                
+                                // Submit via AJAX
+                                $.ajax({
+                                    url: action || window.location.href,
+                                    method: method,
+                                    data: $form.serialize(),
+                                    success: function(response) {
+                                        // Handle successful submission
+                                        if (response.success || response.redirect) {
+                                            if (response.redirect) {
+                                                window.location.href = response.redirect;
+                                            } else {
+                                                // Update page content if provided
+                                                if (response.html) {
+                                                    $form.parent().html(response.html);
+                                                    initializeTheme();
+                                                }
+                                            }
+                                        }
+                                    },
+                                    error: function() {
+                                        // Fallback to normal form submission
+                                        $form.off('submit').submit();
+                                    },
+                                    complete: function() {
+                                        // Remove loading state
+                                        $form.removeClass('ajax-loading');
+                                        $submitBtn.prop('disabled', false).text(originalText);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+                
+                console.log('AJAX forms enhanced');
+            }
+            
+            // CART PAGE FIXES
             function fixCartPage() {
                 if (window.location.pathname.includes('cart') || 
                     window.location.pathname.includes('order') ||
@@ -457,22 +558,159 @@
                     // Force cart page elements to be visible
                     $('body').addClass('cart-page');
                     
-                    // Apply emergency styles to cart elements
-                    $('.cart, .cart-container, .order-summary, .checkout-summary').css({
-                        'background-color': '#1f2937 !important',
-                        'color': '#d1d5db !important',
-                        'border': '1px solid #374151 !important',
-                        'border-radius': '12px !important',
-                        'padding': '20px !important',
-                        'margin-bottom': '20px !important'
-                    });
+                    // Check if cart is empty and needs content
+                    var $cartContainer = $('.cart, .cart-container, .shopping-cart, .order-cart');
+                    var $cartItems = $('.cart-item, .line-item, .cart-line-item, .order-line-item, .basket-item');
                     
-                    // Fix empty cart state
-                    if ($('.cart-item, .line-item').length === 0 && $('.cart, .cart-container').length > 0) {
-                        $('.cart, .cart-container').html('<div style="text-align: center; padding: 40px; color: #d1d5db;"><h3 style="color: #ffffff; margin-bottom: 15px;">Your Cart is Empty</h3><p>Add some items to your cart to get started.</p></div>');
+                    if ($cartContainer.length > 0) {
+                        // Apply proper styling to cart container
+                        $cartContainer.css({
+                            'min-height': '400px',
+                            'background-color': '#1f2937',
+                            'color': '#d1d5db',
+                            'border': '1px solid #374151',
+                            'border-radius': '12px',
+                            'padding': '25px'
+                        });
+                        
+                        // If no cart items found, show empty state
+                        if ($cartItems.length === 0) {
+                            var emptyCartHtml = `
+                                <div class="cart-empty-state">
+                                    <div class="cart-empty-icon">🛒</div>
+                                    <h3>Your Cart is Empty</h3>
+                                    <p>Looks like you haven't added anything to your cart yet.</p>
+                                    <a href="${window.location.origin}/order" class="continue-shopping">
+                                        Start Shopping
+                                    </a>
+                                </div>
+                            `;
+                            
+                            $cartContainer.html(emptyCartHtml);
+                        } else {
+                            // Style existing cart items
+                            $cartItems.each(function() {
+                                $(this).css({
+                                    'background-color': 'rgba(55, 65, 81, 0.6)',
+                                    'border': '1px solid #374151',
+                                    'border-radius': '8px',
+                                    'padding': '20px',
+                                    'margin-bottom': '15px',
+                                    'color': '#d1d5db'
+                                });
+                            });
+                        }
                     }
                     
+                    // Fix cart totals
+                    $('.cart-totals, .order-totals, .summary').css({
+                        'background': 'rgba(59, 130, 246, 0.1)',
+                        'border': '2px solid #3b82f6',
+                        'border-radius': '12px',
+                        'padding': '20px',
+                        'margin-top': '20px',
+                        'color': '#d1d5db'
+                    });
+                    
+                    // Fix checkout buttons
+                    $('.checkout-btn, .proceed-checkout, .btn-primary').css({
+                        'background': 'linear-gradient(135deg, #10b981, #059669)',
+                        'color': '#ffffff',
+                        'border': 'none',
+                        'border-radius': '8px',
+                        'padding': '15px 30px',
+                        'font-size': '16px',
+                        'font-weight': '600',
+                        'width': '100%',
+                        'margin-top': '20px',
+                        'cursor': 'pointer'
+                    });
+                    
                     console.log('Cart page fixes applied');
+                }
+            }
+            
+            // ICON FIXES
+            function fixIcons() {
+                // Add Font Awesome classes to buttons and links that need icons
+                $('a[href*="account"], .my-account, .account').each(function() {
+                    if (!$(this).find('i').length && !$(this).text().includes('👤')) {
+                        $(this).prepend('<i class="fa fa-user"></i> ');
+                    }
+                });
+                
+                $('a[href*="support"], a[href*="ticket"], .support').each(function() {
+                    if (!$(this).find('i').length && !$(this).text().includes('🎧')) {
+                        $(this).prepend('<i class="fa fa-headset"></i> ');
+                    }
+                });
+                
+                $('a[href*="knowledge"], a[href*="help"], .knowledge-base, .kb').each(function() {
+                    if (!$(this).find('i').length && !$(this).text().includes('📚')) {
+                        $(this).prepend('<i class="fa fa-book"></i> ');
+                    }
+                });
+                
+                $('a[href*="order"], .order').each(function() {
+                    if (!$(this).find('i').length && !$(this).text().includes('🛒')) {
+                        $(this).prepend('<i class="fa fa-shopping-cart"></i> ');
+                    }
+                });
+                
+                $('a[href*="cart"], .cart-btn, .show-cart, .view-cart').each(function() {
+                    if (!$(this).find('i').length && !$(this).text().includes('🛒')) {
+                        $(this).prepend('<i class="fa fa-shopping-cart"></i> ');
+                    }
+                });
+                
+                $('.continue-btn, .btn-continue, .continue-shopping').each(function() {
+                    if (!$(this).find('i').length && !$(this).text().includes('→')) {
+                        $(this).append(' <i class="fa fa-arrow-right"></i>');
+                    }
+                });
+                
+                // Fix login/logout icons
+                $('a[href*="login"], .login').each(function() {
+                    if (!$(this).find('i').length) {
+                        $(this).prepend('<i class="fa fa-sign-in-alt"></i> ');
+                    }
+                });
+                
+                $('a[href*="logout"], .logout').each(function() {
+                    if (!$(this).find('i').length) {
+                        $(this).prepend('<i class="fa fa-sign-out-alt"></i> ');
+                    }
+                });
+                
+                console.log('Icons fixed and added');
+            }
+            
+            // PRICING UPDATE FUNCTION
+            function updatePricing($slider) {
+                var value = $slider.val();
+                var ajaxUrl = $slider.data('ajax-url');
+                
+                if (ajaxUrl) {
+                    $.ajax({
+                        url: ajaxUrl,
+                        method: 'POST',
+                        data: {
+                            value: value,
+                            field: $slider.attr('name') || 'pricing'
+                        },
+                        success: function(response) {
+                            if (response.price) {
+                                $('.price-display, .total-price').text('$' + response.price);
+                            }
+                            if (response.html) {
+                                $slider.closest('.pricing-container').html(response.html);
+                                fixSliders();
+                            }
+                        },
+                        error: function() {
+                            console.log('Pricing update failed, using fallback');
+                        }
+                    });
                 }
             }
             
