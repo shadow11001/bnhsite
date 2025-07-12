@@ -31,15 +31,16 @@ const Header = () => {
             <a href="#gameservers" className="text-gray-300 hover:text-blue-400 transition-colors">GameServers</a>
             <a href="#about" className="text-gray-300 hover:text-blue-400 transition-colors">About</a>
             <a href="#contact" className="text-gray-300 hover:text-blue-400 transition-colors">Contact</a>
+            <a href="https://status.bluenebulahosting.com/status/bnh" target="_blank" rel="noopener noreferrer" className="text-green-400 hover:text-green-300 transition-colors">Status</a>
           </nav>
           
           <div className="hidden md:flex space-x-4">
-            <button className="px-4 py-2 text-blue-400 border border-blue-400 rounded-lg hover:bg-blue-400 hover:text-gray-900 transition-colors">
-              Login
-            </button>
-            <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-colors">
-              Get Started
-            </button>
+            <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-blue-400 border border-blue-400 rounded-lg hover:bg-blue-400 hover:text-gray-900 transition-colors">
+              Client Area
+            </a>
+            <a href="https://panel.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-colors">
+              Game Panel
+            </a>
           </div>
           
           <button 
@@ -61,6 +62,15 @@ const Header = () => {
               <a href="#gameservers" className="text-gray-300 hover:text-blue-400 transition-colors">GameServers</a>
               <a href="#about" className="text-gray-300 hover:text-blue-400 transition-colors">About</a>
               <a href="#contact" className="text-gray-300 hover:text-blue-400 transition-colors">Contact</a>
+              <a href="https://status.bluenebulahosting.com/status/bnh" target="_blank" rel="noopener noreferrer" className="text-green-400 hover:text-green-300 transition-colors">Status</a>
+              <div className="flex flex-col space-y-2 mt-4">
+                <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-blue-400 border border-blue-400 rounded-lg hover:bg-blue-400 hover:text-gray-900 transition-colors text-center">
+                  Client Area
+                </a>
+                <a href="https://panel.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-colors text-center">
+                  Game Panel
+                </a>
+              </div>
             </nav>
           </div>
         )}
@@ -95,12 +105,34 @@ const HeroSection = () => {
           99.9% uptime guarantee, and professional managed services for shared hosting, VPS, and GameServers.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105">
+          <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105">
             Get Started
-          </button>
-          <button className="px-8 py-4 border-2 border-blue-400 text-blue-400 font-semibold rounded-lg hover:bg-blue-400 hover:text-gray-900 transition-all">
+          </a>
+          <a href="#hosting" className="px-8 py-4 border-2 border-blue-400 text-blue-400 font-semibold rounded-lg hover:bg-blue-400 hover:text-gray-900 transition-all">
             View Plans
-          </button>
+          </a>
+        </div>
+        
+        {/* Quick Links */}
+        <div className="mt-12 flex flex-wrap justify-center gap-4 text-sm">
+          <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-300 hover:text-blue-400 transition-colors">
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            Client Portal
+          </a>
+          <a href="https://panel.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-300 hover:text-blue-400 transition-colors">
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l7 7-7 7z" />
+            </svg>
+            Game Panel
+          </a>
+          <a href="https://status.bluenebulahosting.com/status/bnh" target="_blank" rel="noopener noreferrer" className="flex items-center text-green-400 hover:text-green-300 transition-colors">
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            System Status
+          </a>
         </div>
       </div>
     </section>
@@ -108,13 +140,20 @@ const HeroSection = () => {
 };
 
 // Hosting Plans Component
-const HostingPlans = ({ plans, title, type }) => {
+const HostingPlans = ({ plans, title, type, description }) => {
   const filteredPlans = plans.filter(plan => plan.plan_type === type);
   
+  if (filteredPlans.length === 0) return null;
+  
   return (
-    <div className="mb-16">
-      <h3 className="text-3xl font-bold text-white mb-8 text-center">{title}</h3>
-      <div className="grid md:grid-cols-3 gap-8">
+    <div className="mb-20">
+      <div className="text-center mb-12">
+        <h3 className="text-3xl font-bold text-white mb-4">{title}</h3>
+        {description && (
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">{description}</p>
+        )}
+      </div>
+      <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredPlans.map((plan) => (
           <div key={plan.id} className={`relative bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border ${plan.popular ? 'border-blue-500 ring-2 ring-blue-500/50' : 'border-gray-700'} hover:border-blue-400 transition-all`}>
             {plan.popular && (
@@ -126,8 +165,8 @@ const HostingPlans = ({ plans, title, type }) => {
             )}
             
             <div className="text-center mb-6">
-              <h4 className="text-2xl font-bold text-white mb-2">{plan.plan_name}</h4>
-              <div className="text-4xl font-bold text-blue-400 mb-2">
+              <h4 className="text-xl font-bold text-white mb-2">{plan.plan_name}</h4>
+              <div className="text-3xl font-bold text-blue-400 mb-2">
                 ${plan.base_price}
                 <span className="text-lg text-gray-400">/mo</span>
               </div>
@@ -136,10 +175,10 @@ const HostingPlans = ({ plans, title, type }) => {
               )}
             </div>
             
-            <ul className="space-y-3 mb-8">
+            <ul className="space-y-2 mb-8">
               {plan.features.map((feature, index) => (
-                <li key={index} className="flex items-center text-gray-300">
-                  <svg className="w-5 h-5 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <li key={index} className="flex items-center text-gray-300 text-sm">
+                  <svg className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   {feature}
@@ -147,13 +186,13 @@ const HostingPlans = ({ plans, title, type }) => {
               ))}
               
               {plan.supported_games && (
-                <li className="flex items-start text-gray-300">
-                  <svg className="w-5 h-5 text-green-400 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <li className="flex items-start text-gray-300 text-sm">
+                  <svg className="w-4 h-4 text-green-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <div>
                     <span>Supported Games:</span>
-                    <div className="text-sm text-blue-300 mt-1">
+                    <div className="text-xs text-blue-300 mt-1">
                       {plan.supported_games.join(', ')}
                     </div>
                   </div>
@@ -161,13 +200,13 @@ const HostingPlans = ({ plans, title, type }) => {
               )}
             </ul>
             
-            <button className={`w-full py-3 rounded-lg font-semibold transition-all ${
+            <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className={`block w-full py-3 rounded-lg font-semibold transition-all text-center ${
               plan.popular 
                 ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700' 
                 : 'border border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-gray-900'
             }`}>
-              Choose Plan
-            </button>
+              Order Now
+            </a>
           </div>
         ))}
       </div>
@@ -182,19 +221,22 @@ const FeaturesSection = () => {
       title: "Shared Hosting",
       description: "Perfect for websites and blogs with HestiaCP control panel and one-click installations.",
       image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwyfHxzZXJ2ZXJ8ZW58MHx8fHwxNzUyMjk1Nzg3fDA&ixlib=rb-4.1.0&q=85",
-      features: ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"]
+      features: ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
+      link: "#hosting"
     },
     {
       title: "VPS Hosting", 
       description: "Scalable virtual private servers with full root access and managed support.",
       image: "https://images.unsplash.com/photo-1594915440248-1e419eba6611?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDJ8MHwxfHNlYXJjaHwyfHxkYXRhY2VudGVyfGVufDB8fHx8MTc1MjI5NTgwMHww&ixlib=rb-4.1.0&q=85",
-      features: ["Full Root Access", "Choice of OS", "DDoS Protection", "Scalable Resources"]
+      features: ["Full Root Access", "Choice of OS", "DDoS Protection", "Scalable Resources"],
+      link: "#vps"
     },
     {
       title: "GameServer Hosting",
       description: "High-performance game servers with Pterodactyl panel for easy management.",
       image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwxfHxnYW1pbmd8ZW58MHx8fHwxNzUyMjgwMTA1fDA&ixlib=rb-4.1.0&q=85",
-      features: ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"]
+      features: ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
+      link: "#gameservers"
     }
   ];
 
@@ -219,7 +261,7 @@ const FeaturesSection = () => {
               <div className="p-6">
                 <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
                 <p className="text-gray-300 mb-4">{feature.description}</p>
-                <ul className="space-y-2">
+                <ul className="space-y-2 mb-6">
                   {feature.features.map((item, idx) => (
                     <li key={idx} className="flex items-center text-sm text-gray-300">
                       <svg className="w-4 h-4 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -229,6 +271,9 @@ const FeaturesSection = () => {
                     </li>
                   ))}
                 </ul>
+                <a href={feature.link} className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                  View Plans
+                </a>
               </div>
             </div>
           ))}
@@ -255,7 +300,7 @@ const AboutSection = () => {
               websites and applications run smoothly while you focus on growing your business.
             </p>
             
-            <div className="grid sm:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-3 gap-6 mb-8">
               <div className="text-center">
                 <div className="text-3xl font-bold text-blue-400">99.9%</div>
                 <div className="text-sm text-gray-300">Uptime Guarantee</div>
@@ -268,6 +313,15 @@ const AboutSection = () => {
                 <div className="text-3xl font-bold text-blue-400">5000+</div>
                 <div className="text-sm text-gray-300">Happy Customers</div>
               </div>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-colors text-center">
+                Get Started Today
+              </a>
+              <a href="https://status.bluenebulahosting.com/status/bnh" target="_blank" rel="noopener noreferrer" className="px-6 py-3 border border-green-400 text-green-400 rounded-lg hover:bg-green-400 hover:text-gray-900 transition-colors text-center">
+                Check System Status
+              </a>
             </div>
           </div>
           
@@ -301,10 +355,10 @@ const ContactSection = () => {
     
     try {
       await axios.post(`${API}/contact`, formData);
-      alert('Message sent successfully!');
+      alert('Message sent successfully! We\'ll get back to you soon.');
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
-      alert('Error sending message. Please try again.');
+      alert('Error sending message. Please try again or contact us directly.');
     } finally {
       setIsSubmitting(false);
     }
@@ -319,9 +373,18 @@ const ContactSection = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-white mb-4">Get in Touch</h2>
-          <p className="text-lg text-gray-300">
+          <p className="text-lg text-gray-300 mb-6">
             Have questions? Our expert support team is here to help 24/7.
           </p>
+          <div className="flex flex-wrap justify-center gap-4 text-sm">
+            <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 transition-colors">
+              Submit Support Ticket
+            </a>
+            <span className="text-gray-500">•</span>
+            <a href="https://status.bluenebulahosting.com/status/bnh" target="_blank" rel="noopener noreferrer" className="text-green-400 hover:text-green-300 transition-colors">
+              System Status
+            </a>
+          </div>
         </div>
         
         <form onSubmit={handleSubmit} className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700">
@@ -420,9 +483,9 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-semibold mb-4">Support</h4>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Knowledge Base</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Ticket System</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Live Chat</a></li>
+              <li><a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">Client Portal</a></li>
+              <li><a href="https://panel.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">Game Panel</a></li>
+              <li><a href="https://status.bluenebulahosting.com/status/bnh" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">System Status</a></li>
               <li><a href="#contact" className="hover:text-blue-400 transition-colors">Contact Us</a></li>
             </ul>
           </div>
@@ -489,16 +552,68 @@ const Home = () => {
             </p>
           </div>
           
-          <HostingPlans plans={hostingPlans} title="SSD Shared Hosting" type="ssd_shared" />
-          <HostingPlans plans={hostingPlans} title="HDD Shared Hosting" type="hdd_shared" />
-          
-          <div id="vps">
-            <HostingPlans plans={hostingPlans} title="VPS Hosting" type="standard_vps" />
+          <HostingPlans 
+            plans={hostingPlans} 
+            title="SSD Shared Hosting" 
+            type="ssd_shared"
+            description="Fast SSD-powered shared hosting with premium features"
+          />
+          <HostingPlans 
+            plans={hostingPlans} 
+            title="HDD Shared Hosting" 
+            type="hdd_shared"
+            description="Affordable shared hosting with reliable HDD storage"
+          />
+        </div>
+      </section>
+      
+      {/* VPS Section */}
+      <section id="vps" className="py-20 bg-gray-900/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-4">VPS Hosting Solutions</h2>
+            <p className="text-lg text-gray-300">
+              Scalable virtual private servers with full control and managed support
+            </p>
           </div>
           
-          <div id="gameservers">
-            <HostingPlans plans={hostingPlans} title="GameServer Hosting" type="standard_gameserver" />
+          <HostingPlans 
+            plans={hostingPlans} 
+            title="Standard VPS" 
+            type="standard_vps"
+            description="Reliable VPS hosting with balanced performance and pricing"
+          />
+          <HostingPlans 
+            plans={hostingPlans} 
+            title="Performance VPS" 
+            type="performance_vps"
+            description="High-performance VPS with premium hardware and optimizations"
+          />
+        </div>
+      </section>
+      
+      {/* GameServers Section */}
+      <section id="gameservers" className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-4">GameServer Hosting</h2>
+            <p className="text-lg text-gray-300">
+              High-performance game servers with Pterodactyl panel management
+            </p>
           </div>
+          
+          <HostingPlans 
+            plans={hostingPlans} 
+            title="Standard GameServers" 
+            type="standard_gameserver"
+            description="Reliable game hosting with standard performance"
+          />
+          <HostingPlans 
+            plans={hostingPlans} 
+            title="Performance GameServers" 
+            type="performance_gameserver"
+            description="Premium game hosting with enhanced performance and priority support"
+          />
         </div>
       </section>
       
