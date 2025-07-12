@@ -1324,6 +1324,9 @@ const AdminPanel = () => {
       </div>
     );
   };
+
+  // Site Settings
+  const SiteSettings = () => {
     const [settings, setSettings] = useState({
       uptime_kuma_api_key: 'uk1_USvIQkci-6cYMA5VcOksKY7B1TzT7ul2zrvFOniq',
       uptime_kuma_url: 'https://status.bluenebulahosting.com/status/bnh',
