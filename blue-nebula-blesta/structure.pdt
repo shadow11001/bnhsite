@@ -340,8 +340,7 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
                                 }
                                 ?>
                                 <div class="logo-text-wrapper">
-                                    <div class="company-name">Blue Nebula</div>
-                                    <div class="company-tagline">Hosting</div>
+                                    <div class="company-name">Blue Nebula Hosting</div>
                                 </div>
                             </div>
                             <p class="footer-description">Professional hosting solutions with enterprise-grade infrastructure and 24/7 support.</p>
