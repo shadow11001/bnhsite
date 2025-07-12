@@ -169,11 +169,21 @@ body::after {
    ========================================================================== */
 
 .nav-content nav.navbar {
-    background: rgba(31, 41, 55, 0.9) !important;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.4) 0%, rgba(31, 41, 55, 0.9) 50%, rgba(139, 92, 246, 0.4) 100%) !important;
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.3);
     position: relative;
     z-index: 1000 !important; /* High z-index for dropdowns */
+}
+
+.nav-content nav.navbar::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
 }
 
 .nav-content nav.navbar .dropdown-menu {
