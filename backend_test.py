@@ -489,14 +489,27 @@ class BlueNebulaAPITester:
             print("❌ API is not accessible, stopping tests")
             return False
         
-        # Test hosting plans
+        # Test authentication system (highest priority)
+        print("\n🔐 Testing Authentication System...")
+        auth_success = self.test_admin_login()
+        if auth_success:
+            self.test_token_verification()
+            self.test_protected_endpoints()
+        
+        # Test hosting plans (highest priority)
+        print("\n📋 Testing Hosting Plans...")
         plans_success, plans = self.test_hosting_plans_all()
         if plans_success:
             self.test_hosting_plans_filtered(plans)
             self.test_specific_plan(plans)
             self.test_plan_pricing_and_features(plans)
         
+        # Test legal content endpoints
+        print("\n📄 Testing Legal Content...")
+        self.test_legal_content_endpoints()
+        
         # Test other endpoints
+        print("\n🌐 Testing General Endpoints...")
         self.test_company_info()
         self.test_features()
         self.test_contact_submission()
