@@ -277,6 +277,11 @@
     <!-- Additional JavaScript -->
     <script>
         $(document).ready(function() {
+            // Fix mobile menu toggle
+            $('.navbar-toggle').on('click', function() {
+                $('.navbar-collapse').toggleClass('in');
+            });
+            
             // Auto-hide alerts after 5 seconds
             setTimeout(function() {
                 $('.alert').fadeOut('slow');
@@ -300,6 +305,10 @@
             $('form').on('submit', function() {
                 $(this).find('button[type="submit"], input[type="submit"]').prop('disabled', true).addClass('loading');
             });
+            
+            // Fix visibility issues on order pages
+            $('body').addClass('blesta-ready');
+        });
         });
     </script>
     
