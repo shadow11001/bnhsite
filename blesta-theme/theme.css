@@ -678,6 +678,45 @@ a.list-group-item.active:focus {
     border-radius: 8px !important;
 }
 
+/* Footer Styling - Enhanced */
+.footer, #footer, .container-fluid .footer, .row.footer {
+    background: rgba(15, 15, 16, 0.95) !important;
+    border-top: 1px solid rgba(59, 130, 246, 0.2) !important;
+    color: #9ca3af !important;
+    padding: 20px 0 !important;
+    margin-top: 40px !important;
+    backdrop-filter: blur(10px) !important;
+    position: relative !important;
+    z-index: 10 !important;
+    width: 100% !important;
+}
+
+.footer * {
+    background: transparent !important;
+}
+
+.footer hr {
+    border-color: rgba(59, 130, 246, 0.2) !important;
+    background: transparent !important;
+    margin: 20px 0 !important;
+}
+
+.footer p {
+    color: #9ca3af !important;
+    background: transparent !important;
+    margin: 0 !important;
+}
+
+.footer a, #footer a {
+    color: #3b82f6 !important;
+    text-decoration: none !important;
+    background: transparent !important;
+}
+
+.footer a:hover, #footer a:hover {
+    color: #60a5fa !important;
+}
+
 /* Additional Blue Nebula Enhancements */
 
 /* Form Controls */
