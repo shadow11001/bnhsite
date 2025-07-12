@@ -174,7 +174,16 @@ async def get_hosting_plans(plan_type: Optional[str] = None):
             query["plan_type"] = plan_type
         
         plans = await db.hosting_plans.find(query).to_list(1000)
-        return [HostingPlan(**plan) for plan in plans]
+        
+        # Filter out markup_percentage from public API response
+        filtered_plans = []
+        for plan in plans:
+            # Remove markup_percentage before returning to users
+            plan_dict = dict(plan)
+            plan_dict.pop('markup_percentage', None)
+            filtered_plans.append(HostingPlan(**plan_dict))
+        
+        return filtered_plans
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
