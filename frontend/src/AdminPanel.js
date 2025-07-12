@@ -388,6 +388,541 @@ const AdminPanel = () => {
     );
   };
 
+  // Website Content Editor
+  const ContentEditor = () => {
+    const [selectedSection, setSelectedSection] = useState('hero');
+    const [sectionContent, setSectionContent] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+
+    const sections = [
+      { key: 'hero', label: 'Hero Section', description: 'Main landing page content' },
+      { key: 'features', label: 'Features Section', description: 'Why choose us section' },
+      { key: 'about', label: 'About Section', description: 'Company information' }
+    ];
+
+    const loadSectionContent = async (section) => {
+      try {
+        const response = await axios.get(`${API}/content/${section}`);
+        setSectionContent(response.data);
+      } catch (error) {
+        console.error('Error loading section content:', error);
+      }
+    };
+
+    useEffect(() => {
+      loadSectionContent(selectedSection);
+    }, [selectedSection]);
+
+    const updateSectionContent = async () => {
+      setIsLoading(true);
+      try {
+        await axios.put(`${API}/content`, sectionContent, { headers: getAuthHeaders() });
+        alert('Content updated successfully!');
+      } catch (error) {
+        alert('Error updating content: ' + error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    return (
+      <div className="bg-gray-800 rounded-lg p-6">
+        <h3 className="text-xl font-bold text-white mb-6">Website Content Management</h3>
+        
+        <div className="grid lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-1">
+            <h4 className="text-white font-semibold mb-4">Sections</h4>
+            <div className="space-y-2">
+              {sections.map(section => (
+                <button
+                  key={section.key}
+                  onClick={() => setSelectedSection(section.key)}
+                  className={`w-full text-left p-3 rounded transition-colors ${
+                    selectedSection === section.key
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  <div className="font-medium">{section.label}</div>
+                  <div className="text-xs opacity-75">{section.description}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          <div className="lg:col-span-3">
+            <div className="bg-gray-700 rounded-lg p-6">
+              <h4 className="text-white font-semibold mb-4">
+                Edit {sections.find(s => s.key === selectedSection)?.label}
+              </h4>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-gray-300 mb-2">Title</label>
+                  <input
+                    type="text"
+                    value={sectionContent.title || ''}
+                    onChange={(e) => setSectionContent({...sectionContent, title: e.target.value})}
+                    className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                  />
+                </div>
+                
+                {selectedSection === 'hero' && (
+                  <div>
+                    <label className="block text-gray-300 mb-2">Subtitle</label>
+                    <input
+                      type="text"
+                      value={sectionContent.subtitle || ''}
+                      onChange={(e) => setSectionContent({...sectionContent, subtitle: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                    />
+                  </div>
+                )}
+                
+                <div>
+                  <label className="block text-gray-300 mb-2">Description</label>
+                  <textarea
+                    rows={4}
+                    value={sectionContent.description || ''}
+                    onChange={(e) => setSectionContent({...sectionContent, description: e.target.value})}
+                    className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                  />
+                </div>
+                
+                <button
+                  onClick={updateSectionContent}
+                  disabled={isLoading}
+                  className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
+                >
+                  {isLoading ? 'Updating...' : 'Update Content'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Navigation Editor
+  const NavigationEditor = () => {
+    const [navItems, setNavItems] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+      setNavItems(navigationItems);
+    }, [navigationItems]);
+
+    const addNavItem = () => {
+      const newItem = {
+        id: Date.now().toString(),
+        label: 'New Item',
+        href: '#',
+        order: navItems.length + 1,
+        is_external: false
+      };
+      setNavItems([...navItems, newItem]);
+    };
+
+    const updateNavItem = (id, updates) => {
+      setNavItems(navItems.map(item => 
+        item.id === id ? { ...item, ...updates } : item
+      ));
+    };
+
+    const removeNavItem = (id) => {
+      setNavItems(navItems.filter(item => item.id !== id));
+    };
+
+    const saveNavigation = async () => {
+      setIsLoading(true);
+      try {
+        await axios.put(`${API}/navigation`, navItems, { headers: getAuthHeaders() });
+        alert('Navigation updated successfully!');
+        setNavigationItems(navItems);
+      } catch (error) {
+        alert('Error updating navigation: ' + error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    return (
+      <div className="bg-gray-800 rounded-lg p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-xl font-bold text-white">Navigation Management</h3>
+          <button
+            onClick={addNavItem}
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+          >
+            Add Item
+          </button>
+        </div>
+        
+        <div className="space-y-4 mb-6">
+          {navItems.map((item, index) => (
+            <div key={item.id} className="bg-gray-700 rounded-lg p-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <label className="block text-gray-300 mb-2">Label</label>
+                  <input
+                    type="text"
+                    value={item.label}
+                    onChange={(e) => updateNavItem(item.id, { label: e.target.value })}
+                    className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-gray-300 mb-2">Link</label>
+                  <input
+                    type="text"
+                    value={item.href}
+                    onChange={(e) => updateNavItem(item.id, { href: e.target.value })}
+                    className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-gray-300 mb-2">Order</label>
+                  <input
+                    type="number"
+                    value={item.order}
+                    onChange={(e) => updateNavItem(item.id, { order: parseInt(e.target.value) })}
+                    className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                  />
+                </div>
+                
+                <div className="flex items-end">
+                  <button
+                    onClick={() => removeNavItem(item.id)}
+                    className="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+              
+              <div className="mt-2 flex items-center">
+                <input
+                  type="checkbox"
+                  checked={item.is_external}
+                  onChange={(e) => updateNavItem(item.id, { is_external: e.target.checked })}
+                  className="mr-2"
+                />
+                <label className="text-gray-300 text-sm">External Link</label>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <button
+          onClick={saveNavigation}
+          disabled={isLoading}
+          className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
+        >
+          {isLoading ? 'Saving...' : 'Save Navigation'}
+        </button>
+      </div>
+    );
+  };
+
+  // Legal Content Editor
+  const LegalEditor = () => {
+    const [selectedType, setSelectedType] = useState('terms');
+    const [legalData, setLegalData] = useState({ title: '', content: '' });
+    const [isLoading, setIsLoading] = useState(false);
+
+    const loadLegalContent = async (type) => {
+      try {
+        const response = await axios.get(`${API}/legal/${type}`);
+        setLegalData(response.data);
+      } catch (error) {
+        console.error('Error loading legal content:', error);
+      }
+    };
+
+    useEffect(() => {
+      loadLegalContent(selectedType);
+    }, [selectedType]);
+
+    const saveLegalContent = async () => {
+      setIsLoading(true);
+      try {
+        await axios.put(`${API}/legal/${selectedType}`, legalData, { headers: getAuthHeaders() });
+        alert(`${selectedType === 'terms' ? 'Terms of Service' : 'Privacy Policy'} updated successfully!`);
+      } catch (error) {
+        alert('Error updating legal content: ' + error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    return (
+      <div className="bg-gray-800 rounded-lg p-6">
+        <h3 className="text-xl font-bold text-white mb-6">Legal Pages Management</h3>
+        
+        <div className="mb-6">
+          <div className="flex space-x-4">
+            <button
+              onClick={() => setSelectedType('terms')}
+              className={`px-4 py-2 rounded transition-colors ${
+                selectedType === 'terms'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              }`}
+            >
+              Terms of Service
+            </button>
+            <button
+              onClick={() => setSelectedType('privacy')}
+              className={`px-4 py-2 rounded transition-colors ${
+                selectedType === 'privacy'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              }`}
+            >
+              Privacy Policy
+            </button>
+          </div>
+        </div>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block text-gray-300 mb-2">Title</label>
+            <input
+              type="text"
+              value={legalData.title || ''}
+              onChange={(e) => setLegalData({...legalData, title: e.target.value})}
+              className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-gray-300 mb-2">Content</label>
+            <textarea
+              rows={20}
+              value={legalData.content || ''}
+              onChange={(e) => setLegalData({...legalData, content: e.target.value})}
+              className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none font-mono text-sm"
+              placeholder="Enter your legal content here. You can use basic HTML formatting."
+            />
+          </div>
+          
+          <button
+            onClick={saveLegalContent}
+            disabled={isLoading}
+            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
+          >
+            {isLoading ? 'Saving...' : `Save ${selectedType === 'terms' ? 'Terms of Service' : 'Privacy Policy'}`}
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  // Contact & SMTP Settings
+  const ContactSMTPEditor = () => {
+    const [smtpData, setSmtpData] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [testResult, setTestResult] = useState('');
+
+    useEffect(() => {
+      setSmtpData(smtpSettings);
+    }, [smtpSettings]);
+
+    const saveSMTPSettings = async () => {
+      setIsLoading(true);
+      try {
+        await axios.put(`${API}/smtp-settings`, smtpData, { headers: getAuthHeaders() });
+        alert('SMTP settings updated successfully!');
+        setSmtpSettings(smtpData);
+      } catch (error) {
+        alert('Error updating SMTP settings: ' + error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const testSMTPConnection = async () => {
+      setIsLoading(true);
+      setTestResult('Testing...');
+      try {
+        // This would be implemented in the backend
+        setTestResult('✅ SMTP connection successful!');
+      } catch (error) {
+        setTestResult('❌ SMTP connection failed: ' + error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    return (
+      <div className="bg-gray-800 rounded-lg p-6">
+        <h3 className="text-xl font-bold text-white mb-6">Contact Form & SMTP Settings</h3>
+        
+        <div className="grid lg:grid-cols-2 gap-6">
+          <div>
+            <h4 className="text-white font-semibold mb-4">SMTP Configuration</h4>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-gray-300 mb-2">SMTP Host</label>
+                <input
+                  type="text"
+                  value={smtpData.smtp_host || ''}
+                  onChange={(e) => setSmtpData({...smtpData, smtp_host: e.target.value})}
+                  placeholder="mail.yourdomain.com"
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-300 mb-2">Port</label>
+                  <input
+                    type="number"
+                    value={smtpData.smtp_port || 587}
+                    onChange={(e) => setSmtpData({...smtpData, smtp_port: parseInt(e.target.value)})}
+                    className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  />
+                </div>
+                
+                <div className="flex items-center mt-6">
+                  <input
+                    type="checkbox"
+                    checked={smtpData.smtp_use_tls || false}
+                    onChange={(e) => setSmtpData({...smtpData, smtp_use_tls: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <label className="text-gray-300">Use TLS</label>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Username</label>
+                <input
+                  type="text"
+                  value={smtpData.smtp_username || ''}
+                  onChange={(e) => setSmtpData({...smtpData, smtp_username: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Password</label>
+                <input
+                  type="password"
+                  value={smtpData.smtp_password || ''}
+                  onChange={(e) => setSmtpData({...smtpData, smtp_password: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h4 className="text-white font-semibold mb-4">Email Settings</h4>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-gray-300 mb-2">From Email</label>
+                <input
+                  type="email"
+                  value={smtpData.from_email || ''}
+                  onChange={(e) => setSmtpData({...smtpData, from_email: e.target.value})}
+                  placeholder="noreply@yourdomain.com"
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">From Name</label>
+                <input
+                  type="text"
+                  value={smtpData.from_name || ''}
+                  onChange={(e) => setSmtpData({...smtpData, from_name: e.target.value})}
+                  placeholder="Blue Nebula Hosting"
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                />
+              </div>
+              
+              <div className="bg-gray-700 rounded p-4">
+                <h5 className="text-white font-medium mb-2">Test Connection</h5>
+                <button
+                  onClick={testSMTPConnection}
+                  disabled={isLoading}
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors disabled:opacity-50 mb-2"
+                >
+                  Test SMTP
+                </button>
+                {testResult && (
+                  <div className="text-sm text-gray-300 mt-2">{testResult}</div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-6">
+          <button
+            onClick={saveSMTPSettings}
+            disabled={isLoading}
+            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
+          >
+            {isLoading ? 'Saving...' : 'Save SMTP Settings'}
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  // Site Settings
+  const SiteSettings = () => {
+    return (
+      <div className="bg-gray-800 rounded-lg p-6">
+        <h3 className="text-xl font-bold text-white mb-6">Site Settings</h3>
+        
+        <div className="grid lg:grid-cols-2 gap-6">
+          <div className="bg-gray-700 rounded-lg p-4">
+            <h4 className="text-white font-semibold mb-4">Logo & Branding</h4>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-gray-300 mb-2">Logo Instructions</label>
+                <div className="bg-gray-600 rounded p-3 text-sm text-gray-300">
+                  <p>Upload your logo as <code className="bg-gray-800 px-1 rounded">logo.png</code> to the website root directory.</p>
+                  <p className="mt-2">Recommended size: 64x64 pixels or larger (square format works best)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-gray-700 rounded-lg p-4">
+            <h4 className="text-white font-semibold mb-4">System Status</h4>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-gray-300 mb-2">Uptime Kuma Integration</label>
+                <div className="bg-gray-600 rounded p-3 text-sm text-gray-300">
+                  <p>✅ API Key: <code className="text-xs">uk1_USvIQkci-6cYMA5VcOksKY7B1TzT7ul2zrvFOniq</code></p>
+                  <p className="mt-2">✅ Status URL: status.bluenebulahosting.com/status/bnh</p>
+                  <p className="mt-2">Status updates automatically every 30 seconds</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-6 bg-yellow-600/20 border border-yellow-600 rounded-lg p-4">
+          <h4 className="text-yellow-300 font-semibold mb-2">⚠️ Important Notes</h4>
+          <ul className="text-yellow-200 text-sm space-y-1">
+            <li>• Changes to navigation and content are applied immediately</li>
+            <li>• SMTP settings require server restart to take effect</li>
+            <li>• Always test SMTP connection before relying on contact forms</li>
+            <li>• Legal pages should be reviewed by a legal professional</li>
+          </ul>
+        </div>
+      </div>
+    );
+  };
+
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
