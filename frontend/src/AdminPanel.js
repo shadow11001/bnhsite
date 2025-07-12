@@ -308,65 +308,126 @@ const AdminPanel = () => {
   };
 
   const CompanyEditor = () => {
-    const [formData, setFormData] = useState(companyInfo);
+    const [companyData, setCompanyData] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      updateCompanyInfo(formData);
+    useEffect(() => {
+      console.log('Company editor: companyInfo changed:', companyInfo);
+      if (companyInfo && Object.keys(companyInfo).length > 0) {
+        setCompanyData(companyInfo);
+      }
+    }, [companyInfo]);
+
+    const updateCompanyInfo = async () => {
+      setIsLoading(true);
+      try {
+        await axios.put(`${API}/company-info`, companyData, { headers: getAuthHeaders() });
+        alert('Company information updated successfully!');
+      } catch (error) {
+        alert('Error updating company info: ' + error.message);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     return (
       <div className="bg-gray-800 rounded-lg p-6">
-        <h3 className="text-xl font-bold text-white mb-4">Company Information</h3>
+        <h3 className="text-xl font-bold text-white mb-6">Company Information</h3>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-300 mb-2">Company Name</label>
-            <input
-              type="text"
-              value={formData.name || ''}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
-              className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
-            />
+        <div className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-gray-300 mb-2">Company Name</label>
+              <input
+                type="text"
+                value={companyData.name || ''}
+                onChange={(e) => setCompanyData({...companyData, name: e.target.value})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-gray-300 mb-2">Tagline</label>
+              <input
+                type="text"
+                value={companyData.tagline || ''}
+                onChange={(e) => setCompanyData({...companyData, tagline: e.target.value})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
+              />
+            </div>
           </div>
           
           <div>
-            <label className="block text-gray-300 mb-2">Tagline</label>
-            <input
-              type="text"
-              value={formData.tagline || ''}
-              onChange={(e) => setFormData({...formData, tagline: e.target.value})}
-              className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-gray-300 mb-2">Description</label>
+            <label className="block text-gray-300 mb-2">Company Description</label>
             <textarea
               rows={4}
-              value={formData.description || ''}
-              onChange={(e) => setFormData({...formData, description: e.target.value})}
-              className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+              value={companyData.description || ''}
+              onChange={(e) => setCompanyData({...companyData, description: e.target.value})}
+              className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
+            />
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-gray-300 mb-2">Contact Email</label>
+              <input
+                type="email"
+                value={companyData.contact_email || ''}
+                onChange={(e) => setCompanyData({...companyData, contact_email: e.target.value})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-gray-300 mb-2">Phone</label>
+              <input
+                type="tel"
+                value={companyData.phone || ''}
+                onChange={(e) => setCompanyData({...companyData, phone: e.target.value})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-gray-300 mb-2">Founded Year</label>
+              <input
+                type="number"
+                value={companyData.founded_year || ''}
+                onChange={(e) => setCompanyData({...companyData, founded_year: parseInt(e.target.value)})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
+              />
+            </div>
+          </div>
+          
+          <div>
+            <label className="block text-gray-300 mb-2">Address</label>
+            <input
+              type="text"
+              value={companyData.address || ''}
+              onChange={(e) => setCompanyData({...companyData, address: e.target.value})}
+              className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
             />
           </div>
           
           <div>
-            <label className="block text-gray-300 mb-2">Features (one per line)</label>
+            <label className="block text-gray-300 mb-2">Key Features (one per line)</label>
             <textarea
               rows={6}
-              value={formData.features ? formData.features.join('\n') : ''}
-              onChange={(e) => setFormData({...formData, features: e.target.value.split('\n').filter(f => f.trim())})}
-              className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+              value={companyData.features ? companyData.features.join('\n') : ''}
+              onChange={(e) => setCompanyData({...companyData, features: e.target.value.split('\n').filter(f => f.trim())})}
+              className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
+              placeholder="Enter one feature per line..."
             />
           </div>
           
           <button
-            type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            onClick={updateCompanyInfo}
+            disabled={isLoading}
+            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
           >
-            Update Company Info
+            {isLoading ? 'Updating...' : 'Update Company Info'}
           </button>
-        </form>
+        </div>
       </div>
     );
   };
