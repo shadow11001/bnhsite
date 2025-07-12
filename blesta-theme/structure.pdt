@@ -249,15 +249,21 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
             .footer {
                 background: rgba(15, 15, 16, 0.95) !important;
                 border-top: 1px solid rgba(59, 130, 246, 0.2) !important;
-                backdrop-filter: blur(10px);
+                backdrop-filter: blur(10px) !important;
+                padding: 20px 0 !important;
+                margin-top: 40px !important;
+                position: relative !important;
+                z-index: 1 !important;
             }
             
             .footer hr {
                 border-color: rgba(59, 130, 246, 0.2) !important;
+                margin: 20px 0 !important;
             }
             
             .footer p {
                 color: #9ca3af !important;
+                margin: 0 !important;
             }
             
             .footer a {
@@ -268,6 +274,18 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
             
             .footer a:hover {
                 color: #60a5fa !important;
+            }
+            
+            .footer .container-fluid {
+                background: transparent !important;
+            }
+            
+            .footer .row {
+                background: transparent !important;
+            }
+            
+            .footer .col-md-12 {
+                background: transparent !important;
             }
         </style>
 
