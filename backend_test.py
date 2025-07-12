@@ -572,6 +572,12 @@ class BlueNebulaAPITester:
             self.test_hosting_plans_filtered(plans)
             self.test_specific_plan(plans)
             self.test_plan_pricing_and_features(plans)
+            # Test that markup percentages are not exposed
+            self.test_markup_not_exposed(plans)
+        
+        # Test system status (NEW feature)
+        print("\n📊 Testing System Status...")
+        self.test_system_status()
         
         # Test legal content endpoints
         print("\n📄 Testing Legal Content...")
