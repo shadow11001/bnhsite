@@ -205,6 +205,15 @@ async def verify_token(current_user: str = Depends(get_current_user)):
     """Verify if token is valid"""
     return {"valid": True, "user": current_user}
 
+@api_router.get("/admin/hosting-plans", response_model=List[HostingPlan])
+async def get_admin_hosting_plans(current_user: str = Depends(get_current_user)):
+    """Get all hosting plans with markup data - admin only"""
+    try:
+        plans = await db.hosting_plans.find().to_list(1000)
+        return [HostingPlan(**plan) for plan in plans]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/hosting-plans", response_model=List[PublicHostingPlan])
 async def get_hosting_plans(plan_type: Optional[str] = None):
     """Get all hosting plans or filter by type"""
