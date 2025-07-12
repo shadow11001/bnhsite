@@ -25,6 +25,9 @@
     <!-- Blue Nebula Theme CSS -->
     <link href="<?php echo $this->view_dir;?>css/blue_nebula.css" rel="stylesheet">
     
+    <!-- Order and Cart Specific CSS -->
+    <link href="<?php echo $this->view_dir;?>css/order_cart.css" rel="stylesheet">
+    
     <!-- Responsive CSS -->
     <link href="<?php echo $this->view_dir;?>css/responsive.css" rel="stylesheet">
     
