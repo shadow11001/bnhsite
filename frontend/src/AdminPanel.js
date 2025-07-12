@@ -1030,8 +1030,300 @@ const AdminPanel = () => {
     );
   };
 
-  // Site Settings
-  const SiteSettings = () => {
+  // Promo Code Manager
+  const PromoCodeManager = () => {
+    const [promoCodes, setPromoCodes] = useState([]);
+    const [editingPromo, setEditingPromo] = useState(null);
+    const [showForm, setShowForm] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+      loadPromoCodes();
+    }, []);
+
+    const loadPromoCodes = async () => {
+      try {
+        const response = await axios.get(`${API}/admin/promo-codes`, { headers: getAuthHeaders() });
+        setPromoCodes(response.data);
+      } catch (error) {
+        console.error('Error loading promo codes:', error);
+      }
+    };
+
+    const savePromoCode = async (promoData) => {
+      setIsLoading(true);
+      try {
+        if (editingPromo) {
+          await axios.put(`${API}/admin/promo-codes/${editingPromo.id}`, promoData, { headers: getAuthHeaders() });
+        } else {
+          await axios.post(`${API}/admin/promo-codes`, promoData, { headers: getAuthHeaders() });
+        }
+        await loadPromoCodes();
+        setShowForm(false);
+        setEditingPromo(null);
+        alert('Promo code saved successfully!');
+      } catch (error) {
+        alert('Error saving promo code: ' + error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const deletePromoCode = async (id) => {
+      if (confirm('Are you sure you want to delete this promo code?')) {
+        try {
+          await axios.delete(`${API}/admin/promo-codes/${id}`, { headers: getAuthHeaders() });
+          await loadPromoCodes();
+          alert('Promo code deleted successfully!');
+        } catch (error) {
+          alert('Error deleting promo code: ' + error.message);
+        }
+      }
+    };
+
+    const PromoForm = () => {
+      const [formData, setFormData] = useState(editingPromo || {
+        code: '',
+        title: '',
+        description: '',
+        discount_percentage: '',
+        discount_amount: '',
+        expiry_date: '',
+        display_location: 'hero',
+        button_text: 'Copy Code',
+        is_active: true
+      });
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        savePromoCode(formData);
+      };
+
+      return (
+        <div className="bg-gray-700 rounded-lg p-6 mb-6">
+          <h4 className="text-white font-semibold mb-4">
+            {editingPromo ? 'Edit Promo Code' : 'Create New Promo Code'}
+          </h4>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-300 mb-2">Promo Code *</label>
+                <input
+                  type="text"
+                  value={formData.code}
+                  onChange={(e) => setFormData({...formData, code: e.target.value.toUpperCase()})}
+                  className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none font-mono"
+                  placeholder="SAVE20"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Title *</label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => setFormData({...formData, title: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                  placeholder="Special Discount"
+                  required
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-gray-300 mb-2">Description *</label>
+              <textarea
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                placeholder="Get 20% off your first order"
+                rows={2}
+                required
+              />
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-gray-300 mb-2">Discount %</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={formData.discount_percentage}
+                  onChange={(e) => setFormData({...formData, discount_percentage: parseInt(e.target.value) || ''})}
+                  className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                  placeholder="20"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Discount $</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={formData.discount_amount}
+                  onChange={(e) => setFormData({...formData, discount_amount: parseFloat(e.target.value) || ''})}
+                  className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                  placeholder="5.00"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Expiry Date</label>
+                <input
+                  type="date"
+                  value={formData.expiry_date ? formData.expiry_date.split('T')[0] : ''}
+                  onChange={(e) => setFormData({...formData, expiry_date: e.target.value ? new Date(e.target.value).toISOString() : ''})}
+                  className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                />
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-300 mb-2">Display Location</label>
+                <select
+                  value={formData.display_location}
+                  onChange={(e) => setFormData({...formData, display_location: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                >
+                  <option value="hero">Hero Section</option>
+                  <option value="pricing">Pricing Section</option>
+                  <option value="floating">Floating Bar (Top)</option>
+                  <option value="footer">Footer</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Button Text</label>
+                <input
+                  type="text"
+                  value={formData.button_text}
+                  onChange={(e) => setFormData({...formData, button_text: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                  placeholder="Copy Code"
+                />
+              </div>
+            </div>
+            
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                checked={formData.is_active}
+                onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
+                className="mr-2"
+              />
+              <label className="text-gray-300">Active</label>
+            </div>
+            
+            <div className="flex gap-4">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
+              >
+                {isLoading ? 'Saving...' : 'Save Promo Code'}
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => {
+                  setShowForm(false);
+                  setEditingPromo(null);
+                }}
+                className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      );
+    };
+
+    return (
+      <div className="bg-gray-800 rounded-lg p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-xl font-bold text-white">Promo Code Management</h3>
+          <button
+            onClick={() => setShowForm(true)}
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+          >
+            Add Promo Code
+          </button>
+        </div>
+        
+        {showForm && <PromoForm />}
+        
+        <div className="space-y-4">
+          {promoCodes.map(promo => (
+            <div key={promo.id} className="bg-gray-700 rounded-lg p-4">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-4 mb-2">
+                    <span className="bg-blue-600 text-white px-3 py-1 rounded font-mono font-bold">
+                      {promo.code}
+                    </span>
+                    <span className={`px-2 py-1 rounded text-xs ${
+                      promo.is_active ? 'bg-green-600 text-white' : 'bg-gray-600 text-gray-300'
+                    }`}>
+                      {promo.is_active ? 'Active' : 'Inactive'}
+                    </span>
+                    <span className="bg-purple-600 text-white px-2 py-1 rounded text-xs">
+                      {promo.display_location}
+                    </span>
+                  </div>
+                  
+                  <h4 className="font-semibold text-white">{promo.title}</h4>
+                  <p className="text-gray-300 text-sm">{promo.description}</p>
+                  
+                  <div className="flex gap-4 mt-2 text-xs text-gray-400">
+                    {promo.discount_percentage && (
+                      <span>{promo.discount_percentage}% off</span>
+                    )}
+                    {promo.discount_amount && (
+                      <span>${promo.discount_amount} off</span>
+                    )}
+                    {promo.expiry_date && (
+                      <span>Expires: {new Date(promo.expiry_date).toLocaleDateString()}</span>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      setEditingPromo(promo);
+                      setShowForm(true);
+                    }}
+                    className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
+                  >
+                    Edit
+                  </button>
+                  
+                  <button
+                    onClick={() => deletePromoCode(promo.id)}
+                    className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors text-sm"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+          
+          {promoCodes.length === 0 && (
+            <div className="text-center py-8 text-gray-400">
+              No promo codes created yet. Click "Add Promo Code" to get started.
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
     const [settings, setSettings] = useState({
       uptime_kuma_api_key: 'uk1_USvIQkci-6cYMA5VcOksKY7B1TzT7ul2zrvFOniq',
       uptime_kuma_url: 'https://status.bluenebulahosting.com/status/bnh',
