@@ -22,6 +22,14 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
+# JWT Configuration
+SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "your-secret-key-change-this-in-production")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
+
+# Security
+security = HTTPBearer()
+
 # Create the main app without a prefix
 app = FastAPI(title="Blue Nebula Hosting API", version="1.0.0")
 
