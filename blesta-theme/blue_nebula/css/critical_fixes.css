@@ -1,0 +1,311 @@
+/* Blue Nebula Critical Fixes - Override CSS */
+/* This file contains critical fixes for visibility and functionality issues */
+
+/* Force text visibility on ALL elements */
+* {
+    color: inherit !important;
+}
+
+body, html {
+    color: #d1d5db !important;
+}
+
+/* Fix white text on white background issues */
+.text-muted {
+    color: #9ca3af !important;
+}
+
+.text-primary {
+    color: #3b82f6 !important;
+}
+
+.text-success {
+    color: #10b981 !important;
+}
+
+.text-danger {
+    color: #ef4444 !important;
+}
+
+.text-warning {
+    color: #f59e0b !important;
+}
+
+.text-info {
+    color: #3b82f6 !important;
+}
+
+/* Force all backgrounds to be visible */
+.bg-white, .bg-light {
+    background: rgba(31, 41, 55, 0.8) !important;
+    color: #d1d5db !important;
+}
+
+/* Package/Order page specific fixes */
+.package, .service {
+    background: rgba(31, 41, 55, 0.8) !important;
+    border: 1px solid #374151 !important;
+    color: #d1d5db !important;
+}
+
+.package h1, .package h2, .package h3, .package h4, .package h5, .package h6 {
+    color: #ffffff !important;
+}
+
+.package p, .package span, .package div {
+    color: #d1d5db !important;
+}
+
+/* Cart and checkout fixes */
+.cart, .checkout, .summary {
+    background: rgba(31, 41, 55, 0.8) !important;
+    color: #d1d5db !important;
+}
+
+.cart-item, .line-item {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border: 1px solid #374151 !important;
+    color: #d1d5db !important;
+    padding: 15px !important;
+    margin-bottom: 10px !important;
+    border-radius: 8px !important;
+}
+
+/* Form fixes */
+.form-control {
+    background: rgba(55, 65, 81, 0.9) !important;
+    border: 1px solid #374151 !important;
+    color: #ffffff !important;
+}
+
+.form-control::placeholder {
+    color: #9ca3af !important;
+}
+
+label, .control-label {
+    color: #d1d5db !important;
+    font-weight: 600 !important;
+}
+
+/* Button fixes */
+.btn {
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 12px 24px !important;
+    font-weight: 600 !important;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: #ffffff !important;
+}
+
+.btn-default, .btn-secondary {
+    background: transparent !important;
+    border: 2px solid #3b82f6 !important;
+    color: #3b82f6 !important;
+}
+
+/* Mobile menu fix */
+.navbar-toggle {
+    background: transparent !important;
+    border: 1px solid #374151 !important;
+}
+
+.navbar-toggle .icon-bar {
+    background: #d1d5db !important;
+}
+
+/* Dropdown fixes */
+.dropdown-menu {
+    background: rgba(31, 41, 55, 0.95) !important;
+    border: 1px solid #374151 !important;
+    border-radius: 8px !important;
+}
+
+.dropdown-menu li a {
+    color: #d1d5db !important;
+    padding: 10px 15px !important;
+}
+
+.dropdown-menu li a:hover {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: #3b82f6 !important;
+}
+
+/* Table fixes */
+.table {
+    color: #d1d5db !important;
+}
+
+.table thead th {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.table tbody td {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border: none !important;
+    color: #d1d5db !important;
+}
+
+/* Alert fixes */
+.alert {
+    border-radius: 8px !important;
+    border: none !important;
+    padding: 16px 20px !important;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: #10b981 !important;
+    border-left: 4px solid #10b981 !important;
+}
+
+.alert-danger, .alert-error {
+    background: rgba(239, 68, 68, 0.2) !important;
+    color: #ef4444 !important;
+    border-left: 4px solid #ef4444 !important;
+}
+
+.alert-warning {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: #f59e0b !important;
+    border-left: 4px solid #f59e0b !important;
+}
+
+.alert-info {
+    background: rgba(59, 130, 246, 0.2) !important;
+    color: #3b82f6 !important;
+    border-left: 4px solid #3b82f6 !important;
+}
+
+/* Force visibility on all interactive elements */
+input, textarea, select, button {
+    background: rgba(55, 65, 81, 0.9) !important;
+    color: #ffffff !important;
+    border: 1px solid #374151 !important;
+}
+
+/* Range slider fixes */
+input[type="range"] {
+    -webkit-appearance: none !important;
+    background: #374151 !important;
+    height: 8px !important;
+    border-radius: 4px !important;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    width: 20px !important;
+    height: 20px !important;
+    background: #3b82f6 !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+}
+
+/* Loading state fixes */
+.loading {
+    opacity: 0.7 !important;
+    pointer-events: none !important;
+}
+
+/* Ensure all text is readable */
+small, .small {
+    color: #9ca3af !important;
+}
+
+.help-text, .description {
+    color: #9ca3af !important;
+    font-size: 14px !important;
+}
+
+/* Price display fixes */
+.price, .amount, .total {
+    color: #3b82f6 !important;
+    font-weight: 700 !important;
+    font-size: 1.5em !important;
+}
+
+/* Ensure links are visible */
+a {
+    color: #3b82f6 !important;
+    text-decoration: none !important;
+}
+
+a:hover {
+    color: #60a5fa !important;
+}
+
+/* Panel and card content fixes */
+.panel-body, .card-body {
+    color: #d1d5db !important;
+}
+
+.panel-heading, .card-header {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    color: #ffffff !important;
+}
+
+/* Breadcrumb fixes */
+.breadcrumb {
+    background: rgba(31, 41, 55, 0.6) !important;
+    border: none !important;
+    color: #d1d5db !important;
+}
+
+.breadcrumb a {
+    color: #3b82f6 !important;
+}
+
+.breadcrumb .active {
+    color: #d1d5db !important;
+}
+
+/* Progress bar fixes */
+.progress {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border-radius: 8px !important;
+}
+
+.progress-bar {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+}
+
+/* Ensure all headings are visible */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+/* Fix any remaining visibility issues */
+.invisible-fix {
+    background: rgba(31, 41, 55, 0.8) !important;
+    color: #d1d5db !important;
+    padding: 10px !important;
+    border-radius: 8px !important;
+}
+
+/* Mobile responsive fixes */
+@media (max-width: 767px) {
+    .container {
+        padding: 10px !important;
+    }
+    
+    .card, .panel, .package {
+        margin-bottom: 15px !important;
+        padding: 15px !important;
+    }
+    
+    .btn {
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 10px !important;
+    }
+}
