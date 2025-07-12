@@ -72,12 +72,19 @@ const AdminPanel = () => {
     if (!isAuthenticated) return;
     
     try {
-      const [plansResponse, companyResponse] = await Promise.all([
+      const [plansResponse, companyResponse, navigationResponse, smtpResponse, heroResponse] = await Promise.all([
         axios.get(`${API}/hosting-plans`),
-        axios.get(`${API}/company-info`)
+        axios.get(`${API}/company-info`),
+        axios.get(`${API}/navigation`, { headers: getAuthHeaders() }),
+        axios.get(`${API}/smtp-settings`, { headers: getAuthHeaders() }),
+        axios.get(`${API}/content/hero`)
       ]);
+      
       setHostingPlans(plansResponse.data);
       setCompanyInfo(companyResponse.data);
+      setNavigationItems(navigationResponse.data);
+      setSmtpSettings(smtpResponse.data);
+      setWebsiteContent(prev => ({ ...prev, hero: heroResponse.data }));
     } catch (error) {
       console.error('Error fetching data:', error);
       if (error.response?.status === 401) {
