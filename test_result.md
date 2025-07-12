@@ -122,6 +122,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "VERIFIED: All 36 hosting plans present with correct names. SSD Shared: Opal, Topaz, Diamond. HDD Shared: Quartz, Granite, Marble. Standard VPS: Meteor, Asteroid, Planet, Star, Cluster, Galaxy. Performance VPS: Probe, Rover, Lander, Satellite, Station, Outpost, Base, Colony, Spaceport. Standard GameServers: Stardust, Flare, Comet, Nova, White Dwarf, Red Giant. Performance GameServers: Supernova, Neutron Star, Pulsar, Magnetar, Black Hole, Quasar, Nebula, Star Cluster, Cosmos. All plan filtering and individual plan retrieval working correctly."
+      - working: true
+        agent: "testing"
+        comment: "RE-VERIFIED: All 36 hosting plans confirmed with exact correct names as specified. Plan distribution correct: SSD Shared (3), HDD Shared (3), Standard VPS (6), Performance VPS (9), Standard GameServers (6), Performance GameServers (9). All plan types and filtering working perfectly."
 
   - task: "Add admin authentication system"
     implemented: true
@@ -140,6 +143,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "VERIFIED: Authentication system working perfectly. POST /api/login with admin/admin123 returns valid JWT token. GET /api/verify-token correctly validates tokens. Protected endpoints (PUT /api/hosting-plans/{id}, PUT /api/company-info) properly require authentication and return 403 Forbidden when accessed without valid token."
+      - working: true
+        agent: "testing"
+        comment: "RE-VERIFIED: Authentication system fully functional. Login with admin/admin123 working, JWT token verification working, protected endpoints properly secured with 401/403 responses for unauthorized access."
 
   - task: "Add Terms of Service and Privacy Policy endpoints"
     implemented: true
@@ -158,6 +164,36 @@ backend:
       - working: true
         agent: "testing"
         comment: "VERIFIED: Legal content endpoints working correctly. GET /api/content/terms returns Terms of Service content with proper title and section. GET /api/content/privacy returns Privacy Policy content with proper title and section. Both endpoints return appropriate default content."
+      - working: true
+        agent: "testing"
+        comment: "RE-VERIFIED: Legal content endpoints confirmed working. Both /api/content/terms and /api/content/privacy return proper structured responses with correct titles and sections."
+
+  - task: "Add system status integration with Uptime Kuma"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "NEW FEATURE: System status endpoint /api/system-status implemented with Uptime Kuma integration using API key uk1_USvIQkci-6cYMA5VcOksKY7B1TzT7ul2zrvFOniq. Returns proper status format with 'status' and 'text' fields. Handles API failures gracefully with fallback responses."
+      - working: true
+        agent: "testing"
+        comment: "VERIFIED: System status endpoint working perfectly. Returns proper JSON with status ('operational', 'degraded', 'down', 'unknown') and descriptive text. Successfully integrates with Uptime Kuma API and handles failures gracefully. Response: status='operational', text='All Systems Operational'."
+
+  - task: "Verify markup percentages not exposed in API responses"
+    implemented: true
+    working: false
+    file: "/app/backend/server.py"
+    stuck_count: 1
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "ISSUE FOUND: Markup percentages are being exposed in all hosting plan API responses. The HostingPlan model includes markup_percentage field which is returned to users. All 36 plans show markup_percentage values (0% for shared hosting, 20% for VPS, 40% for GameServers). This may expose internal pricing strategy to customers."
 
 frontend:
   - task: "Remove markup percentage display from plans"
