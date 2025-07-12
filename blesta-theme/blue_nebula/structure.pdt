@@ -324,102 +324,271 @@
     <!-- Additional JavaScript -->
     <script>
         $(document).ready(function() {
-            // CRITICAL: Fix mobile menu toggle functionality
-            $('.navbar-toggle').off('click').on('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
+            console.log('Blue Nebula Blesta theme initializing...');
+            
+            // MOBILE MENU - Comprehensive fix based on examples
+            function initMobileMenu() {
+                // Remove any existing event handlers
+                $('.navbar-toggle').off('click touchstart');
                 
-                var $collapse = $('.navbar-collapse');
-                
-                if ($collapse.hasClass('in')) {
-                    $collapse.removeClass('in').hide();
-                } else {
-                    $collapse.addClass('in').show();
-                }
-                
-                console.log('Mobile menu toggled');
-            });
-            
-            // Close mobile menu when clicking outside
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('.navbar').length) {
-                    $('.navbar-collapse').removeClass('in').hide();
-                }
-            });
-            
-            // Close mobile menu when clicking on a link
-            $('.navbar-nav a').on('click', function() {
-                $('.navbar-collapse').removeClass('in').hide();
-            });
-            
-            // Auto-hide alerts after 5 seconds
-            setTimeout(function() {
-                $('.alert').fadeOut('slow');
-            }, 5000);
-            
-            // Force all text to be visible by removing problematic styles
-            $('*').css({
-                'text-shadow': 'none',
-                'background-color': function(index, value) {
-                    if (value === 'white' || value === '#ffffff' || value === 'rgb(255, 255, 255)') {
-                        return '#1f2937';
-                    }
-                    return value;
-                }
-            });
-            
-            // Fix form styling
-            $('input, textarea, select').each(function() {
-                $(this).addClass('form-control');
-                if ($(this).css('background-color') === 'rgb(255, 255, 255)' || $(this).css('background-color') === 'white') {
-                    $(this).css('background-color', 'rgba(55, 65, 81, 0.9)');
-                    $(this).css('color', '#ffffff');
-                }
-            });
-            
-            // Fix package/order page visibility
-            $('.package, .service, .order-form, .checkout-form, .cart, .summary').each(function() {
-                $(this).css({
-                    'background-color': '#1f2937',
-                    'color': '#d1d5db',
-                    'border': '1px solid #374151',
-                    'border-radius': '12px',
-                    'padding': '20px'
-                });
-            });
-            
-            // Add loading state to buttons on form submit
-            $('form').on('submit', function() {
-                $(this).find('button[type="submit"], input[type="submit"]').prop('disabled', true).addClass('loading');
-            });
-            
-            // Fix cart page visibility
-            if (window.location.pathname.includes('cart') || window.location.pathname.includes('order')) {
-                $('body').addClass('cart-page');
-                
-                // Force all elements to be visible on cart/order pages
-                $('*').each(function() {
-                    var $this = $(this);
-                    if ($this.css('color') === 'rgb(255, 255, 255)' && 
-                        ($this.css('background-color') === 'rgb(255, 255, 255)' || 
-                         $this.css('background-color') === 'white' || 
-                         $this.css('background-color') === 'transparent')) {
-                        $this.css('background-color', '#1f2937');
+                // Add proper mobile menu functionality
+                $('.navbar-toggle').on('click touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    var $toggle = $(this);
+                    var $collapse = $('.navbar-collapse');
+                    
+                    console.log('Mobile menu toggle clicked');
+                    
+                    // Add active state to toggle button
+                    $toggle.toggleClass('active');
+                    
+                    // Toggle the collapse
+                    if ($collapse.hasClass('in') || $collapse.is(':visible')) {
+                        $collapse.removeClass('in').slideUp(300);
+                        console.log('Mobile menu closed');
+                    } else {
+                        $collapse.addClass('in').slideDown(300);
+                        console.log('Mobile menu opened');
                     }
                 });
+                
+                // Close menu when clicking outside
+                $(document).on('click touchstart', function(e) {
+                    if (!$(e.target).closest('.navbar').length) {
+                        $('.navbar-collapse').removeClass('in').slideUp(300);
+                        $('.navbar-toggle').removeClass('active');
+                    }
+                });
+                
+                // Close menu when clicking on navigation links
+                $('.navbar-nav a').on('click', function() {
+                    $('.navbar-collapse').removeClass('in').slideUp(300);
+                    $('.navbar-toggle').removeClass('active');
+                });
+                
+                console.log('Mobile menu initialized');
             }
             
-            // Debug: Log when elements are not visible
-            $('*').each(function() {
-                var $this = $(this);
-                if ($this.css('color') === $this.css('background-color')) {
-                    console.log('Invisible element detected:', $this);
-                    $this.css('background-color', '#1f2937');
-                    $this.css('color', '#d1d5db');
+            // VISIBILITY FIXES - Force all elements to be visible
+            function forceVisibility() {
+                // Fix white-on-white text issues
+                $('*').each(function() {
+                    var $el = $(this);
+                    var textColor = $el.css('color');
+                    var bgColor = $el.css('background-color');
+                    
+                    // Check for invisible text (white on white, etc.)
+                    if ((textColor === 'rgb(255, 255, 255)' || textColor === 'white') && 
+                        (bgColor === 'rgb(255, 255, 255)' || bgColor === 'white' || bgColor === 'transparent')) {
+                        $el.css({
+                            'background-color': '#1f2937',
+                            'color': '#d1d5db'
+                        });
+                    }
+                });
+                
+                // Force package/service visibility
+                $('.package, .service, .product, .order-form, .checkout-form, .cart').each(function() {
+                    $(this).css({
+                        'background-color': '#1f2937',
+                        'color': '#d1d5db',
+                        'border': '1px solid #374151',
+                        'border-radius': '12px',
+                        'padding': '20px'
+                    });
+                });
+                
+                // Force cart items visibility
+                $('.cart-item, .line-item, .order-item').each(function() {
+                    $(this).css({
+                        'background-color': 'rgba(55, 65, 81, 0.6)',
+                        'color': '#d1d5db',
+                        'border': '1px solid #374151',
+                        'border-radius': '8px',
+                        'padding': '15px',
+                        'margin-bottom': '15px'
+                    });
+                });
+                
+                // Force form element visibility
+                $('input, textarea, select').each(function() {
+                    var $input = $(this);
+                    if (!$input.hasClass('form-control')) {
+                        $input.addClass('form-control');
+                    }
+                    $input.css({
+                        'background-color': 'rgba(55, 65, 81, 0.9)',
+                        'color': '#ffffff',
+                        'border': '1px solid #374151'
+                    });
+                });
+                
+                // Fix table visibility
+                $('.table, table').each(function() {
+                    $(this).find('td, th').css({
+                        'color': '#d1d5db',
+                        'background-color': function(index, value) {
+                            if ($(this).parent().is('thead')) {
+                                return 'linear-gradient(135deg, #3b82f6, #8b5cf6)';
+                            } else {
+                                return 'rgba(55, 65, 81, 0.6)';
+                            }
+                        }
+                    });
+                });
+                
+                console.log('Visibility fixes applied');
+            }
+            
+            // CART PAGE SPECIFIC FIXES
+            function fixCartPage() {
+                if (window.location.pathname.includes('cart') || 
+                    window.location.pathname.includes('order') ||
+                    window.location.pathname.includes('checkout')) {
+                    
+                    // Force cart page elements to be visible
+                    $('body').addClass('cart-page');
+                    
+                    // Apply emergency styles to cart elements
+                    $('.cart, .cart-container, .order-summary, .checkout-summary').css({
+                        'background-color': '#1f2937 !important',
+                        'color': '#d1d5db !important',
+                        'border': '1px solid #374151 !important',
+                        'border-radius': '12px !important',
+                        'padding': '20px !important',
+                        'margin-bottom': '20px !important'
+                    });
+                    
+                    // Fix empty cart state
+                    if ($('.cart-item, .line-item').length === 0 && $('.cart, .cart-container').length > 0) {
+                        $('.cart, .cart-container').html('<div style="text-align: center; padding: 40px; color: #d1d5db;"><h3 style="color: #ffffff; margin-bottom: 15px;">Your Cart is Empty</h3><p>Add some items to your cart to get started.</p></div>');
+                    }
+                    
+                    console.log('Cart page fixes applied');
+                }
+            }
+            
+            // ORDER FORM SPECIFIC FIXES
+            function fixOrderForms() {
+                // Fix package selection visibility
+                $('.package-option, .product-option').css({
+                    'background-color': 'rgba(55, 65, 81, 0.6)',
+                    'border': '2px solid #374151',
+                    'color': '#d1d5db',
+                    'border-radius': '8px',
+                    'padding': '15px',
+                    'margin-bottom': '15px',
+                    'cursor': 'pointer'
+                });
+                
+                // Add hover effects to package options
+                $('.package-option, .product-option').on('mouseenter', function() {
+                    $(this).css('border-color', '#3b82f6');
+                }).on('mouseleave', function() {
+                    if (!$(this).hasClass('selected')) {
+                        $(this).css('border-color', '#374151');
+                    }
+                });
+                
+                // Fix range sliders
+                $('input[type="range"]').each(function() {
+                    var $slider = $(this);
+                    $slider.css({
+                        'background': '#374151',
+                        'height': '8px',
+                        'border-radius': '4px',
+                        'outline': 'none',
+                        'margin': '15px 0'
+                    });
+                });
+                
+                console.log('Order form fixes applied');
+            }
+            
+            // INITIALIZE ALL FIXES
+            function initializeTheme() {
+                initMobileMenu();
+                forceVisibility();
+                fixCartPage();
+                fixOrderForms();
+                
+                // Auto-hide alerts
+                setTimeout(function() {
+                    $('.alert').fadeOut('slow');
+                }, 5000);
+                
+                // Add loading states to form submissions
+                $('form').on('submit', function() {
+                    $(this).find('button[type="submit"], input[type="submit"]')
+                           .prop('disabled', true)
+                           .addClass('loading')
+                           .text('Loading...');
+                });
+                
+                // Debug logging for visibility issues
+                var invisibleElements = [];
+                $('*').each(function() {
+                    var $el = $(this);
+                    if ($el.css('color') === $el.css('background-color') && $el.text().trim() !== '') {
+                        invisibleElements.push($el);
+                    }
+                });
+                
+                if (invisibleElements.length > 0) {
+                    console.warn('Found', invisibleElements.length, 'potentially invisible elements');
+                    invisibleElements.forEach(function(el) {
+                        $(el).addClass('force-visible');
+                    });
+                }
+                
+                console.log('Blue Nebula theme initialization complete');
+            }
+            
+            // Run initialization
+            initializeTheme();
+            
+            // Re-run fixes on AJAX content load (for dynamic content)
+            $(document).ajaxComplete(function() {
+                setTimeout(function() {
+                    forceVisibility();
+                    fixCartPage();
+                    fixOrderForms();
+                }, 100);
+            });
+            
+            // Re-run fixes on window resize (for responsive issues)
+            $(window).on('resize', function() {
+                if ($(window).width() <= 767) {
+                    initMobileMenu();
                 }
             });
             
-            console.log('Blue Nebula theme JavaScript loaded successfully');
+            // Monitor for DOM changes and apply fixes to new elements
+            if (window.MutationObserver) {
+                var observer = new MutationObserver(function(mutations) {
+                    var shouldReapplyFixes = false;
+                    mutations.forEach(function(mutation) {
+                        if (mutation.addedNodes.length > 0) {
+                            shouldReapplyFixes = true;
+                        }
+                    });
+                    
+                    if (shouldReapplyFixes) {
+                        setTimeout(function() {
+                            forceVisibility();
+                            fixOrderForms();
+                        }, 50);
+                    }
+                });
+                
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+        });
         });
         });
         });
