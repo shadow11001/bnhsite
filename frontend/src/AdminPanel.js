@@ -140,8 +140,8 @@ const AdminPanel = () => {
       // Fetch legal content
       try {
         const [termsResponse, privacyResponse] = await Promise.all([
-          axios.get(`${API}/legal/terms`),
-          axios.get(`${API}/legal/privacy`)
+          axios.get(`${API}/content/terms`),
+          axios.get(`${API}/content/privacy`)
         ]);
         console.log('Legal content loaded');
         setLegalContent({
