@@ -185,7 +185,7 @@ async def get_hosting_plan(plan_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.put("/hosting-plans/{plan_id}")
-async def update_hosting_plan(plan_id: str, plan_update: dict):
+async def update_hosting_plan(plan_id: str, plan_update: dict, current_user: str = Depends(get_current_user)):
     """Update hosting plan - for admin use"""
     try:
         result = await db.hosting_plans.update_one(
