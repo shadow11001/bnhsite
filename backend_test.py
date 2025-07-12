@@ -54,7 +54,7 @@ class BlueNebulaAPITester:
             return False
 
     def test_hosting_plans_all(self):
-        """Test getting all hosting plans"""
+        """Test getting all hosting plans - should have 36 plans with correct names"""
         try:
             response = requests.get(f"{self.api_url}/hosting-plans", timeout=10)
             success = response.status_code == 200
@@ -64,28 +64,54 @@ class BlueNebulaAPITester:
                 success = isinstance(plans, list) and len(plans) > 0
                 
                 if success:
-                    # Verify we have the expected 12 plans
-                    expected_count = 12
+                    # Verify we have the expected 36 plans
+                    expected_count = 36
                     actual_count = len(plans)
                     success = actual_count == expected_count
                     
                     if success:
                         # Check plan types distribution
                         plan_types = {}
+                        plan_names_by_type = {}
                         for plan in plans:
                             plan_type = plan.get('plan_type')
+                            plan_name = plan.get('plan_name')
                             plan_types[plan_type] = plan_types.get(plan_type, 0) + 1
+                            if plan_type not in plan_names_by_type:
+                                plan_names_by_type[plan_type] = []
+                            plan_names_by_type[plan_type].append(plan_name)
                         
                         expected_types = {
                             'ssd_shared': 3,
                             'hdd_shared': 3, 
-                            'standard_vps': 3,
-                            'standard_gameserver': 3
+                            'standard_vps': 6,
+                            'performance_vps': 9,
+                            'standard_gameserver': 6,
+                            'performance_gameserver': 9
                         }
                         
                         types_match = plan_types == expected_types
-                        success = types_match
-                        details = f"Found {actual_count} plans, Types: {plan_types}"
+                        
+                        # Verify specific plan names
+                        expected_names = {
+                            'ssd_shared': ['Opal', 'Topaz', 'Diamond'],
+                            'hdd_shared': ['Quartz', 'Granite', 'Marble'],
+                            'standard_vps': ['Meteor', 'Asteroid', 'Planet', 'Star', 'Cluster', 'Galaxy'],
+                            'performance_vps': ['Probe', 'Rover', 'Lander', 'Satellite', 'Station', 'Outpost', 'Base', 'Colony', 'Spaceport'],
+                            'standard_gameserver': ['Stardust', 'Flare', 'Comet', 'Nova', 'White Dwarf', 'Red Giant'],
+                            'performance_gameserver': ['Supernova', 'Neutron Star', 'Pulsar', 'Magnetar', 'Black Hole', 'Quasar', 'Nebula', 'Star Cluster', 'Cosmos']
+                        }
+                        
+                        names_correct = True
+                        for plan_type, expected_plan_names in expected_names.items():
+                            actual_names = sorted(plan_names_by_type.get(plan_type, []))
+                            expected_sorted = sorted(expected_plan_names)
+                            if actual_names != expected_sorted:
+                                names_correct = False
+                                self.errors.append(f"Plan names mismatch for {plan_type}: expected {expected_sorted}, got {actual_names}")
+                        
+                        success = types_match and names_correct
+                        details = f"Found {actual_count} plans, Types: {plan_types}, Names correct: {names_correct}"
                     else:
                         details = f"Expected {expected_count} plans, got {actual_count}"
                 else:
@@ -93,11 +119,11 @@ class BlueNebulaAPITester:
             else:
                 details = f"HTTP {response.status_code}"
                 
-            self.log_test("Get All Hosting Plans", success, details)
+            self.log_test("Get All Hosting Plans (36 with correct names)", success, details)
             return success, plans if success else []
             
         except Exception as e:
-            self.log_test("Get All Hosting Plans", False, str(e))
+            self.log_test("Get All Hosting Plans (36 with correct names)", False, str(e))
             return False, []
 
     def test_hosting_plans_filtered(self, plans):
