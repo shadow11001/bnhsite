@@ -802,6 +802,8 @@
                     forceVisibility();
                     fixCartPage();
                     fixOrderForms();
+                    fixSliders();
+                    fixIcons();
                 }, 100);
             });
             
@@ -810,6 +812,7 @@
                 if ($(window).width() <= 767) {
                     initMobileMenu();
                 }
+                fixSliders();
             });
             
             // Monitor for DOM changes and apply fixes to new elements
@@ -826,6 +829,8 @@
                         setTimeout(function() {
                             forceVisibility();
                             fixOrderForms();
+                            fixSliders();
+                            fixIcons();
                         }, 50);
                     }
                 });
