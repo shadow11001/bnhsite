@@ -780,7 +780,7 @@ const AdminPanel = () => {
     const loadLegalContent = async (type) => {
       try {
         console.log('Loading legal content for:', type);
-        const response = await axios.get(`${API}/legal/${type}`);
+        const response = await axios.get(`${API}/content/${type}`);
         console.log('Legal content loaded:', response.data);
         setLegalData(response.data);
       } catch (error) {
