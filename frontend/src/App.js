@@ -62,6 +62,59 @@ const LegalPage = ({ type }) => {
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+// System Status Component with Uptime Kuma Integration
+const SystemStatus = () => {
+  const [status, setStatus] = useState({ status: 'checking', text: 'Checking...' });
+
+  useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        // Call our backend endpoint that will fetch from Uptime Kuma
+        const response = await axios.get(`${API}/system-status`);
+        setStatus(response.data);
+      } catch (error) {
+        console.error('Error fetching status:', error);
+        setStatus({ status: 'unknown', text: 'Status Unknown' });
+      }
+    };
+
+    checkStatus();
+    // Check status every 30 seconds
+    const interval = setInterval(checkStatus, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getStatusColor = () => {
+    switch (status.status) {
+      case 'operational': return 'text-green-400';
+      case 'degraded': return 'text-yellow-400';
+      case 'down': return 'text-red-400';
+      default: return 'text-gray-400';
+    }
+  };
+
+  const getStatusIcon = () => {
+    switch (status.status) {
+      case 'operational': return '●';
+      case 'degraded': return '◐';
+      case 'down': return '●';
+      default: return '○';
+    }
+  };
+
+  return (
+    <a 
+      href="https://status.bluenebulahosting.com/status/bnh" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      className={`${getStatusColor()} hover:text-blue-300 transition-colors flex items-center`}
+    >
+      <span className="mr-1">{getStatusIcon()}</span>
+      Status: {status.text}
+    </a>
+  );
+};
+
 // Header Component
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
