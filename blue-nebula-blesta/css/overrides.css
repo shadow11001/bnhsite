@@ -541,18 +541,7 @@ label, .form-label {
     background: linear-gradient(90deg, transparent, #3b82f6, #8b5cf6, transparent);
 }
 
-/* Add subtle background overlay for content readability */
-.footer::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(15, 15, 16, 0.3);
-    z-index: -1;
-    backdrop-filter: blur(5px);
-}
+/* Remove the overlay completely for seamless blending */
 
 /* Footer Logo */
 .footer-logo .logo-content {
