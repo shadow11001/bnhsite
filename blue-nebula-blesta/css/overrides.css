@@ -93,12 +93,6 @@ body::before {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.company-tagline {
-    font-size: 0.9rem;
-    color: #8b5cf6;
-    font-weight: 500;
-}
-
 .logo a:hover .logo-content {
     transform: translateY(-1px);
     transition: transform 0.3s ease;
@@ -120,10 +114,6 @@ body::before {
 
 .footer-logo .company-name {
     font-size: 1.2rem;
-}
-
-.footer-logo .company-tagline {
-    font-size: 0.8rem;
 }
 
 /* ============================================================================
