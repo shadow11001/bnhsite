@@ -12,8 +12,12 @@ const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState('plans');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
-  const [loginData, setLoginData] = useState({ username: '', password: '' });
-  const [loginError, setLoginError] = useState('');
+  
+  // Content management states
+  const [websiteContent, setWebsiteContent] = useState({});
+  const [navigationItems, setNavigationItems] = useState([]);
+  const [smtpSettings, setSmtpSettings] = useState({});
+  const [legalContent, setLegalContent] = useState({});
 
   // Check authentication on component mount
   useEffect(() => {
