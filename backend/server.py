@@ -180,7 +180,7 @@ async def verify_token(current_user: str = Depends(get_current_user)):
     """Verify if token is valid"""
     return {"valid": True, "user": current_user}
 
-@api_router.get("/hosting-plans", response_model=List[HostingPlan])
+@api_router.get("/hosting-plans", response_model=List[PublicHostingPlan])
 async def get_hosting_plans(plan_type: Optional[str] = None):
     """Get all hosting plans or filter by type"""
     try:
@@ -190,15 +190,26 @@ async def get_hosting_plans(plan_type: Optional[str] = None):
         
         plans = await db.hosting_plans.find(query).to_list(1000)
         
-        # Filter out markup_percentage from public API response
-        filtered_plans = []
+        # Convert to public model without markup_percentage
+        public_plans = []
         for plan in plans:
-            # Remove markup_percentage before returning to users
-            plan_dict = dict(plan)
-            plan_dict.pop('markup_percentage', None)
-            filtered_plans.append(HostingPlan(**plan_dict))
+            plan_dict = {
+                "id": plan["id"],
+                "plan_type": plan["plan_type"],
+                "plan_name": plan["plan_name"],
+                "base_price": plan["base_price"],
+                "cpu_cores": plan.get("cpu_cores"),
+                "memory_gb": plan.get("memory_gb"),
+                "disk_gb": plan.get("disk_gb"),
+                "disk_type": plan.get("disk_type", "SSD"),
+                "bandwidth": plan.get("bandwidth"),
+                "supported_games": plan.get("supported_games"),
+                "features": plan.get("features", []),
+                "popular": plan.get("popular", False)
+            }
+            public_plans.append(PublicHostingPlan(**plan_dict))
         
-        return filtered_plans
+        return public_plans
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
