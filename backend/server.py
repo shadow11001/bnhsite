@@ -58,6 +58,13 @@ class ContactInfo(BaseModel):
     message: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
+class ContentUpdate(BaseModel):
+    section: str  # "hero", "features", "about", "company"
+    title: Optional[str] = None
+    subtitle: Optional[str] = None
+    description: Optional[str] = None
+    features: Optional[List[str]] = None
+
 # API Routes
 @api_router.get("/")
 async def root():
@@ -87,6 +94,20 @@ async def get_hosting_plan(plan_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.put("/hosting-plans/{plan_id}")
+async def update_hosting_plan(plan_id: str, plan_update: dict):
+    """Update hosting plan - for admin use"""
+    try:
+        result = await db.hosting_plans.update_one(
+            {"id": plan_id}, 
+            {"$set": plan_update}
+        )
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Plan not found")
+        return {"message": "Plan updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/company-info", response_model=CompanyInfo)
 async def get_company_info():
     """Get company information"""
@@ -110,6 +131,19 @@ async def get_company_info():
             )
             return default_info
         return CompanyInfo(**company)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/company-info")
+async def update_company_info(company_update: dict):
+    """Update company information - for admin use"""
+    try:
+        await db.company_info.update_one(
+            {}, 
+            {"$set": company_update}, 
+            upsert=True
+        )
+        return {"message": "Company info updated successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -159,15 +193,40 @@ async def get_features():
         ]
     }
 
-# Initialize hosting plans data
+@api_router.put("/content")
+async def update_content(content_update: ContentUpdate):
+    """Update website content - for admin use"""
+    try:
+        update_data = content_update.dict(exclude_unset=True)
+        await db.website_content.update_one(
+            {"section": content_update.section},
+            {"$set": update_data},
+            upsert=True
+        )
+        return {"message": f"Content for {content_update.section} updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/content/{section}")
+async def get_content(section: str):
+    """Get website content by section"""
+    try:
+        content = await db.website_content.find_one({"section": section})
+        if not content:
+            return {"section": section, "message": "No custom content found"}
+        return content
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Initialize hosting plans data with EXACT names from pricing table
 @api_router.post("/init-data")
 async def initialize_data():
-    """Initialize hosting plans data - for development only"""
+    """Initialize hosting plans data with exact names from pricing table"""
     try:
         # Clear existing data
         await db.hosting_plans.delete_many({})
         
-        # SSD Shared Hosting Plans
+        # SSD Shared Hosting Plans (exact names)
         ssd_shared_plans = [
             {
                 "plan_type": "ssd_shared",
@@ -198,7 +257,7 @@ async def initialize_data():
             }
         ]
         
-        # HDD Shared Hosting Plans  
+        # HDD Shared Hosting Plans (exact names)
         hdd_shared_plans = [
             {
                 "plan_type": "hdd_shared",
@@ -229,7 +288,7 @@ async def initialize_data():
             }
         ]
         
-        # Standard VPS Plans (20% markup)
+        # Standard VPS Plans (6 plans - exact names from pricing table)
         standard_vps_plans = [
             {
                 "plan_type": "standard_vps",
@@ -238,7 +297,6 @@ async def initialize_data():
                 "cpu_cores": 1,
                 "memory_gb": 2,
                 "disk_gb": 55,
-                "disk_type": "SSD",
                 "markup_percentage": 20,
                 "features": ["1 vCPU", "2 GB RAM", "55 GB SSD", "Root Access", "Choice of OS"],
                 "popular": False
@@ -250,35 +308,168 @@ async def initialize_data():
                 "cpu_cores": 2,
                 "memory_gb": 4,
                 "disk_gb": 80,
-                "disk_type": "SSD",
                 "markup_percentage": 20,
                 "features": ["2 vCPU", "4 GB RAM", "80 GB SSD", "Root Access", "Choice of OS"],
                 "popular": True
             },
             {
                 "plan_type": "standard_vps",
-                "plan_name": "Earth", 
+                "plan_name": "Planet", 
                 "base_price": 40.0,
                 "cpu_cores": 4,
                 "memory_gb": 8,
                 "disk_gb": 160,
-                "disk_type": "SSD", 
                 "markup_percentage": 20,
                 "features": ["4 vCPU", "8 GB RAM", "160 GB SSD", "Root Access", "Choice of OS"],
+                "popular": False
+            },
+            {
+                "plan_type": "standard_vps",
+                "plan_name": "Star", 
+                "base_price": 80.0,
+                "cpu_cores": 6,
+                "memory_gb": 16,
+                "disk_gb": 320,
+                "markup_percentage": 20,
+                "features": ["6 vCPU", "16 GB RAM", "320 GB SSD", "Root Access", "Choice of OS"],
+                "popular": False
+            },
+            {
+                "plan_type": "standard_vps",
+                "plan_name": "Cluster", 
+                "base_price": 160.0,
+                "cpu_cores": 8,
+                "memory_gb": 32,
+                "disk_gb": 640,
+                "markup_percentage": 20,
+                "features": ["8 vCPU", "32 GB RAM", "640 GB SSD", "Root Access", "Choice of OS"],
+                "popular": False
+            },
+            {
+                "plan_type": "standard_vps",
+                "plan_name": "Galaxy", 
+                "base_price": 320.0,
+                "cpu_cores": 12,
+                "memory_gb": 48,
+                "disk_gb": 1280,
+                "markup_percentage": 20,
+                "features": ["12 vCPU", "48 GB RAM", "1280 GB SSD", "Root Access", "Choice of OS"],
                 "popular": False
             }
         ]
         
-        # Standard GameServer Plans (40% markup)
-        gameserver_plans = [
+        # Performance VPS Plans (9 plans - exact names from pricing table)
+        performance_vps_plans = [
+            {
+                "plan_type": "performance_vps",
+                "plan_name": "Prime",
+                "base_price": 6.0,
+                "cpu_cores": 1,
+                "memory_gb": 1,
+                "disk_gb": 32,
+                "markup_percentage": 20,
+                "features": ["1 vCPU", "1 GB RAM", "32 GB SSD", "High Performance", "Root Access"],
+                "popular": False
+            },
+            {
+                "plan_type": "performance_vps",
+                "plan_name": "Horizon",
+                "base_price": 12.0,
+                "cpu_cores": 1,
+                "memory_gb": 2,
+                "disk_gb": 64,
+                "markup_percentage": 20,
+                "features": ["1 vCPU", "2 GB RAM", "64 GB SSD", "High Performance", "Root Access"],
+                "popular": False
+            },
+            {
+                "plan_type": "performance_vps",
+                "plan_name": "Lantern",
+                "base_price": 24.0,
+                "cpu_cores": 2,
+                "memory_gb": 4,
+                "disk_gb": 128,
+                "markup_percentage": 20,
+                "features": ["2 vCPU", "4 GB RAM", "128 GB SSD", "High Performance", "Root Access"],
+                "popular": True
+            },
+            {
+                "plan_type": "performance_vps",
+                "plan_name": "Summit",
+                "base_price": 48.0,
+                "cpu_cores": 3,
+                "memory_gb": 8,
+                "disk_gb": 256,
+                "markup_percentage": 20,
+                "features": ["3 vCPU", "8 GB RAM", "256 GB SSD", "High Performance", "Root Access"],
+                "popular": False
+            },
+            {
+                "plan_type": "performance_vps",
+                "plan_name": "Station",
+                "base_price": 96.0,
+                "cpu_cores": 4,
+                "memory_gb": 16,
+                "disk_gb": 384,
+                "markup_percentage": 20,
+                "features": ["4 vCPU", "16 GB RAM", "384 GB SSD", "High Performance", "Root Access"],
+                "popular": False
+            },
+            {
+                "plan_type": "performance_vps",
+                "plan_name": "Quasar",
+                "base_price": 144.0,
+                "cpu_cores": 6,
+                "memory_gb": 24,
+                "disk_gb": 448,
+                "markup_percentage": 20,
+                "features": ["6 vCPU", "24 GB RAM", "448 GB SSD", "High Performance", "Root Access"],
+                "popular": False
+            },
+            {
+                "plan_type": "performance_vps",
+                "plan_name": "Base",
+                "base_price": 192.0,
+                "cpu_cores": 8,
+                "memory_gb": 32,
+                "disk_gb": 512,
+                "markup_percentage": 20,
+                "features": ["8 vCPU", "32 GB RAM", "512 GB SSD", "High Performance", "Root Access"],
+                "popular": False
+            },
+            {
+                "plan_type": "performance_vps",
+                "plan_name": "Galaxy",
+                "base_price": 256.0,
+                "cpu_cores": 12,
+                "memory_gb": 48,
+                "disk_gb": 768,
+                "markup_percentage": 20,
+                "features": ["12 vCPU", "48 GB RAM", "768 GB SSD", "High Performance", "Root Access"],
+                "popular": False
+            },
+            {
+                "plan_type": "performance_vps",
+                "plan_name": "Spaceway",
+                "base_price": 320.0,
+                "cpu_cores": 16,
+                "memory_gb": 58,
+                "disk_gb": 1024,
+                "markup_percentage": 20,
+                "features": ["16 vCPU", "58 GB RAM", "1024 GB SSD", "High Performance", "Root Access"],
+                "popular": False
+            }
+        ]
+        
+        # Standard GameServer Plans (6 plans - exact names from pricing table)
+        standard_gameserver_plans = [
             {
                 "plan_type": "standard_gameserver",
-                "plan_name": "Lunar",
+                "plan_name": "F-1",
                 "base_price": 10.0,
                 "cpu_cores": 1,
                 "memory_gb": 2,
                 "disk_gb": 25,
-                "disk_type": "SSD",
                 "markup_percentage": 40,
                 "supported_games": ["Minecraft", "Terraria", "Garry's Mod"],
                 "features": ["1 vCPU", "2 GB RAM", "25 GB SSD", "Pterodactyl Panel", "DDoS Protection"],
@@ -286,12 +477,11 @@ async def initialize_data():
             },
             {
                 "plan_type": "standard_gameserver",
-                "plan_name": "Solar", 
+                "plan_name": "Lunar", 
                 "base_price": 20.0,
                 "cpu_cores": 2,
                 "memory_gb": 4,
                 "disk_gb": 80,
-                "disk_type": "SSD",
                 "markup_percentage": 40,
                 "supported_games": ["Minecraft", "CS:GO", "TF2", "ARK"],
                 "features": ["2 vCPU", "4 GB RAM", "80 GB SSD", "Pterodactyl Panel", "DDoS Protection"],
@@ -299,21 +489,170 @@ async def initialize_data():
             },
             {
                 "plan_type": "standard_gameserver",
-                "plan_name": "Galactic",
+                "plan_name": "Solar",
+                "base_price": 40.0,
+                "cpu_cores": 4,
+                "memory_gb": 8,
+                "disk_gb": 160,
+                "markup_percentage": 40,
+                "supported_games": ["Minecraft", "Rust", "CS:GO", "TF2", "ARK"],
+                "features": ["4 vCPU", "8 GB RAM", "160 GB SSD", "Pterodactyl Panel", "DDoS Protection"],
+                "popular": False
+            },
+            {
+                "plan_type": "standard_gameserver",
+                "plan_name": "VIA",
                 "base_price": 80.0,
                 "cpu_cores": 6,
                 "memory_gb": 16,
                 "disk_gb": 320,
-                "disk_type": "SSD",
                 "markup_percentage": 40,
                 "supported_games": ["Minecraft", "Rust", "CS:GO", "TF2", "ARK", "Terraria"],
-                "features": ["6 vCPU", "16 GB RAM", "320 GB SSD", "Pterodactyl Panel", "DDoS Protection", "Priority Support"],
+                "features": ["6 vCPU", "16 GB RAM", "320 GB SSD", "Pterodactyl Panel", "DDoS Protection"],
+                "popular": False
+            },
+            {
+                "plan_type": "standard_gameserver",
+                "plan_name": "Silver",
+                "base_price": 160.0,
+                "cpu_cores": 8,
+                "memory_gb": 32,
+                "disk_gb": 640,
+                "markup_percentage": 40,
+                "supported_games": ["Minecraft", "Rust", "CS:GO", "TF2", "ARK", "Terraria"],
+                "features": ["8 vCPU", "32 GB RAM", "640 GB SSD", "Pterodactyl Panel", "DDoS Protection", "Priority Support"],
+                "popular": False
+            },
+            {
+                "plan_type": "standard_gameserver",
+                "plan_name": "Galactic",
+                "base_price": 320.0,
+                "cpu_cores": 12,
+                "memory_gb": 48,
+                "disk_gb": 1280,
+                "markup_percentage": 40,
+                "supported_games": ["Minecraft", "Rust", "CS:GO", "TF2", "ARK", "Terraria"],
+                "features": ["12 vCPU", "48 GB RAM", "1280 GB SSD", "Pterodactyl Panel", "DDoS Protection", "Priority Support"],
+                "popular": False
+            }
+        ]
+        
+        # Performance GameServer Plans (9 plans - exact names from pricing table)
+        performance_gameserver_plans = [
+            {
+                "plan_type": "performance_gameserver",
+                "plan_name": "Prime",
+                "base_price": 6.0,
+                "cpu_cores": 1,
+                "memory_gb": 1,
+                "disk_gb": 32,
+                "markup_percentage": 40,
+                "supported_games": ["Minecraft", "Terraria", "Garry's Mod"],
+                "features": ["1 vCPU", "1 GB RAM", "32 GB SSD", "High Performance", "Pterodactyl Panel"],
+                "popular": False
+            },
+            {
+                "plan_type": "performance_gameserver",
+                "plan_name": "Horizon",
+                "base_price": 12.0,
+                "cpu_cores": 1,
+                "memory_gb": 2,
+                "disk_gb": 64,
+                "markup_percentage": 40,
+                "supported_games": ["Minecraft", "CS:GO", "TF2"],
+                "features": ["1 vCPU", "2 GB RAM", "64 GB SSD", "High Performance", "Pterodactyl Panel"],
+                "popular": False
+            },
+            {
+                "plan_type": "performance_gameserver",
+                "plan_name": "Lantern",
+                "base_price": 24.0,
+                "cpu_cores": 2,
+                "memory_gb": 4,
+                "disk_gb": 128,
+                "markup_percentage": 40,
+                "supported_games": ["Minecraft", "CS:GO", "TF2", "ARK"],
+                "features": ["2 vCPU", "4 GB RAM", "128 GB SSD", "High Performance", "Pterodactyl Panel"],
+                "popular": True
+            },
+            {
+                "plan_type": "performance_gameserver",
+                "plan_name": "Summit",
+                "base_price": 48.0,
+                "cpu_cores": 3,
+                "memory_gb": 8,
+                "disk_gb": 256,
+                "markup_percentage": 40,
+                "supported_games": ["Minecraft", "Rust", "CS:GO", "TF2", "ARK"],
+                "features": ["3 vCPU", "8 GB RAM", "256 GB SSD", "High Performance", "Pterodactyl Panel"],
+                "popular": False
+            },
+            {
+                "plan_type": "performance_gameserver",
+                "plan_name": "Station",
+                "base_price": 96.0,
+                "cpu_cores": 4,
+                "memory_gb": 16,
+                "disk_gb": 384,
+                "markup_percentage": 40,
+                "supported_games": ["Minecraft", "Rust", "CS:GO", "TF2", "ARK", "Terraria"],
+                "features": ["4 vCPU", "16 GB RAM", "384 GB SSD", "High Performance", "Pterodactyl Panel"],
+                "popular": False
+            },
+            {
+                "plan_type": "performance_gameserver",
+                "plan_name": "Quasar",
+                "base_price": 144.0,
+                "cpu_cores": 6,
+                "memory_gb": 24,
+                "disk_gb": 448,
+                "markup_percentage": 40,
+                "supported_games": ["Minecraft", "Rust", "CS:GO", "TF2", "ARK", "Terraria"],
+                "features": ["6 vCPU", "24 GB RAM", "448 GB SSD", "High Performance", "Pterodactyl Panel"],
+                "popular": False
+            },
+            {
+                "plan_type": "performance_gameserver",
+                "plan_name": "Base",
+                "base_price": 192.0,
+                "cpu_cores": 8,
+                "memory_gb": 32,
+                "disk_gb": 512,
+                "markup_percentage": 40,
+                "supported_games": ["Minecraft", "Rust", "CS:GO", "TF2", "ARK", "Terraria"],
+                "features": ["8 vCPU", "32 GB RAM", "512 GB SSD", "High Performance", "Pterodactyl Panel"],
+                "popular": False
+            },
+            {
+                "plan_type": "performance_gameserver",
+                "plan_name": "Galaxy",
+                "base_price": 256.0,
+                "cpu_cores": 12,
+                "memory_gb": 48,
+                "disk_gb": 768,
+                "markup_percentage": 40,
+                "supported_games": ["Minecraft", "Rust", "CS:GO", "TF2", "ARK", "Terraria"],
+                "features": ["12 vCPU", "48 GB RAM", "768 GB SSD", "High Performance", "Pterodactyl Panel"],
+                "popular": False
+            },
+            {
+                "plan_type": "performance_gameserver",
+                "plan_name": "Spaceway",
+                "base_price": 320.0,
+                "cpu_cores": 16,
+                "memory_gb": 58,
+                "disk_gb": 1024,
+                "markup_percentage": 40,
+                "supported_games": ["Minecraft", "Rust", "CS:GO", "TF2", "ARK", "Terraria"],
+                "features": ["16 vCPU", "58 GB RAM", "1024 GB SSD", "High Performance", "Pterodactyl Panel"],
                 "popular": False
             }
         ]
         
         # Combine all plans
-        all_plans = ssd_shared_plans + hdd_shared_plans + standard_vps_plans + gameserver_plans
+        all_plans = (ssd_shared_plans + hdd_shared_plans + 
+                    standard_vps_plans + performance_vps_plans + 
+                    standard_gameserver_plans + performance_gameserver_plans)
         
         # Add IDs to all plans
         for plan in all_plans:
