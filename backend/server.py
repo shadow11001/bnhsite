@@ -226,6 +226,58 @@ async def verify_token(current_user: str = Depends(get_current_user)):
     """Verify if token is valid"""
     return {"valid": True, "user": current_user}
 
+# Promo Code Management
+@api_router.get("/promo-codes")
+async def get_promo_codes():
+    """Get all active promo codes"""
+    try:
+        promo_codes = await db.promo_codes.find({"is_active": True}).to_list(100)
+        return promo_codes
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/admin/promo-codes")
+async def get_admin_promo_codes(current_user: str = Depends(get_current_user)):
+    """Get all promo codes for admin - includes inactive"""
+    try:
+        promo_codes = await db.promo_codes.find().to_list(100)
+        return promo_codes
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/promo-codes")
+async def create_promo_code(promo_data: dict, current_user: str = Depends(get_current_user)):
+    """Create new promo code - admin only"""
+    try:
+        promo_data["id"] = str(uuid.uuid4())
+        promo_data["created_date"] = datetime.utcnow().isoformat()
+        
+        await db.promo_codes.insert_one(promo_data)
+        return {"message": "Promo code created successfully", "id": promo_data["id"]}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/admin/promo-codes/{promo_id}")
+async def update_promo_code(promo_id: str, promo_data: dict, current_user: str = Depends(get_current_user)):
+    """Update promo code - admin only"""
+    try:
+        await db.promo_codes.update_one(
+            {"id": promo_id},
+            {"$set": promo_data}
+        )
+        return {"message": "Promo code updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/admin/promo-codes/{promo_id}")
+async def delete_promo_code(promo_id: str, current_user: str = Depends(get_current_user)):
+    """Delete promo code - admin only"""
+    try:
+        await db.promo_codes.delete_one({"id": promo_id})
+        return {"message": "Promo code deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Site Settings Management
 @api_router.get("/site-settings")
 async def get_site_settings(current_user: str = Depends(get_current_user)):
