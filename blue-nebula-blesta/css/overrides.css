@@ -489,8 +489,10 @@ label, .form-label {
     backdrop-filter: blur(10px);
     border: 1px solid #374151 !important;
     border-radius: 8px !important;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3) !important;
     padding: 8px 0 !important;
+    z-index: 1050 !important;
+    margin-top: 2px !important;
 }
 
 .dropdown-item {
@@ -499,6 +501,7 @@ label, .form-label {
     padding: 8px 16px !important;
     border: none !important;
     background: transparent !important;
+    font-size: 0.9rem;
 }
 
 .dropdown-item:hover, .dropdown-item:focus {
@@ -507,12 +510,18 @@ label, .form-label {
     border: none !important;
 }
 
+.dropdown-item i {
+    color: inherit !important;
+    margin-right: 8px;
+}
+
 /* Fix navigation dropdown specifically */
 .navbar .dropdown-menu {
     background: rgba(31, 41, 55, 0.95) !important;
     border: 1px solid #374151 !important;
     border-radius: 8px !important;
     margin-top: 8px !important;
+    z-index: 1050 !important;
 }
 
 .navbar .dropdown-item {
@@ -520,7 +529,7 @@ label, .form-label {
     background: transparent !important;
 }
 
-.navbar .dropdown-item:hover {
+.navbar .dropdown-item:hover, .navbar .dropdown-item:focus {
     background: rgba(59, 130, 246, 0.1) !important;
     color: #3b82f6 !important;
 }
@@ -528,6 +537,7 @@ label, .form-label {
 /* Fix dropdown toggle styling */
 .dropdown-toggle::after {
     border-top-color: #d1d5db !important;
+    margin-left: 8px;
 }
 
 .navbar .dropdown-toggle {
@@ -536,6 +546,19 @@ label, .form-label {
 
 .navbar .dropdown-toggle:hover {
     color: #3b82f6 !important;
+}
+
+/* Dropdown divider */
+.dropdown-divider {
+    border-top: 1px solid #374151 !important;
+    margin: 8px 0 !important;
+}
+
+/* Fix user dropdown specifically */
+.nav-item.dropdown .dropdown-menu {
+    right: 0 !important;
+    left: auto !important;
+    min-width: 200px;
 }
 
 /* ============================================================================
