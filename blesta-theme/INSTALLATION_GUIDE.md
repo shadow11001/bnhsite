@@ -10,6 +10,7 @@ blue_nebula/
 ├── structure.pdt              # Main template structure
 ├── css/
 │   ├── blue_nebula.css        # Main theme CSS
+│   ├── critical_fixes.css     # Critical visibility fixes
 │   └── responsive.css         # Mobile responsive styles
 ├── images/
 │   └── favicon.ico            # Blue Nebula favicon (placeholder)
