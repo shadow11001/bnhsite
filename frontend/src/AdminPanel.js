@@ -1185,10 +1185,19 @@ const AdminPanel = () => {
           <div>
             <h2 className="text-2xl font-bold text-white mb-6">Manage Hosting Plans</h2>
             
+            {/* Debug info */}
+            <div className="bg-gray-700 rounded p-2 mb-4 text-xs text-gray-300">
+              Debug: Loaded {hostingPlans.length} hosting plans | Loading: {loading ? 'Yes' : 'No'} | Authenticated: {isAuthenticated ? 'Yes' : 'No'}
+            </div>
+            
             {hostingPlans.length === 0 ? (
               <div className="bg-gray-800 rounded-lg p-6 text-center">
-                <div className="text-gray-400 mb-4">Loading hosting plans...</div>
-                <div className="text-sm text-gray-500">If this persists, check console for errors.</div>
+                <div className="text-gray-400 mb-4">
+                  {loading ? 'Loading hosting plans...' : 'No hosting plans found'}
+                </div>
+                <div className="text-sm text-gray-500">
+                  {loading ? 'Please wait...' : 'Check console for errors or refresh the page'}
+                </div>
               </div>
             ) : (
               <div className="grid gap-6">
