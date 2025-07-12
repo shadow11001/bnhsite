@@ -1,0 +1,14 @@
+{
+    "version": "2.0.0",
+    "name": "Blue Nebula",
+    "description": "Blue Nebula Hosting custom theme based on Bootstrap with space theme and professional branding.",
+    "authors": [
+        {
+            "name": "Blue Nebula Hosting",
+            "url": "https://bluenebulahosting.com"
+        }
+    ],
+    "require": {
+        "blesta": ">=5.0.0"
+    }
+}
