@@ -175,15 +175,33 @@ nav.navbar .navbar-nav > .active > a:focus {
     transition: all 0.3s ease;
 }
 
-/* Fix bright blue cards that don't blend */
+/* Fix bright blue cards and elements that don't blend */
 .card[style*="background-color: #007bff"],
 .card[style*="background: #007bff"],
 .card[style*="background-color: blue"],
 .card[style*="background: blue"],
 .card[style*="background-color: #0066cc"],
-.card[style*="background: #0066cc"] {
+.card[style*="background: #0066cc"],
+.card[style*="background-color: #17a2b8"],
+.card[style*="background: #17a2b8"],
+.card[style*="background-color: #6f42c1"],
+.card[style*="background: #6f42c1"],
+.card[style*="background-color: #20c997"],
+.card[style*="background: #20c997"] {
     background: rgba(31, 41, 55, 0.9) !important;
     border: 1px solid #3b82f6 !important;
+    color: #d1d5db !important;
+}
+
+/* Fix order form and package descriptions */
+.package-description, .plan-description, .order-description,
+div[style*="background-color: #17a2b8"],
+div[style*="background: #17a2b8"],
+.alert-info, .bg-info, .text-info-bg {
+    background: rgba(31, 41, 55, 0.9) !important;
+    color: #d1d5db !important;
+    border: 1px solid #3b82f6 !important;
+    border-radius: 8px !important;
 }
 
 /* Subtle accent for service cards */
@@ -239,6 +257,14 @@ nav.navbar .navbar-nav > .active > a:focus {
 /* Fix cards with inline styles that have bright colors */
 .card[style*="background"] {
     background: rgba(31, 41, 55, 0.9) !important;
+}
+
+/* Fix order form package selection areas */
+.package-selection, .plan-selection, .order-form-section {
+    background: rgba(31, 41, 55, 0.9) !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    color: #d1d5db !important;
 }
 
 /* ============================================================================
