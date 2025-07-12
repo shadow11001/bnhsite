@@ -112,6 +112,12 @@ body::before {
     background: rgba(31, 41, 55, 0.9) !important;
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+    position: relative;
+    z-index: 1000 !important; /* High z-index for dropdowns */
+}
+
+.nav-content nav.navbar .dropdown-menu {
+    z-index: 1001 !important; /* Even higher for dropdown menus */
 }
 
 .nav-content nav.navbar .navbar-nav > .active > a,
