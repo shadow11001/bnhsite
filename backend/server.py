@@ -118,12 +118,13 @@ class SMTPSettings(BaseModel):
     from_email: str
     from_name: str
 
-class LegalContent(BaseModel):
+class SiteSettings(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    type: str  # "terms" or "privacy"
-    title: str
-    content: str
-    last_updated: datetime = Field(default_factory=datetime.utcnow)
+    uptime_kuma_api_key: str
+    uptime_kuma_url: str
+    status_update_interval: int = 30
+    site_title: str
+    site_description: str
 
 # Authentication functions
 def hash_password(password: str) -> str:
