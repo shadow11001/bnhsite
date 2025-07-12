@@ -718,7 +718,9 @@ const AdminPanel = () => {
 
     const loadLegalContent = async (type) => {
       try {
+        console.log('Loading legal content for:', type);
         const response = await axios.get(`${API}/legal/${type}`);
+        console.log('Legal content loaded:', response.data);
         setLegalData(response.data);
       } catch (error) {
         console.error('Error loading legal content:', error);
@@ -726,9 +728,14 @@ const AdminPanel = () => {
     };
 
     useEffect(() => {
-      if (legalContent[selectedType]) {
+      console.log('Legal editor: selectedType changed to:', selectedType);
+      console.log('Current legalContent:', legalContent);
+      
+      if (legalContent && legalContent[selectedType]) {
+        console.log('Using cached legal content for', selectedType);
         setLegalData(legalContent[selectedType]);
       } else {
+        console.log('Loading fresh legal content for', selectedType);
         loadLegalContent(selectedType);
       }
     }, [selectedType, legalContent]);
