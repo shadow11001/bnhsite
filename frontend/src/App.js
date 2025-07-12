@@ -154,7 +154,7 @@ const HostingPlans = ({ plans, title, type, description }) => {
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">{description}</p>
         )}
       </div>
-      <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center max-w-6xl mx-auto">
         {filteredPlans.map((plan) => (
           <div key={plan.id} className={`relative bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border ${plan.popular ? 'border-blue-500 ring-2 ring-blue-500/50' : 'border-gray-700'} hover:border-blue-400 transition-all`}>
             {plan.popular && (
