@@ -288,11 +288,11 @@ async def initialize_data():
             }
         ]
         
-        # Standard VPS Plans (6 plans - exact names from pricing table)
+        # Standard VPS Plans (6 plans - correct names from user)
         standard_vps_plans = [
             {
                 "plan_type": "standard_vps",
-                "plan_name": "Mercury",
+                "plan_name": "Meteor",
                 "base_price": 10.0,
                 "cpu_cores": 1,
                 "memory_gb": 2,
@@ -303,7 +303,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "standard_vps", 
-                "plan_name": "Venus",
+                "plan_name": "Asteroid",
                 "base_price": 20.0,
                 "cpu_cores": 2,
                 "memory_gb": 4,
