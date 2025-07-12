@@ -1039,7 +1039,12 @@ const AdminPanel = () => {
           </div>
         )}
         
+        {activeTab === 'content' && <ContentEditor />}
+        {activeTab === 'navigation' && <NavigationEditor />}
         {activeTab === 'company' && <CompanyEditor />}
+        {activeTab === 'legal' && <LegalEditor />}
+        {activeTab === 'contact' && <ContactSMTPEditor />}
+        {activeTab === 'settings' && <SiteSettings />}
         
         {selectedPlan && (
           <PlanEditor plan={selectedPlan} onUpdate={updatePlan} />
