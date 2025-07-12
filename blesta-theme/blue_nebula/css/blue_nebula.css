@@ -490,14 +490,200 @@ body {
     background: var(--secondary-blue);
 }
 
-/* Text Colors */
+/* Text Colors and Readability Fixes */
 h1, h2, h3, h4, h5, h6 {
     color: var(--text-primary) !important;
     font-weight: 600 !important;
 }
 
-p, span, div {
+p, span, div, td, th, li {
     color: var(--text-secondary) !important;
+}
+
+/* Specific fixes for order pages and forms */
+.package-name, .package-description, .price-description {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+}
+
+.description, .package-description p {
+    color: var(--text-secondary) !important;
+}
+
+/* Fix text visibility in order forms */
+.order-form .form-group label,
+.checkout-form .form-group label,
+.package-config label {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+}
+
+.order-form .form-control,
+.checkout-form .form-control,
+.package-config .form-control {
+    background: rgba(55, 65, 81, 0.9) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Fix slider and range inputs */
+input[type="range"] {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    height: 6px !important;
+    background: var(--border-color) !important;
+    border-radius: 3px !important;
+    outline: none !important;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    width: 20px !important;
+    height: 20px !important;
+    background: var(--primary-blue) !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px !important;
+    height: 20px !important;
+    background: var(--primary-blue) !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    border: none !important;
+}
+
+/* Cart page fixes */
+.cart-summary, .invoice-summary {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+}
+
+.cart-item, .invoice-item {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    margin-bottom: 10px !important;
+}
+
+.cart-item h4, .invoice-item h4 {
+    color: var(--text-primary) !important;
+}
+
+.cart-item p, .invoice-item p {
+    color: var(--text-secondary) !important;
+}
+
+/* Package selection fixes */
+.package-option {
+    background: var(--card-bg) !important;
+    border: 2px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 15px !important;
+    transition: all 0.3s ease !important;
+}
+
+.package-option:hover {
+    border-color: var(--primary-blue) !important;
+    transform: translateY(-2px) !important;
+}
+
+.package-option.selected {
+    border-color: var(--primary-blue) !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+}
+
+.package-option h3, .package-option h4 {
+    color: var(--text-primary) !important;
+    margin-bottom: 10px !important;
+}
+
+.package-option .price {
+    color: var(--primary-blue) !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+}
+
+/* Configuration options */
+.config-option {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    margin-bottom: 15px !important;
+}
+
+.config-option label {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+}
+
+.config-option .description {
+    color: var(--text-secondary) !important;
+    font-size: 14px !important;
+}
+
+/* Fix dropdown and select styling */
+select.form-control {
+    background: rgba(55, 65, 81, 0.9) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    padding: 12px 16px !important;
+}
+
+select.form-control option {
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Fix radio buttons and checkboxes */
+input[type="radio"], input[type="checkbox"] {
+    margin-right: 8px !important;
+    transform: scale(1.2) !important;
+}
+
+/* Mobile menu fixes */
+.navbar-toggle {
+    border: 1px solid var(--border-color) !important;
+    background: transparent !important;
+}
+
+.navbar-toggle .icon-bar {
+    background: var(--text-secondary) !important;
+}
+
+.navbar-toggle:hover,
+.navbar-toggle:focus {
+    background: rgba(59, 130, 246, 0.1) !important;
+}
+
+@media (max-width: 767px) {
+    .navbar-collapse {
+        background: rgba(15, 15, 16, 0.98) !important;
+        border-top: 1px solid var(--border-color) !important;
+        margin-top: 10px !important;
+        border-radius: 8px !important;
+        padding: 15px !important;
+    }
+    
+    .navbar-nav li a {
+        color: var(--text-secondary) !important;
+        padding: 12px 15px !important;
+        border-radius: 6px !important;
+        margin-bottom: 5px !important;
+        display: block !important;
+    }
+    
+    .navbar-nav li a:hover {
+        background: rgba(59, 130, 246, 0.1) !important;
+        color: var(--primary-blue) !important;
+    }
 }
 
 .text-primary {
