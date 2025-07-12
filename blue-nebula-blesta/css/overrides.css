@@ -77,10 +77,21 @@ body::after {
    ========================================================================== */
 
 .header {
-    background: rgba(15, 15, 16, 0.95) !important;
+    background: linear-gradient(135deg, rgba(31, 41, 55, 0.9) 0%, rgba(59, 130, 246, 0.3) 50%, rgba(139, 92, 246, 0.3) 100%) !important;
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.5);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.header::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #3b82f6, #8b5cf6, transparent);
 }
 
 /* Blue Nebula Logo Styling */
