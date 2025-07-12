@@ -1,0 +1,337 @@
+/* Blue Nebula - Order and Cart Page Specific Fixes */
+
+/* These styles specifically target order forms, cart pages, and checkout processes */
+
+/* Order Form Container */
+.order-container, .cart-container, .checkout-container {
+    background: #1f2937 !important;
+    color: #d1d5db !important;
+    padding: 20px !important;
+    border-radius: 12px !important;
+    border: 1px solid #374151 !important;
+    margin-bottom: 20px !important;
+}
+
+/* Package Selection */
+.package-selection, .product-selection {
+    background: #1f2937 !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.package-option, .product-option {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border: 2px solid #374151 !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    margin-bottom: 15px !important;
+    color: #d1d5db !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+.package-option:hover, .product-option:hover {
+    border-color: #3b82f6 !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+}
+
+.package-option.selected, .product-option.selected {
+    border-color: #3b82f6 !important;
+    background: rgba(59, 130, 246, 0.15) !important;
+}
+
+.package-option h3, .package-option h4, .product-option h3, .product-option h4 {
+    color: #ffffff !important;
+    margin-bottom: 10px !important;
+}
+
+.package-option .price, .product-option .price {
+    color: #3b82f6 !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+}
+
+.package-option .description, .product-option .description {
+    color: #d1d5db !important;
+    font-size: 14px !important;
+}
+
+/* Configuration Options */
+.config-options, .configuration {
+    background: #1f2937 !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.config-option {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border: 1px solid #374151 !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    margin-bottom: 15px !important;
+}
+
+.config-option label {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    display: block !important;
+    margin-bottom: 8px !important;
+}
+
+.config-option .description {
+    color: #9ca3af !important;
+    font-size: 14px !important;
+    margin-top: 5px !important;
+}
+
+/* Cart Items */
+.cart-items, .order-items {
+    background: #1f2937 !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.cart-item, .order-item, .line-item {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border: 1px solid #374151 !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    margin-bottom: 15px !important;
+    color: #d1d5db !important;
+}
+
+.cart-item:last-child, .order-item:last-child, .line-item:last-child {
+    margin-bottom: 0 !important;
+}
+
+.cart-item h4, .order-item h4, .line-item h4 {
+    color: #ffffff !important;
+    margin-bottom: 10px !important;
+}
+
+.cart-item .price, .order-item .price, .line-item .price {
+    color: #3b82f6 !important;
+    font-weight: 700 !important;
+    font-size: 18px !important;
+}
+
+.cart-item .description, .order-item .description, .line-item .description {
+    color: #9ca3af !important;
+    font-size: 14px !important;
+}
+
+/* Order Summary */
+.order-summary, .cart-summary, .checkout-summary {
+    background: #1f2937 !important;
+    border: 2px solid #3b82f6 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.summary-line {
+    display: flex !important;
+    justify-content: space-between !important;
+    padding: 8px 0 !important;
+    border-bottom: 1px solid #374151 !important;
+    color: #d1d5db !important;
+}
+
+.summary-line:last-child {
+    border-bottom: none !important;
+    font-weight: 700 !important;
+    font-size: 18px !important;
+    color: #ffffff !important;
+}
+
+.summary-total {
+    background: rgba(59, 130, 246, 0.1) !important;
+    border-radius: 8px !important;
+    padding: 12px !important;
+    margin-top: 10px !important;
+}
+
+.summary-total .amount {
+    color: #3b82f6 !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+}
+
+/* Billing Information */
+.billing-info, .customer-info {
+    background: #1f2937 !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.billing-info h3, .customer-info h3 {
+    color: #ffffff !important;
+    margin-bottom: 15px !important;
+}
+
+/* Payment Methods */
+.payment-methods {
+    background: #1f2937 !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.payment-method {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border: 2px solid #374151 !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    margin-bottom: 10px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+.payment-method:hover {
+    border-color: #3b82f6 !important;
+}
+
+.payment-method.selected {
+    border-color: #3b82f6 !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+}
+
+.payment-method label {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+}
+
+/* Step Indicators */
+.checkout-steps, .order-steps {
+    background: #1f2937 !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    padding: 15px !important;
+    margin-bottom: 20px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+}
+
+.step {
+    flex: 1 !important;
+    text-align: center !important;
+    color: #9ca3af !important;
+    position: relative !important;
+}
+
+.step.active {
+    color: #3b82f6 !important;
+    font-weight: 600 !important;
+}
+
+.step.completed {
+    color: #10b981 !important;
+}
+
+/* Empty Cart State */
+.empty-cart, .empty-order {
+    text-align: center !important;
+    padding: 40px !important;
+    background: #1f2937 !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    color: #9ca3af !important;
+}
+
+.empty-cart h3, .empty-order h3 {
+    color: #ffffff !important;
+    margin-bottom: 15px !important;
+}
+
+/* Loading States */
+.loading-overlay {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(15, 15, 16, 0.8) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 12px !important;
+}
+
+.loading-spinner {
+    border: 3px solid #374151 !important;
+    border-top: 3px solid #3b82f6 !important;
+    border-radius: 50% !important;
+    width: 40px !important;
+    height: 40px !important;
+    animation: spin 1s linear infinite !important;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Error States */
+.error-message, .validation-error {
+    background: rgba(239, 68, 68, 0.2) !important;
+    color: #ef4444 !important;
+    border: 1px solid #ef4444 !important;
+    border-radius: 8px !important;
+    padding: 12px !important;
+    margin-top: 8px !important;
+}
+
+/* Success States */
+.success-message {
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: #10b981 !important;
+    border: 1px solid #10b981 !important;
+    border-radius: 8px !important;
+    padding: 12px !important;
+    margin-top: 8px !important;
+}
+
+/* Mobile Optimizations for Order Pages */
+@media (max-width: 767px) {
+    .order-container, .cart-container, .checkout-container {
+        padding: 15px !important;
+        margin-bottom: 15px !important;
+    }
+    
+    .package-option, .product-option {
+        padding: 12px !important;
+        margin-bottom: 12px !important;
+    }
+    
+    .checkout-steps, .order-steps {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+    
+    .step {
+        border-bottom: 1px solid #374151 !important;
+        padding-bottom: 10px !important;
+    }
+    
+    .step:last-child {
+        border-bottom: none !important;
+    }
+    
+    .cart-item, .order-item {
+        padding: 12px !important;
+    }
+    
+    .summary-line {
+        font-size: 14px !important;
+    }
+}
