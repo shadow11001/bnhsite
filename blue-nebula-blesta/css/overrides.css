@@ -152,6 +152,8 @@ nav.navbar .navbar-nav > .active > a:focus {
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(59, 130, 246, 0.2);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1 !important; /* Lower z-index to not block dropdowns */
 }
 
 .title h3 {
