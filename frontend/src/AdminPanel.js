@@ -76,10 +76,14 @@ const AdminPanel = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (isAuthenticated) {
+      fetchData();
+    }
+  }, [isAuthenticated]);
 
   const fetchData = async () => {
+    if (!isAuthenticated) return;
+    
     try {
       const [plansResponse, companyResponse] = await Promise.all([
         axios.get(`${API}/hosting-plans`),
@@ -89,6 +93,9 @@ const AdminPanel = () => {
       setCompanyInfo(companyResponse.data);
     } catch (error) {
       console.error('Error fetching data:', error);
+      if (error.response?.status === 401) {
+        handleLogout();
+      }
     } finally {
       setLoading(false);
     }
@@ -96,21 +103,33 @@ const AdminPanel = () => {
 
   const updatePlan = async (planId, updates) => {
     try {
-      await axios.put(`${API}/hosting-plans/${planId}`, updates);
+      await axios.put(`${API}/hosting-plans/${planId}`, updates, {
+        headers: getAuthHeaders()
+      });
       await fetchData();
       alert('Plan updated successfully!');
     } catch (error) {
-      alert('Error updating plan: ' + error.message);
+      if (error.response?.status === 401) {
+        handleLogout();
+      } else {
+        alert('Error updating plan: ' + error.message);
+      }
     }
   };
 
   const updateCompanyInfo = async (updates) => {
     try {
-      await axios.put(`${API}/company-info`, updates);
+      await axios.put(`${API}/company-info`, updates, {
+        headers: getAuthHeaders()
+      });
       await fetchData();
       alert('Company info updated successfully!');
     } catch (error) {
-      alert('Error updating company info: ' + error.message);
+      if (error.response?.status === 401) {
+        handleLogout();
+      } else {
+        alert('Error updating company info: ' + error.message);
+      }
     }
   };
 
