@@ -76,6 +76,15 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
         <?php echo (isset($head) ? $head : null);?>
     </head>
     <body class="<?php echo $this->Html->safe($css_route_class ?? ''); ?>">
+        <!-- Shooting Stars -->
+        <div class="shooting-stars">
+            <div class="shooting-star"></div>
+            <div class="shooting-star"></div>
+            <div class="shooting-star"></div>
+            <div class="shooting-star"></div>
+            <div class="shooting-star"></div>
+        </div>
+        
         <?php echo (isset($body_start) ? $body_start : null);?>
 
         <?php
