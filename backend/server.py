@@ -194,7 +194,11 @@ async def get_hosting_plan(plan_id: str):
         plan = await db.hosting_plans.find_one({"id": plan_id})
         if not plan:
             raise HTTPException(status_code=404, detail="Plan not found")
-        return HostingPlan(**plan)
+        
+        # Filter out markup_percentage from public API response
+        plan_dict = dict(plan)
+        plan_dict.pop('markup_percentage', None)
+        return HostingPlan(**plan_dict)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
