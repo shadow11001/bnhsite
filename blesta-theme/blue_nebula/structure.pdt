@@ -25,6 +25,9 @@
     <!-- Blue Nebula Theme CSS -->
     <link href="<?php echo $this->view_dir;?>css/blue_nebula.css" rel="stylesheet">
     
+    <!-- Critical Fixes CSS -->
+    <link href="<?php echo $this->view_dir;?>css/critical_fixes.css" rel="stylesheet">
+    
     <!-- Custom CSS for specific styling -->
     <style>
         /* Space background with stars effect */
