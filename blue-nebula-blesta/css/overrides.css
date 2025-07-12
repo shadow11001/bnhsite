@@ -631,8 +631,36 @@ label, .form-label {
 }
 
 /* ============================================================================
-   UTILITIES
+   GLOBAL OVERRIDES FOR BRIGHT COLORS
    ========================================================================== */
+
+/* Fix any bright color backgrounds throughout the site */
+[style*="background-color: #17a2b8"],
+[style*="background: #17a2b8"],
+[style*="background-color: #007bff"],
+[style*="background: #007bff"],
+[style*="background-color: #6f42c1"],
+[style*="background: #6f42c1"],
+[style*="background-color: #20c997"],
+[style*="background: #20c997"],
+.bg-primary, .bg-info, .bg-success, .bg-warning, .bg-secondary {
+    background: rgba(31, 41, 55, 0.9) !important;
+    color: #d1d5db !important;
+    border: 1px solid #3b82f6 !important;
+    border-radius: 8px !important;
+}
+
+/* Fix bright text colors */
+[style*="color: #17a2b8"],
+[style*="color: #007bff"],
+.text-primary, .text-info {
+    color: #d1d5db !important;
+}
+
+/* Hide duplicate footer elements */
+.container-fluid:last-child .row:last-child:not(.footer):not(.footer-bottom) {
+    display: none !important;
+}
 
 /* Text selection */
 ::selection {
