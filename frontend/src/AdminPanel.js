@@ -306,64 +306,93 @@ const AdminPanel = () => {
   };
 
   // Login Form Component
-  const LoginForm = () => (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-      <div className="bg-gray-800 rounded-lg p-8 max-w-md w-full">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">BN</span>
-          </div>
-          <h1 className="text-2xl font-bold text-white">Admin Login</h1>
-          <p className="text-gray-400">Blue Nebula Hosting Admin Panel</p>
-        </div>
+  const LoginForm = () => {
+    const [localLoginData, setLocalLoginData] = useState({ username: '', password: '' });
+    const [localLoginError, setLocalLoginError] = useState('');
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+    const handleLocalLogin = async (e) => {
+      e.preventDefault();
+      setLocalLoginError('');
+      setIsLoggingIn(true);
+      
+      try {
+        const response = await axios.post(`${API}/login`, localLoginData);
+        const { access_token } = response.data;
         
-        <form onSubmit={handleLogin} className="space-y-6">
-          {loginError && (
-            <div className="bg-red-600/20 border border-red-500 rounded-lg p-3 text-red-400 text-sm">
-              {loginError}
+        localStorage.setItem('admin_token', access_token);
+        setIsAuthenticated(true);
+        await fetchData();
+        setLocalLoginData({ username: '', password: '' });
+      } catch (error) {
+        setLocalLoginError(error.response?.data?.detail || 'Login failed');
+      } finally {
+        setIsLoggingIn(false);
+      }
+    };
+
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="bg-gray-800 rounded-lg p-8 max-w-md w-full">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <span className="text-white font-bold text-2xl">BN</span>
             </div>
-          )}
-          
-          <div>
-            <label className="block text-gray-300 mb-2">Username</label>
-            <input
-              type="text"
-              value={loginData.username}
-              onChange={(e) => setLoginData({...loginData, username: e.target.value})}
-              required
-              className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-400 focus:outline-none"
-              placeholder="Enter admin username"
-            />
+            <h1 className="text-2xl font-bold text-white">Admin Login</h1>
+            <p className="text-gray-400">Blue Nebula Hosting Admin Panel</p>
           </div>
           
-          <div>
-            <label className="block text-gray-300 mb-2">Password</label>
-            <input
-              type="password"
-              value={loginData.password}
-              onChange={(e) => setLoginData({...loginData, password: e.target.value})}
-              required
-              className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-400 focus:outline-none"
-              placeholder="Enter admin password"
-            />
-          </div>
-          
-          <button
-            type="submit"
-            className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-colors font-semibold"
-          >
-            Login
-          </button>
-          
-          <div className="text-center">
-            <a href="/" className="text-blue-400 hover:text-blue-300 transition-colors text-sm">
-              ← Back to Website
-            </a>
-          </div>
-        </form>
+          <form onSubmit={handleLocalLogin} className="space-y-6">
+            {localLoginError && (
+              <div className="bg-red-600/20 border border-red-500 rounded-lg p-3 text-red-400 text-sm">
+                {localLoginError}
+              </div>
+            )}
+            
+            <div>
+              <label className="block text-gray-300 mb-2">Username</label>
+              <input
+                type="text"
+                value={localLoginData.username}
+                onChange={(e) => setLocalLoginData(prev => ({...prev, username: e.target.value}))}
+                required
+                disabled={isLoggingIn}
+                className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-400 focus:outline-none disabled:opacity-50"
+                placeholder="Enter admin username"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-gray-300 mb-2">Password</label>
+              <input
+                type="password"
+                value={localLoginData.password}
+                onChange={(e) => setLocalLoginData(prev => ({...prev, password: e.target.value}))}
+                required
+                disabled={isLoggingIn}
+                className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-400 focus:outline-none disabled:opacity-50"
+                placeholder="Enter admin password"
+              />
+            </div>
+            
+            <button
+              type="submit"
+              disabled={isLoggingIn}
+              className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-colors font-semibold disabled:opacity-50"
+            >
+              {isLoggingIn ? 'Logging in...' : 'Login'}
+            </button>
+            
+            <div className="text-center">
+              <a href="/" className="text-blue-400 hover:text-blue-300 transition-colors text-sm">
+                ← Back to Website
+              </a>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   if (authLoading) {
     return (
