@@ -69,6 +69,14 @@ class ContactInfo(BaseModel):
     message: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
 class ContentUpdate(BaseModel):
     section: str  # "hero", "features", "about", "company"
     title: Optional[str] = None
