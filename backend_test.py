@@ -128,7 +128,15 @@ class BlueNebulaAPITester:
 
     def test_hosting_plans_filtered(self, plans):
         """Test filtering hosting plans by type"""
-        plan_types = ['ssd_shared', 'hdd_shared', 'standard_vps', 'standard_gameserver']
+        plan_types = ['ssd_shared', 'hdd_shared', 'standard_vps', 'performance_vps', 'standard_gameserver', 'performance_gameserver']
+        expected_counts = {
+            'ssd_shared': 3,
+            'hdd_shared': 3,
+            'standard_vps': 6,
+            'performance_vps': 9,
+            'standard_gameserver': 6,
+            'performance_gameserver': 9
+        }
         all_passed = True
         
         for plan_type in plan_types:
@@ -143,11 +151,11 @@ class BlueNebulaAPITester:
                     if success:
                         # Verify all plans are of the requested type
                         correct_type = all(plan.get('plan_type') == plan_type for plan in filtered_plans)
-                        expected_count = 3  # Each type should have 3 plans
+                        expected_count = expected_counts[plan_type]
                         actual_count = len(filtered_plans)
                         
                         success = correct_type and actual_count == expected_count
-                        details = f"Type: {plan_type}, Count: {actual_count}/3"
+                        details = f"Type: {plan_type}, Count: {actual_count}/{expected_count}"
                     else:
                         details = "Invalid response format"
                 else:
