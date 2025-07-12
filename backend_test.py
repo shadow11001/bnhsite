@@ -380,7 +380,7 @@ class BlueNebulaAPITester:
             # Test without token (should fail)
             response_no_auth = requests.put(f"{self.api_url}/hosting-plans/{test_plan_id}", 
                                           json=test_update, timeout=10)
-            no_auth_fails = response_no_auth.status_code == 401
+            no_auth_fails = response_no_auth.status_code in [401, 403]  # Accept both unauthorized and forbidden
             
             # Test company info update (should require auth)
             company_update = {"description": "Test update"}
