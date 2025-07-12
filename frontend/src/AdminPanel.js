@@ -659,8 +659,12 @@ const AdminPanel = () => {
     };
 
     useEffect(() => {
-      loadLegalContent(selectedType);
-    }, [selectedType]);
+      if (legalContent[selectedType]) {
+        setLegalData(legalContent[selectedType]);
+      } else {
+        loadLegalContent(selectedType);
+      }
+    }, [selectedType, legalContent]);
 
     const saveLegalContent = async () => {
       setIsLoading(true);
