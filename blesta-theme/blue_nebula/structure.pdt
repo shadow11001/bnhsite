@@ -148,7 +148,7 @@
                             </ul>
                         </li>
                     <?php } else { ?>
-                        <li><a href="<?php echo $this->Html->safe($blesta_uri . "login/");?>"><i class="fa fa-sign-in"></i> Login</a></li>
+                        <li><a href="https://billing.bluenebulahosting.com/client/login"><i class="fa fa-sign-in"></i> Login</a></li>
                     <?php } ?>
                     
                     <!-- Game Panel Link -->
