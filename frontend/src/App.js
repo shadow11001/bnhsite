@@ -305,7 +305,7 @@ const HostingPlans = ({ plans, title, type, description }) => {
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center max-w-6xl mx-auto">
         {filteredPlans.map((plan) => (
-          <div key={plan.id} className={`relative bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border ${plan.popular ? 'border-blue-500 ring-2 ring-blue-500/50' : 'border-gray-700'} hover:border-blue-400 transition-all`}>
+          <div key={plan.id} className={`relative bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border ${plan.popular ? 'border-blue-500 ring-2 ring-blue-500/50' : 'border-gray-700'} hover:border-blue-400 transition-all w-full max-w-sm flex flex-col h-full min-h-[400px]`}>
             {plan.popular && (
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                 <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
@@ -314,7 +314,7 @@ const HostingPlans = ({ plans, title, type, description }) => {
               </div>
             )}
             
-            <div className="text-center mb-6">
+            <div className="text-center mb-6 flex-shrink-0">
               <h4 className="text-xl font-bold text-white mb-2">{plan.plan_name}</h4>
               <div className="text-3xl font-bold text-blue-400 mb-2">
                 ${plan.base_price}
@@ -322,7 +322,7 @@ const HostingPlans = ({ plans, title, type, description }) => {
               </div>
             </div>
             
-            <ul className="space-y-2 mb-8">
+            <ul className="space-y-2 mb-8 flex-grow">
               {plan.features.map((feature, index) => (
                 <li key={index} className="flex items-center text-gray-300 text-sm">
                   <svg className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -347,13 +347,15 @@ const HostingPlans = ({ plans, title, type, description }) => {
               )}
             </ul>
             
-            <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className={`block w-full py-3 rounded-lg font-semibold transition-all text-center ${
-              plan.popular 
-                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700' 
-                : 'border border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-gray-900'
-            }`}>
-              Order Now
-            </a>
+            <div className="mt-auto flex-shrink-0">
+              <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className={`block w-full py-3 rounded-lg font-semibold transition-all text-center ${
+                plan.popular 
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700' 
+                  : 'border border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-gray-900'
+              }`}>
+                Order Now
+              </a>
+            </div>
           </div>
         ))}
       </div>
