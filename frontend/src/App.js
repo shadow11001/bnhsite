@@ -65,6 +65,7 @@ const API = `${BACKEND_URL}/api`;
 // Header Component
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isHostingDropdownOpen, setIsHostingDropdownOpen] = useState(false);
 
   return (
     <header className="bg-gray-900/95 backdrop-blur-sm fixed w-full z-50 border-b border-blue-500/20">
@@ -72,22 +73,59 @@ const Header = () => {
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">BN</span>
+              <img 
+                src="/logo.png" 
+                alt="Blue Nebula Hosting" 
+                className="w-8 h-8 object-contain"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+              <span className="text-white font-bold text-xl hidden">BN</span>
             </div>
             <div className="text-white">
-              <h1 className="font-bold text-xl">Blue Nebula</h1>
-              <p className="text-sm text-blue-300">Hosting</p>
+              <h1 className="font-bold text-xl">Blue Nebula Hosting</h1>
             </div>
           </div>
           
           <nav className="hidden md:flex space-x-8">
             <a href="#home" className="text-gray-300 hover:text-blue-400 transition-colors">Home</a>
-            <a href="#hosting" className="text-gray-300 hover:text-blue-400 transition-colors">Hosting</a>
-            <a href="#vps" className="text-gray-300 hover:text-blue-400 transition-colors">VPS</a>
-            <a href="#gameservers" className="text-gray-300 hover:text-blue-400 transition-colors">GameServers</a>
+            
+            <div className="relative group">
+              <button 
+                className="text-gray-300 hover:text-blue-400 transition-colors flex items-center"
+                onMouseEnter={() => setIsHostingDropdownOpen(true)}
+                onMouseLeave={() => setIsHostingDropdownOpen(false)}
+              >
+                Hosting
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              {isHostingDropdownOpen && (
+                <div 
+                  className="absolute top-full left-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg border border-gray-700 py-2 z-50"
+                  onMouseEnter={() => setIsHostingDropdownOpen(true)}
+                  onMouseLeave={() => setIsHostingDropdownOpen(false)}
+                >
+                  <a href="#hosting" className="block px-4 py-2 text-gray-300 hover:text-blue-400 hover:bg-gray-700 transition-colors">
+                    Shared Hosting
+                  </a>
+                  <a href="#vps" className="block px-4 py-2 text-gray-300 hover:text-blue-400 hover:bg-gray-700 transition-colors">
+                    VPS Hosting
+                  </a>
+                  <a href="#gameservers" className="block px-4 py-2 text-gray-300 hover:text-blue-400 hover:bg-gray-700 transition-colors">
+                    GameServer Hosting
+                  </a>
+                </div>
+              )}
+            </div>
+            
             <a href="#about" className="text-gray-300 hover:text-blue-400 transition-colors">About</a>
             <a href="#contact" className="text-gray-300 hover:text-blue-400 transition-colors">Contact</a>
-            <a href="https://status.bluenebulahosting.com/status/bnh" target="_blank" rel="noopener noreferrer" className="text-green-400 hover:text-green-300 transition-colors">Status</a>
+            <SystemStatus />
           </nav>
           
           <div className="hidden md:flex space-x-4">
@@ -113,12 +151,15 @@ const Header = () => {
           <div className="md:hidden pb-4">
             <nav className="flex flex-col space-y-4">
               <a href="#home" className="text-gray-300 hover:text-blue-400 transition-colors">Home</a>
-              <a href="#hosting" className="text-gray-300 hover:text-blue-400 transition-colors">Hosting</a>
-              <a href="#vps" className="text-gray-300 hover:text-blue-400 transition-colors">VPS</a>
-              <a href="#gameservers" className="text-gray-300 hover:text-blue-400 transition-colors">GameServers</a>
+              <div className="space-y-2">
+                <div className="text-gray-400 text-sm font-semibold">Hosting</div>
+                <a href="#hosting" className="text-gray-300 hover:text-blue-400 transition-colors pl-4">Shared Hosting</a>
+                <a href="#vps" className="text-gray-300 hover:text-blue-400 transition-colors pl-4">VPS Hosting</a>
+                <a href="#gameservers" className="text-gray-300 hover:text-blue-400 transition-colors pl-4">GameServer Hosting</a>
+              </div>
               <a href="#about" className="text-gray-300 hover:text-blue-400 transition-colors">About</a>
               <a href="#contact" className="text-gray-300 hover:text-blue-400 transition-colors">Contact</a>
-              <a href="https://status.bluenebulahosting.com/status/bnh" target="_blank" rel="noopener noreferrer" className="text-green-400 hover:text-green-300 transition-colors">Status</a>
+              <SystemStatus />
               <div className="flex flex-col space-y-2 mt-4">
                 <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-blue-400 border border-blue-400 rounded-lg hover:bg-blue-400 hover:text-gray-900 transition-colors text-center">
                   Client Area
