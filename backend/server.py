@@ -225,7 +225,7 @@ async def get_company_info():
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.put("/company-info")
-async def update_company_info(company_update: dict):
+async def update_company_info(company_update: dict, current_user: str = Depends(get_current_user)):
     """Update company information - for admin use"""
     try:
         await db.company_info.update_one(
