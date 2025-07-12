@@ -757,6 +757,9 @@
                 forceVisibility();
                 fixCartPage();
                 fixOrderForms();
+                fixSliders();
+                fixAjaxForms();
+                fixIcons();
                 
                 // Auto-hide alerts
                 setTimeout(function() {
