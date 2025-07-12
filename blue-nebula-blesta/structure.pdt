@@ -319,19 +319,8 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
                     <div class="col-md-3">
                         <div class="footer-logo">
                             <div class="logo-content">
-                                <?php
-                                $footer_logo_path = $this->view_dir . 'images/logo.png';
-                                if (file_exists($footer_logo_path)) {
-                                ?>
-                                <img src="<?php echo $this->view_dir;?>images/logo.png" alt="Blue Nebula Hosting" class="footer-logo-image" />
-                                <?php
-                                } else {
-                                ?>
-                                <!-- Footer logo not found at: <?php echo $footer_logo_path; ?> -->
-                                <div class="logo-icon">BNH</div>
-                                <?php
-                                }
-                                ?>
+                                <img src="<?php echo $this->view_dir;?>images/logo.png" alt="Blue Nebula Hosting" class="footer-logo-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                <div class="logo-icon" style="display: none;">BNH</div>
                                 <div class="logo-text-wrapper">
                                     <div class="company-name">Blue Nebula Hosting</div>
                                 </div>
