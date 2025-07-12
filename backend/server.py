@@ -125,13 +125,18 @@ class LegalContent(BaseModel):
     content: str
     last_updated: datetime = Field(default_factory=datetime.utcnow)
 
-class SiteSettings(BaseModel):
+class PromoCode(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    uptime_kuma_api_key: str
-    uptime_kuma_url: str
-    status_update_interval: int = 30
-    site_title: str
-    site_description: str
+    code: str
+    title: str
+    description: str
+    discount_percentage: Optional[int] = None
+    discount_amount: Optional[float] = None
+    expiry_date: Optional[datetime] = None
+    is_active: bool = True
+    display_location: str = "hero"  # "hero", "pricing", "floating", "footer"
+    button_text: str = "Copy Code"
+    created_date: datetime = Field(default_factory=datetime.utcnow)
 
 # Authentication functions
 def hash_password(password: str) -> str:
