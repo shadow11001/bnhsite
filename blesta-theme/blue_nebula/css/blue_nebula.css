@@ -1,0 +1,587 @@
+/* Blue Nebula Hosting - Blesta Template CSS */
+/* Matches the main website space theme design */
+
+/* CSS Variables for consistent theming */
+:root {
+    --primary-blue: #3b82f6;
+    --primary-purple: #8b5cf6;
+    --secondary-blue: #60a5fa;
+    --accent-green: #10b981;
+    --accent-red: #ef4444;
+    --accent-yellow: #f59e0b;
+    --dark-bg: #0f0f10;
+    --card-bg: rgba(31, 41, 55, 0.8);
+    --border-color: #374151;
+    --text-primary: #ffffff;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    --gradient-bg: linear-gradient(135deg, #0f0f10 0%, #1e1b4b 50%, #312e81 100%);
+    --card-gradient: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+}
+
+/* Global Body Styling */
+body {
+    background: var(--gradient-bg) !important;
+    color: var(--text-primary) !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+    min-height: 100vh;
+    margin: 0;
+    background-attachment: fixed;
+}
+
+/* Remove default Bootstrap backgrounds */
+.container, .container-fluid, .row, .col-md-12, .main-content, #main {
+    background: transparent !important;
+}
+
+/* Header Styling */
+.navbar, .header, #header {
+    background: rgba(15, 15, 16, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+    border-radius: 0 !important;
+}
+
+.navbar-brand, .logo, .brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    color: var(--text-primary) !important;
+    text-decoration: none !important;
+}
+
+.navbar-brand img, .logo img {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 8px !important;
+    background: var(--card-gradient) !important;
+    padding: 8px !important;
+}
+
+.navbar-brand::after {
+    content: "Blue Nebula Hosting" !important;
+    font-weight: 600 !important;
+    font-size: 1.2rem !important;
+    color: var(--text-primary) !important;
+}
+
+/* Navigation Links */
+.navbar-nav .nav-link, .nav-link, .navigation a {
+    color: var(--text-secondary) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+}
+
+.navbar-nav .nav-link:hover, .nav-link:hover, .navigation a:hover {
+    color: var(--primary-blue) !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Main Content Wrapper */
+.content, .main-content, #content {
+    padding: 20px !important;
+    margin-top: 20px !important;
+}
+
+/* Cards and Panels */
+.card, .panel, .widget, .box, .well {
+    background: var(--card-bg) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2) !important;
+    margin-bottom: 20px !important;
+    overflow: hidden !important;
+}
+
+.card-header, .panel-heading, .widget-header, .card-title {
+    background: var(--card-gradient) !important;
+    color: var(--text-primary) !important;
+    border-bottom: none !important;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 16px 20px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+}
+
+.card-body, .panel-body, .widget-content, .card-content {
+    padding: 20px !important;
+    color: var(--text-secondary) !important;
+    background: transparent !important;
+}
+
+/* Tables */
+.table, table {
+    background: transparent !important;
+    color: var(--text-secondary) !important;
+    border-collapse: separate !important;
+    border-spacing: 0 4px !important;
+}
+
+.table thead th, table thead th {
+    background: var(--card-gradient) !important;
+    color: var(--text-primary) !important;
+    border: none !important;
+    padding: 12px 16px !important;
+    font-weight: 600 !important;
+    border-radius: 8px 8px 0 0 !important;
+}
+
+.table tbody td, table tbody td {
+    background: rgba(55, 65, 81, 0.6) !important;
+    border: none !important;
+    padding: 12px 16px !important;
+    vertical-align: middle !important;
+    border-radius: 0 !important;
+}
+
+.table tbody tr:first-child td:first-child {
+    border-radius: 8px 0 0 0 !important;
+}
+
+.table tbody tr:first-child td:last-child {
+    border-radius: 0 8px 0 0 !important;
+}
+
+.table tbody tr:last-child td:first-child {
+    border-radius: 0 0 0 8px !important;
+}
+
+.table tbody tr:last-child td:last-child {
+    border-radius: 0 0 8px 0 !important;
+}
+
+.table tbody tr:hover td, table tbody tr:hover td {
+    background: rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Buttons */
+.btn, button, input[type="submit"], input[type="button"], .button {
+    border-radius: 8px !important;
+    padding: 12px 24px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+}
+
+.btn-primary, .btn-main, .primary-btn {
+    background: var(--card-gradient) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-primary:hover, .btn-main:hover, .primary-btn:hover {
+    background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-secondary, .btn-outline, .btn-default {
+    background: transparent !important;
+    border: 2px solid var(--primary-blue) !important;
+    color: var(--primary-blue) !important;
+}
+
+.btn-secondary:hover, .btn-outline:hover, .btn-default:hover {
+    background: var(--primary-blue) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--accent-green), #059669) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #059669, #047857) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--accent-red), #dc2626) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, var(--accent-yellow), #d97706) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-info {
+    background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue)) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Forms */
+.form-control, input, textarea, select {
+    background: rgba(55, 65, 81, 0.8) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    color: var(--text-primary) !important;
+    padding: 12px 16px !important;
+    transition: all 0.3s ease !important;
+}
+
+.form-control:focus, input:focus, textarea:focus, select:focus {
+    border-color: var(--primary-blue) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    background: rgba(55, 65, 81, 0.9) !important;
+}
+
+.form-control::placeholder, input::placeholder, textarea::placeholder {
+    color: var(--text-muted) !important;
+}
+
+.form-label, label, .control-label {
+    color: var(--text-secondary) !important;
+    font-weight: 600 !important;
+    margin-bottom: 8px !important;
+}
+
+.form-group {
+    margin-bottom: 20px !important;
+}
+
+/* Status Badges */
+.badge, .label {
+    padding: 6px 12px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+}
+
+.badge-success, .label-success {
+    background: var(--accent-green) !important;
+    color: var(--text-primary) !important;
+}
+
+.badge-danger, .label-danger {
+    background: var(--accent-red) !important;
+    color: var(--text-primary) !important;
+}
+
+.badge-warning, .label-warning {
+    background: var(--accent-yellow) !important;
+    color: var(--text-primary) !important;
+}
+
+.badge-info, .label-info {
+    background: var(--primary-blue) !important;
+    color: var(--text-primary) !important;
+}
+
+.badge-primary, .label-primary {
+    background: var(--card-gradient) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Service/Product Cards */
+.package, .service-card, .product-card {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+    transition: all 0.3s ease !important;
+}
+
+.package:hover, .service-card:hover, .product-card:hover {
+    border-color: var(--primary-blue) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.1) !important;
+}
+
+.package-popular {
+    border-color: var(--primary-blue) !important;
+    position: relative !important;
+}
+
+.package-popular::before {
+    content: "Popular" !important;
+    position: absolute !important;
+    top: -12px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: var(--card-gradient) !important;
+    color: var(--text-primary) !important;
+    padding: 4px 16px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+/* Pricing */
+.price, .amount, .cost {
+    color: var(--primary-blue) !important;
+    font-weight: 700 !important;
+    font-size: 1.8em !important;
+}
+
+.price-currency {
+    font-size: 0.7em !important;
+    color: var(--text-muted) !important;
+}
+
+/* Alerts and Messages */
+.alert, .message, .notification {
+    border-radius: 8px !important;
+    padding: 16px 20px !important;
+    border: none !important;
+    backdrop-filter: blur(10px) !important;
+    margin-bottom: 20px !important;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: var(--accent-green) !important;
+    border-left: 4px solid var(--accent-green) !important;
+}
+
+.alert-danger, .alert-error {
+    background: rgba(239, 68, 68, 0.2) !important;
+    color: var(--accent-red) !important;
+    border-left: 4px solid var(--accent-red) !important;
+}
+
+.alert-warning {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: var(--accent-yellow) !important;
+    border-left: 4px solid var(--accent-yellow) !important;
+}
+
+.alert-info {
+    background: rgba(59, 130, 246, 0.2) !important;
+    color: var(--primary-blue) !important;
+    border-left: 4px solid var(--primary-blue) !important;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background: rgba(31, 41, 55, 0.6) !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    border: none !important;
+}
+
+.breadcrumb a {
+    color: var(--primary-blue) !important;
+    text-decoration: none !important;
+}
+
+.breadcrumb .active {
+    color: var(--text-secondary) !important;
+}
+
+/* Sidebar */
+.sidebar, .side-nav {
+    background: var(--card-bg) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.sidebar .nav-link, .side-nav a {
+    color: var(--text-secondary) !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    margin-bottom: 5px !important;
+    transition: all 0.3s ease !important;
+    display: block !important;
+    text-decoration: none !important;
+}
+
+.sidebar .nav-link:hover, .side-nav a:hover,
+.sidebar .nav-link.active, .side-nav a.active {
+    background: var(--card-gradient) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Footer */
+.footer, #footer {
+    background: rgba(15, 15, 16, 0.95) !important;
+    border-top: 1px solid rgba(59, 130, 246, 0.2) !important;
+    color: var(--text-muted) !important;
+    padding: 30px 0 !important;
+    margin-top: 50px !important;
+    backdrop-filter: blur(10px);
+}
+
+.footer a, #footer a {
+    color: var(--primary-blue) !important;
+    text-decoration: none !important;
+}
+
+.footer a:hover, #footer a:hover {
+    color: var(--secondary-blue) !important;
+}
+
+/* Modal */
+.modal-content {
+    background: rgba(31, 41, 55, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+}
+
+.modal-header {
+    background: var(--card-gradient) !important;
+    color: var(--text-primary) !important;
+    border-bottom: none !important;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.modal-body {
+    color: var(--text-secondary) !important;
+    background: transparent !important;
+}
+
+.modal-footer {
+    background: transparent !important;
+    border-top: 1px solid var(--border-color) !important;
+}
+
+/* Pagination */
+.pagination .page-link {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-secondary) !important;
+}
+
+.pagination .page-link:hover {
+    background: var(--primary-blue) !important;
+    border-color: var(--primary-blue) !important;
+    color: var(--text-primary) !important;
+}
+
+.pagination .active .page-link {
+    background: var(--card-gradient) !important;
+    border-color: var(--primary-blue) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--card-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-blue);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-blue);
+}
+
+/* Text Colors */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+}
+
+p, span, div {
+    color: var(--text-secondary) !important;
+}
+
+.text-primary {
+    color: var(--primary-blue) !important;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.text-success {
+    color: var(--accent-green) !important;
+}
+
+.text-danger {
+    color: var(--accent-red) !important;
+}
+
+.text-warning {
+    color: var(--accent-yellow) !important;
+}
+
+.text-info {
+    color: var(--primary-blue) !important;
+}
+
+/* Links */
+a {
+    color: var(--primary-blue) !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+a:hover {
+    color: var(--secondary-blue) !important;
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content, .main-content {
+        padding: 15px !important;
+    }
+    
+    .card, .panel {
+        margin-bottom: 15px !important;
+    }
+    
+    .btn {
+        padding: 10px 20px !important;
+        font-size: 14px !important;
+    }
+    
+    .navbar-brand::after {
+        font-size: 1rem !important;
+    }
+}
+
+/* Animation for better UX */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card, .panel {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Special Styling for Blue Nebula Brand */
+.blue-nebula-brand {
+    background: var(--card-gradient) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    font-weight: 700 !important;
+}

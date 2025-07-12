@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "name": "Blue Nebula",
+  "description": "Professional space-themed template for Blue Nebula Hosting. Matches the main website design with modern dark theme and enterprise-grade styling.",
+  "authors": [
+    {
+      "name": "Blue Nebula Hosting",
+      "url": "https://bluenebulahosting.com"
+    }
+  ],
+  "require": {
+    "blesta": ">=5.0.0"
+  }
+}
