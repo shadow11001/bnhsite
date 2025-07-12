@@ -29,9 +29,81 @@ body {
     background-attachment: fixed;
 }
 
+/* Fix missing images with placeholder styling */
+img {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+}
+
+img[src=""], img:not([src]), img[src$="placeholder"] {
+    background: var(--card-gradient) !important;
+    color: var(--text-primary) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: 600 !important;
+    position: relative !important;
+}
+
+img[src=""]:before, img:not([src]):before {
+    content: "🖼️ Image" !important;
+    position: absolute !important;
+    color: var(--text-primary) !important;
+}
+
+/* Ensure all text is readable */
+* {
+    text-shadow: none !important;
+}
+
+.text-white {
+    color: var(--text-primary) !important;
+}
+
+.text-dark {
+    color: var(--text-secondary) !important;
+}
+
+/* Fix form elements visibility */
+.form-group {
+    margin-bottom: 20px !important;
+}
+
+.help-block, .error-message {
+    color: var(--accent-red) !important;
+    font-size: 14px !important;
+    margin-top: 5px !important;
+}
+
+.success-message {
+    color: var(--accent-green) !important;
+}
+
 /* Remove default Bootstrap backgrounds */
 .container, .container-fluid, .row, .col-md-12, .main-content, #main {
     background: transparent !important;
+}
+
+/* Fix any white backgrounds that make text invisible */
+.bg-white {
+    background: var(--card-bg) !important;
+}
+
+.bg-light {
+    background: rgba(55, 65, 81, 0.6) !important;
+}
+
+.bg-dark {
+    background: var(--dark-bg) !important;
+}
+
+/* Ensure proper text contrast everywhere */
+.well, .jumbotron, .hero-unit {
+    background: var(--card-bg) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
 }
 
 /* Header Styling */
