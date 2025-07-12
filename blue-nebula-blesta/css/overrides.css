@@ -460,15 +460,51 @@ label, .form-label {
     border: 1px solid #374151 !important;
     border-radius: 8px !important;
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2) !important;
+    padding: 8px 0 !important;
 }
 
 .dropdown-item {
     color: #d1d5db !important;
     transition: all 0.3s ease;
+    padding: 8px 16px !important;
+    border: none !important;
+    background: transparent !important;
 }
 
 .dropdown-item:hover, .dropdown-item:focus {
     background: rgba(59, 130, 246, 0.1) !important;
+    color: #3b82f6 !important;
+    border: none !important;
+}
+
+/* Fix navigation dropdown specifically */
+.navbar .dropdown-menu {
+    background: rgba(31, 41, 55, 0.95) !important;
+    border: 1px solid #374151 !important;
+    border-radius: 8px !important;
+    margin-top: 8px !important;
+}
+
+.navbar .dropdown-item {
+    color: #d1d5db !important;
+    background: transparent !important;
+}
+
+.navbar .dropdown-item:hover {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: #3b82f6 !important;
+}
+
+/* Fix dropdown toggle styling */
+.dropdown-toggle::after {
+    border-top-color: #d1d5db !important;
+}
+
+.navbar .dropdown-toggle {
+    color: #d1d5db !important;
+}
+
+.navbar .dropdown-toggle:hover {
     color: #3b82f6 !important;
 }
 
