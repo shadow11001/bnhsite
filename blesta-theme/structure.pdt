@@ -83,23 +83,34 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
 
             /* Blue Nebula Logo Enhancement */
             .header .logo {
-                display: flex;
-                align-items: center;
-                gap: 12px;
+                display: flex !important;
+                align-items: center !important;
+                gap: 12px !important;
+            }
+            
+            .header .logo a {
+                display: flex !important;
+                align-items: center !important;
+                gap: 12px !important;
+                text-decoration: none !important;
+                color: #ffffff !important;
             }
             
             .header .logo img {
-                border-radius: 8px;
-                background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-                padding: 4px;
+                width: 40px !important;
+                height: 40px !important;
+                border-radius: 8px !important;
+                background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+                padding: 4px !important;
             }
             
-            .header .logo::after {
-                content: "Blue Nebula Hosting";
-                color: #ffffff;
-                font-size: 1.2rem;
-                font-weight: 600;
-                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            .header .logo a::after {
+                content: "Blue Nebula Hosting" !important;
+                color: #ffffff !important;
+                font-size: 1.2rem !important;
+                font-weight: 600 !important;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+                margin-left: 8px !important;
             }
 
             /* Mobile Menu Enhancement */
