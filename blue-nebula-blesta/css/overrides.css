@@ -193,7 +193,7 @@ nav.navbar .navbar-nav > .active > a:focus {
     color: #d1d5db !important;
 }
 
-/* Fix order form and package descriptions */
+/* Fix order form package descriptions and remove hover animations */
 .package-description, .plan-description, .order-description,
 div[style*="background-color: #17a2b8"],
 div[style*="background: #17a2b8"],
@@ -202,6 +202,34 @@ div[style*="background: #17a2b8"],
     color: #d1d5db !important;
     border: 1px solid #3b82f6 !important;
     border-radius: 8px !important;
+    transition: none !important; /* Remove hover animations */
+}
+
+/* Remove hover effects on package descriptions */
+.package-description:hover,
+.plan-description:hover,
+.order-description:hover,
+div[style*="background-color: #17a2b8"]:hover,
+div[style*="background: #17a2b8"]:hover,
+.alert-info:hover,
+.bg-info:hover {
+    background: rgba(31, 41, 55, 0.9) !important;
+    color: #d1d5db !important;
+    border: 1px solid #3b82f6 !important;
+    transform: none !important;
+    box-shadow: none !important;
+    animation: none !important;
+}
+
+/* Disable all animations on package elements */
+.package-option, .package-selection, .plan-card, .order-card {
+    animation: none !important;
+    transition: none !important;
+}
+
+.package-option:hover, .package-selection:hover, .plan-card:hover, .order-card:hover {
+    transform: none !important;
+    animation: none !important;
 }
 
 /* Subtle accent for service cards */
