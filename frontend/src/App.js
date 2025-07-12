@@ -62,6 +62,74 @@ const LegalPage = ({ type }) => {
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+// Promo Code Component
+const PromoCodeBanner = ({ location = "hero" }) => {
+  const [promoCodes, setPromoCodes] = useState([]);
+
+  useEffect(() => {
+    const fetchPromoCodes = async () => {
+      try {
+        const response = await axios.get(`${API}/promo-codes`);
+        const locationCodes = response.data.filter(code => 
+          code.display_location === location && code.is_active
+        );
+        setPromoCodes(locationCodes);
+      } catch (error) {
+        console.error('Error fetching promo codes:', error);
+      }
+    };
+    fetchPromoCodes();
+  }, [location]);
+
+  const copyToClipboard = (code) => {
+    navigator.clipboard.writeText(code).then(() => {
+      alert(`Promo code "${code}" copied to clipboard!`);
+    });
+  };
+
+  if (promoCodes.length === 0) return null;
+
+  return (
+    <div className="space-y-4">
+      {promoCodes.map(promo => (
+        <div key={promo.id} className={`
+          ${location === 'floating' ? 'fixed top-0 left-0 right-0 z-50' : ''}
+          ${location === 'hero' ? 'mb-8' : ''}
+          ${location === 'pricing' ? 'mb-6' : ''}
+          bg-gradient-to-r from-green-600 to-blue-600 text-white p-4 rounded-lg shadow-lg
+        `}>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-center md:text-left">
+              <h3 className="font-bold text-lg">{promo.title}</h3>
+              <p className="text-sm opacity-90">{promo.description}</p>
+              {promo.expiry_date && (
+                <p className="text-xs opacity-75 mt-1">
+                  Expires: {new Date(promo.expiry_date).toLocaleDateString()}
+                </p>
+              )}
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <div className="text-center">
+                <div className="bg-white/20 px-4 py-2 rounded-lg">
+                  <span className="font-mono font-bold text-lg">{promo.code}</span>
+                </div>
+              </div>
+              
+              <button
+                onClick={() => copyToClipboard(promo.code)}
+                className="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+              >
+                {promo.button_text}
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 // System Status Component with Uptime Kuma Integration
 const SystemStatus = () => {
   const [status, setStatus] = useState({ status: 'checking', text: 'Checking...' });
