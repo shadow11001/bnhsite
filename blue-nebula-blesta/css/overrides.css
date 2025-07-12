@@ -419,14 +419,14 @@ label, .form-label {
 }
 
 /* ============================================================================
-   FOOTER
+   FOOTER - Match Main Site Design
    ========================================================================== */
 
 .footer {
     background: rgba(15, 15, 16, 0.95) !important;
     border-top: 2px solid rgba(59, 130, 246, 0.3) !important;
     color: #9ca3af !important;
-    padding: 30px 0 !important;
+    padding: 40px 0 20px !important;
     margin-top: 50px !important;
     backdrop-filter: blur(10px);
     position: relative;
@@ -442,26 +442,93 @@ label, .form-label {
     background: linear-gradient(90deg, transparent, #3b82f6, #8b5cf6, transparent);
 }
 
-.footer hr {
-    border: none !important;
-    border-top: 1px solid rgba(59, 130, 246, 0.2) !important;
-    background: transparent !important;
-    margin: 20px 0 !important;
+/* Footer Logo */
+.footer-logo .logo-content {
+    margin-bottom: 15px;
 }
 
-.footer p {
+.footer-logo .logo-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+}
+
+.footer-logo .company-name {
+    font-size: 1.2rem;
+}
+
+.footer-logo .company-tagline {
+    font-size: 0.8rem;
+}
+
+.footer-description {
     color: #9ca3af !important;
-    background: transparent !important;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-top: 10px;
+}
+
+/* Footer Sections */
+.footer-section h5 {
+    color: #ffffff !important;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #3b82f6;
+    padding-bottom: 8px;
+    display: inline-block;
+}
+
+.footer-links {
+    list-style: none !important;
+    padding: 0 !important;
     margin: 0 !important;
 }
 
-.footer a {
+.footer-links li {
+    margin-bottom: 8px;
+}
+
+.footer-links a {
+    color: #9ca3af !important;
+    text-decoration: none !important;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+    display: block;
+    padding: 4px 0;
+}
+
+.footer-links a:hover {
+    color: #3b82f6 !important;
+    padding-left: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    margin-top: 30px;
+    border-top: 1px solid rgba(59, 130, 246, 0.2);
+    padding-top: 20px;
+}
+
+.footer-bottom hr {
+    display: none; /* Hide since we're using border-top */
+}
+
+.footer-bottom p {
+    color: #9ca3af !important;
+    background: transparent !important;
+    margin: 0 !important;
+    font-size: 0.9rem;
+}
+
+.footer-bottom a {
     color: #3b82f6 !important;
     text-decoration: none !important;
     transition: color 0.3s ease;
 }
 
-.footer a:hover {
+.footer-bottom a:hover {
     color: #60a5fa !important;
 }
 
