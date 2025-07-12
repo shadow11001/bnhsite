@@ -608,11 +608,19 @@ const Footer = () => {
           <div>
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">BN</span>
+                <img 
+                  src="/logo.png" 
+                  alt="Blue Nebula Hosting" 
+                  className="w-8 h-8 object-contain"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+                <span className="text-white font-bold text-xl hidden">BN</span>
               </div>
               <div className="text-white">
-                <h3 className="font-bold text-lg">Blue Nebula</h3>
-                <p className="text-sm text-blue-300">Hosting</p>
+                <h3 className="font-bold text-lg">Blue Nebula Hosting</h3>
               </div>
             </div>
             <p className="text-gray-400">
