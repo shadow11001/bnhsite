@@ -300,14 +300,33 @@ const Header = () => {
 // Hero Section Component
 const HeroSection = () => {
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center">
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: 'url(https://images.unsplash.com/photo-1462331940025-496dfbfc7564?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwyfHxzcGFjZSUyMG5lYnVsYXxlbnwwfHx8fDE3NTIyOTU3NTR8MA&ixlib=rb-4.1.0&q=85)'
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-purple-900/60 to-black/80"></div>
+    <section id="home" className="pt-20 pb-20 min-h-screen flex items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* Floating Promo Bar */}
+          <PromoCodeBanner location="floating" />
+          
+          {/* Hero Promo Banner */}
+          <PromoCodeBanner location="hero" />
+          
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            Fast, Reliable, and <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Affordable</span>
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-300 mb-4">
+            Hosting Solutions—Starting at <span className="text-blue-400 font-semibold">$1/mo</span>
+          </p>
+          <p className="text-lg text-gray-400 mb-8 max-w-3xl mx-auto">
+            Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions with 24/7 support, 99.9% uptime guarantee, and professional managed services for shared hosting, VPS, and GameServers.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="#hosting" className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-colors font-semibold text-lg">
+              View Hosting Plans
+            </a>
+            <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="px-8 py-4 border-2 border-blue-400 text-blue-400 rounded-lg hover:bg-blue-400 hover:text-gray-900 transition-colors font-semibold text-lg">
+              Client Portal
+            </a>
+          </div>
+        </div>
+      </section>
       </div>
       
       <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
