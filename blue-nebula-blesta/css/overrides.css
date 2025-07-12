@@ -689,11 +689,7 @@ label, .form-label {
 
 @media (max-width: 768px) {
     .company-name {
-        font-size: 1.2rem;
-    }
-    
-    .company-tagline {
-        font-size: 0.8rem;
+        font-size: 1.1rem;
     }
     
     .logo-icon, .logo-image {
@@ -735,6 +731,10 @@ label, .form-label {
     
     .footer-bottom p {
         font-size: 0.8rem;
+    }
+    
+    .footer-logo .company-name {
+        font-size: 1rem;
     }
 }
 
