@@ -452,6 +452,28 @@ async def get_content(section: str):
                     "subtitle": "Hosting Solutions—Starting at $1/mo",
                     "description": "Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions with 24/7 support, 99.9% uptime guarantee, and professional managed services for shared hosting, VPS, and GameServers."
                 }
+            elif section == "about":
+                return {
+                    "section": "about",
+                    "title": "About Blue Nebula Hosting",
+                    "description": "Founded with a mission to provide reliable, affordable hosting solutions, Blue Nebula Hosting combines cutting-edge technology with exceptional customer support. We specialize in shared hosting, VPS solutions, and GameServer hosting, serving customers worldwide with 99.9% uptime guarantee and 24/7 technical support."
+                }
+            elif section == "features":
+                return {
+                    "section": "features", 
+                    "title": "Why Choose Blue Nebula Hosting?",
+                    "description": "We deliver enterprise-grade hosting solutions with the reliability and support your business deserves.",
+                    "features": [
+                        "99.9% Uptime Guarantee",
+                        "24/7 Expert Technical Support", 
+                        "Enterprise-Grade Security",
+                        "Lightning-Fast SSD Storage",
+                        "Free SSL Certificates",
+                        "Daily Automated Backups",
+                        "DDoS Protection",
+                        "Easy One-Click Installations"
+                    ]
+                }
             return {"section": section, "message": "No custom content found"}
         return content
     except Exception as e:
