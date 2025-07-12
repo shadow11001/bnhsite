@@ -804,7 +804,7 @@ const AdminPanel = () => {
     const saveLegalContent = async () => {
       setIsLoading(true);
       try {
-        await axios.put(`${API}/legal/${selectedType}`, legalData, { headers: getAuthHeaders() });
+        await axios.put(`${API}/content`, legalData, { headers: getAuthHeaders() });
         alert(`${selectedType === 'terms' ? 'Terms of Service' : 'Privacy Policy'} updated successfully!`);
       } catch (error) {
         alert('Error updating legal content: ' + error.message);
