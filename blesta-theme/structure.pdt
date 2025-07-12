@@ -608,13 +608,40 @@ $html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
                         }
                     });
                     
-                    // Force service cards to have proper styling
-                    $('.card, .well, .panel, .jumbotron').each(function() {
-                        $(this).css({
+                    // Specifically target cards
+                    $('.card, [class*="card"]').each(function() {
+                        var $el = $(this);
+                        var bgColor = $el.css('background-color');
+                        var computedBg = window.getComputedStyle(this).backgroundColor;
+                        
+                        // Force Blue Nebula styling on all cards
+                        $el.css({
+                            'background': 'rgba(31, 41, 55, 0.9)',
                             'background-color': 'rgba(31, 41, 55, 0.9)',
                             'color': '#d1d5db',
                             'border': '1px solid #374151',
-                            'border-radius': '12px'
+                            'border-radius': '12px',
+                            'padding': '20px',
+                            'margin-bottom': '20px'
+                        });
+                        
+                        // Fix card content
+                        $el.find('.card-content, .card-body').css({
+                            'background': 'transparent',
+                            'color': 'inherit'
+                        });
+                        
+                        // Fix card values and labels
+                        $el.find('.card-value').css({
+                            'color': '#ffffff',
+                            'font-size': '2rem',
+                            'font-weight': '700',
+                            'margin-bottom': '8px'
+                        });
+                        
+                        $el.find('.card-label').css({
+                            'color': '#d1d5db',
+                            'font-size': '0.9rem'
                         });
                     });
                     
