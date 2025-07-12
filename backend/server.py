@@ -39,6 +39,14 @@ api_router = APIRouter(prefix="/api")
 
 
 # Define Models
+class SiteSettings(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    uptime_kuma_api_key: str
+    uptime_kuma_url: str
+    status_update_interval: int = 30
+    site_title: str
+    site_description: str
+
 class HostingPlan(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     plan_type: str  # "ssd_shared", "hdd_shared", "standard_vps", "performance_vps", "standard_gameserver", "performance_gameserver"
