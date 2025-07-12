@@ -690,43 +690,65 @@ a.list-group-item.active:focus {
     border-radius: 8px !important;
 }
 
-/* Footer Styling - Enhanced */
+/* Footer Styling - Match Main Site Design */
 .footer, #footer, .container-fluid .footer, .row.footer {
     background: rgba(15, 15, 16, 0.95) !important;
-    border-top: 1px solid rgba(59, 130, 246, 0.2) !important;
+    border-top: 2px solid rgba(59, 130, 246, 0.3) !important;
     color: #9ca3af !important;
-    padding: 20px 0 !important;
-    margin-top: 40px !important;
+    padding: 30px 0 !important;
+    margin-top: 50px !important;
     backdrop-filter: blur(10px) !important;
     position: relative !important;
     z-index: 10 !important;
     width: 100% !important;
 }
 
-.footer * {
+.footer *, .footer .container-fluid *, .footer .row *, .footer .col-md-12 * {
     background: transparent !important;
+    color: inherit !important;
 }
 
 .footer hr {
-    border-color: rgba(59, 130, 246, 0.2) !important;
+    border: none !important;
+    border-top: 1px solid rgba(59, 130, 246, 0.2) !important;
     background: transparent !important;
     margin: 20px 0 !important;
+    height: 1px !important;
 }
 
 .footer p {
     color: #9ca3af !important;
     background: transparent !important;
     margin: 0 !important;
+    text-align: center !important;
 }
 
 .footer a, #footer a {
     color: #3b82f6 !important;
     text-decoration: none !important;
     background: transparent !important;
+    transition: color 0.3s ease !important;
 }
 
 .footer a:hover, #footer a:hover {
     color: #60a5fa !important;
+    text-decoration: none !important;
+}
+
+.footer .container-fluid, .footer .row, .footer .col-md-12 {
+    background: transparent !important;
+    color: inherit !important;
+}
+
+/* Main site footer style integration */
+.footer::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 2px !important;
+    background: linear-gradient(90deg, transparent, #3b82f6, #8b5cf6, transparent) !important;
 }
 
 /* Additional Blue Nebula Enhancements */
