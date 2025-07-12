@@ -735,18 +735,149 @@ a:hover, a:focus {
     100% { transform: rotate(360deg); }
 }
 
-/* EMERGENCY FIXES - Override any remaining visibility issues */
-.invisible-text {
-    color: var(--text-secondary) !important;
-    background: var(--card-bg) !important;
+/* ICON FIXES - Font Awesome and Button Icons */
+
+/* Fix Font Awesome icons visibility */
+.fa, .fas, .far, .fab, .fal, [class*="fa-"] {
+    color: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    font-family: "Font Awesome 5 Free", "Font Awesome 5 Pro", "FontAwesome", sans-serif !important;
+    font-weight: 900 !important;
+    display: inline-block !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
 }
 
-.force-visible {
-    color: var(--text-secondary) !important;
-    background: var(--card-bg) !important;
-    border: 1px solid var(--border-color) !important;
-    padding: 10px !important;
-    border-radius: 6px !important;
+/* Navigation icons */
+.navbar-nav li a i,
+.nav-link i,
+.dropdown-menu a i {
+    margin-right: 8px !important;
+    color: inherit !important;
+    width: 16px !important;
+    text-align: center !important;
+}
+
+/* Button icons */
+.btn i, button i, .button i {
+    margin-right: 6px !important;
+    color: inherit !important;
+}
+
+/* Cart and continue button fixes */
+.btn-cart, .cart-btn, [class*="cart"] {
+    position: relative !important;
+}
+
+.btn-cart:before, .cart-btn:before {
+    content: "\f07a" !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    margin-right: 6px !important;
+}
+
+.btn-continue, .continue-btn, [class*="continue"] {
+    position: relative !important;
+}
+
+.btn-continue:before, .continue-btn:before {
+    content: "\f061" !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    margin-right: 6px !important;
+}
+
+/* Show Cart button specific styling */
+.show-cart, .view-cart, [href*="cart"] {
+    position: relative !important;
+}
+
+.show-cart:before, .view-cart:before, a[href*="cart"]:before {
+    content: "\f07a" !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    margin-right: 6px !important;
+    color: inherit !important;
+}
+
+/* Account icons */
+.my-account, .account, [href*="account"] {
+    position: relative !important;
+}
+
+.my-account:before, .account:before, a[href*="account"]:not([href*="cart"]):before {
+    content: "\f007" !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    margin-right: 6px !important;
+    color: inherit !important;
+}
+
+/* Support icons */
+.support, [href*="support"], [href*="ticket"] {
+    position: relative !important;
+}
+
+.support:before, a[href*="support"]:before, a[href*="ticket"]:before {
+    content: "\f1cd" !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    margin-right: 6px !important;
+    color: inherit !important;
+}
+
+/* Knowledge Base icons */
+.knowledge-base, .kb, [href*="knowledge"], [href*="help"] {
+    position: relative !important;
+}
+
+.knowledge-base:before, .kb:before, a[href*="knowledge"]:before, a[href*="help"]:before {
+    content: "\f02d" !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    margin-right: 6px !important;
+    color: inherit !important;
+}
+
+/* Order icons */
+.order, [href*="order"] {
+    position: relative !important;
+}
+
+.order:before, a[href*="order"]:before {
+    content: "\f07a" !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    margin-right: 6px !important;
+    color: inherit !important;
+}
+
+/* Login/Logout icons */
+.login, [href*="login"] {
+    position: relative !important;
+}
+
+.login:before, a[href*="login"]:before {
+    content: "\f2f6" !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    margin-right: 6px !important;
+    color: inherit !important;
+}
+
+.logout, [href*="logout"] {
+    position: relative !important;
+}
+
+.logout:before, a[href*="logout"]:before {
+    content: "\f2f5" !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    margin-right: 6px !important;
+    color: inherit !important;
 }
 
 /* Header Styling */
