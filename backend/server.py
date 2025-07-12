@@ -129,6 +129,10 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 DEFAULT_ADMIN_USERNAME = "admin"
 DEFAULT_ADMIN_PASSWORD = hash_password("admin123")  # Change this!
 
+# Uptime Kuma Configuration
+UPTIME_KUMA_API_KEY = "uk1_USvIQkci-6cYMA5VcOksKY7B1TzT7ul2zrvFOniq"
+UPTIME_KUMA_BASE_URL = "https://status.bluenebulahosting.com"
+
 # API Routes
 @api_router.get("/")
 async def root():
