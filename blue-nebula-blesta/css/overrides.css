@@ -448,6 +448,16 @@ label, .form-label {
    FOOTER - Match Main Site Design
    ========================================================================== */
 
+/* Hide any duplicate/extra footer elements */
+.footer-black, .footer-duplicate, .extra-footer {
+    display: none !important;
+}
+
+/* Hide any Blesta default footer that appears above ours */
+.container-fluid .row:has(.footer) ~ .row {
+    display: none !important;
+}
+
 .footer {
     background: rgba(15, 15, 16, 0.95) !important;
     border-top: 2px solid rgba(59, 130, 246, 0.3) !important;
@@ -471,6 +481,13 @@ label, .form-label {
 /* Footer Logo */
 .footer-logo .logo-content {
     margin-bottom: 15px;
+}
+
+.footer-logo-image {
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    object-fit: contain;
 }
 
 .footer-logo .logo-icon {
