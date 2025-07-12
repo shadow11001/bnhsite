@@ -303,6 +303,19 @@ async def get_content(section: str):
     try:
         content = await db.website_content.find_one({"section": section})
         if not content:
+            # Return default content for legal pages
+            if section == "terms":
+                return {
+                    "section": "terms",
+                    "title": "Terms of Service",
+                    "content": "Terms of Service content will be updated by the administrator."
+                }
+            elif section == "privacy":
+                return {
+                    "section": "privacy", 
+                    "title": "Privacy Policy",
+                    "content": "Privacy Policy content will be updated by the administrator."
+                }
             return {"section": section, "message": "No custom content found"}
         return content
     except Exception as e:
