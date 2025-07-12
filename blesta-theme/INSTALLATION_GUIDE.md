@@ -32,6 +32,7 @@ blue_nebula/
    ├── structure.pdt
    ├── css/
    │   ├── blue_nebula.css
+   │   ├── critical_fixes.css
    │   └── responsive.css
    └── images/
        └── favicon.ico
