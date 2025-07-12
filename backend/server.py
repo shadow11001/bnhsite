@@ -226,7 +226,7 @@ async def initialize_data():
         # Clear existing data
         await db.hosting_plans.delete_many({})
         
-        # SSD Shared Hosting Plans (exact names)
+        # SSD Shared Hosting Plans (correct names from user)
         ssd_shared_plans = [
             {
                 "plan_type": "ssd_shared",
@@ -257,7 +257,7 @@ async def initialize_data():
             }
         ]
         
-        # HDD Shared Hosting Plans (exact names)
+        # HDD Shared Hosting Plans (correct names from user)
         hdd_shared_plans = [
             {
                 "plan_type": "hdd_shared",
@@ -270,7 +270,7 @@ async def initialize_data():
             },
             {
                 "plan_type": "hdd_shared",
-                "plan_name": "Emerald", 
+                "plan_name": "Granite", 
                 "base_price": 3.0,
                 "disk_gb": 50,
                 "disk_type": "HDD",
