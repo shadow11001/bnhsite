@@ -1615,6 +1615,7 @@ const AdminPanel = () => {
         {activeTab === 'company' && <CompanyEditor />}
         {activeTab === 'legal' && <LegalEditor />}
         {activeTab === 'contact' && <ContactSMTPEditor />}
+        {activeTab === 'promo' && <PromoCodeManager />}
         {activeTab === 'settings' && <SiteSettings />}
         
         {selectedPlan && (
