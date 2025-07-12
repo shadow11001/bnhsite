@@ -333,23 +333,28 @@ async def get_company_info():
     try:
         company = await db.company_info.find_one()
         if not company:
-            # Return default company info if none exists
-            default_info = CompanyInfo(
-                description="Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions for individuals and businesses. Our managed hosting services include shared hosting, VPS, and GameServer hosting with 24/7 support.",
-                features=[
-                    "24/7 Expert Support",
-                    "99.9% Uptime Guarantee", 
+            # Return default company information
+            return {
+                "id": str(uuid.uuid4()),
+                "name": "Blue Nebula Hosting",
+                "tagline": "Fast, Reliable, and Affordable Hosting Solutions",
+                "description": "Blue Nebula Hosting is a premier web hosting provider offering reliable, affordable hosting solutions for businesses of all sizes. We specialize in shared hosting, VPS hosting, and GameServer hosting with enterprise-grade infrastructure, 99.9% uptime guarantee, and 24/7 expert support. Our mission is to empower businesses with robust hosting solutions that scale with their growth.",
+                "founded_year": 2020,
+                "features": [
+                    "99.9% Uptime Guarantee",
+                    "24/7 Expert Technical Support",
+                    "Enterprise-Grade Security", 
+                    "Lightning-Fast SSD Storage",
                     "Free SSL Certificates",
                     "Daily Automated Backups",
                     "DDoS Protection",
-                    "One-Click App Installations",
-                    "cPanel/HestiaCP Control Panel",
-                    "Pterodactyl Game Panel",
-                    "30-Day Money Back Guarantee"
-                ]
-            )
-            return default_info
-        return CompanyInfo(**company)
+                    "Easy One-Click Installations"
+                ],
+                "contact_email": "support@bluenebulahosting.com",
+                "phone": "+1 (555) 123-4567",
+                "address": "123 Tech Street, Cloud City, CC 12345"
+            }
+        return company
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
