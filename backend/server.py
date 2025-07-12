@@ -326,6 +326,72 @@ async def get_content(section: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.get("/system-status")
+async def get_system_status():
+    """Get system status from Uptime Kuma"""
+    try:
+        # Make request to Uptime Kuma API
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                f"{UPTIME_KUMA_BASE_URL}/api/status-page/bnh",
+                headers={"Authorization": f"Bearer {UPTIME_KUMA_API_KEY}"},
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Parse the overall status
+                overall_status = "operational"
+                status_text = "All Systems Operational"
+                
+                # Check if we have incident data or status information
+                if "incident" in data:
+                    incidents = data.get("incident", [])
+                    if incidents:
+                        overall_status = "degraded"
+                        status_text = "Service Issues"
+                
+                # Check monitor statuses if available
+                if "publicGroupList" in data:
+                    for group in data["publicGroupList"]:
+                        for monitor in group.get("monitorList", []):
+                            if monitor.get("status") == 0:  # Down
+                                overall_status = "down"
+                                status_text = "Service Disruption"
+                                break
+                            elif monitor.get("status") == 2:  # Pending
+                                if overall_status == "operational":
+                                    overall_status = "degraded"
+                                    status_text = "Partial Outage"
+                        if overall_status == "down":
+                            break
+                
+                return {
+                    "status": overall_status,
+                    "text": status_text
+                }
+            else:
+                # Fallback to checking the status page directly
+                response = await client.get(f"{UPTIME_KUMA_BASE_URL}/status/bnh", timeout=10)
+                if response.status_code == 200:
+                    return {
+                        "status": "operational",
+                        "text": "All Systems Operational"
+                    }
+                else:
+                    return {
+                        "status": "unknown",
+                        "text": "Status Unknown"
+                    }
+                    
+    except Exception as e:
+        logger.error(f"Error fetching system status: {e}")
+        return {
+            "status": "unknown",
+            "text": "Status Unknown"
+        }
+
 # Initialize hosting plans data with EXACT names from pricing table
 @api_router.post("/init-data")
 async def initialize_data():
