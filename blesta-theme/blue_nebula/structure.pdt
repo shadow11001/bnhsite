@@ -72,6 +72,30 @@
             to { transform: translateX(200px); }
         }
         
+        /* CRITICAL DEBUG STYLES - Force visibility on all elements */
+        .well, .panel, .panel-body, .panel-default,
+        .order-form, .checkout-form, .cart, .summary,
+        .package, .service, .product {
+            background: #1f2937 !important;
+            color: #d1d5db !important;
+            border: 1px solid #374151 !important;
+        }
+        
+        /* Force all text to be visible */
+        div, p, span, td, th, li, label, h1, h2, h3, h4, h5, h6 {
+            color: #d1d5db !important;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            color: #ffffff !important;
+        }
+        
+        /* Fix any white background issues */
+        .bg-white, .bg-light {
+            background: #1f2937 !important;
+            color: #d1d5db !important;
+        }
+        
         /* Blue Nebula brand styling */
         .blue-nebula-brand {
             background: linear-gradient(135deg, #3b82f6, #8b5cf6);
@@ -79,6 +103,23 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             font-weight: 700;
+        }
+        
+        /* EMERGENCY VISIBILITY FIXES */
+        * {
+            text-shadow: none !important;
+        }
+        
+        /* Fix Bootstrap conflicts */
+        .container, .row, .col-md-12, .col-md-6, .col-md-4, .col-md-3, .col-md-8, .col-md-9 {
+            background: transparent !important;
+        }
+        
+        /* Force form visibility */
+        input, textarea, select, button {
+            background: rgba(55, 65, 81, 0.9) !important;
+            color: #ffffff !important;
+            border: 1px solid #374151 !important;
         }
     </style>
     
