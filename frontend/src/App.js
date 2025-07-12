@@ -171,9 +171,6 @@ const HostingPlans = ({ plans, title, type, description }) => {
                 ${plan.base_price}
                 <span className="text-lg text-gray-400">/mo</span>
               </div>
-              {plan.markup_percentage > 0 && (
-                <p className="text-sm text-green-400">Managed • {plan.markup_percentage}% premium included</p>
-              )}
             </div>
             
             <ul className="space-y-2 mb-8">
