@@ -680,10 +680,13 @@ const AdminPanel = () => {
     const updateSectionContent = async () => {
       setIsLoading(true);
       try {
-        await axios.put(`${API}/content`, sectionContent, { headers: getAuthHeaders() });
+        await axios.put(`${API}/content/${selectedSection}`, sectionContent, { headers: getAuthHeaders() });
         alert('Content updated successfully!');
+        // Update the cached content
+        setWebsiteContent(prev => ({ ...prev, [selectedSection]: sectionContent }));
       } catch (error) {
-        alert('Error updating content: ' + error.message);
+        console.error('Error updating content:', error);
+        alert('Error updating content: ' + (error.response?.data?.detail || error.message));
       } finally {
         setIsLoading(false);
       }
