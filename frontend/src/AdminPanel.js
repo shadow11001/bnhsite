@@ -462,11 +462,22 @@ const AdminPanel = () => {
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="bg-gray-800 rounded-lg p-8 max-w-md w-full">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <span className="text-white font-bold text-2xl">BN</span>
+            <div className="flex justify-center mb-4">
+              <img 
+                src="/logo.png" 
+                alt="Blue Nebula Hosting" 
+                className="w-16 h-16 object-contain"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-600 rounded-lg items-center justify-center text-white font-bold text-2xl" style={{display: 'none'}}>
+                BN
+              </div>
             </div>
-            <h1 className="text-2xl font-bold text-white">Admin Login</h1>
-            <p className="text-gray-400">Blue Nebula Hosting Admin Panel</p>
+            <h2 className="text-2xl font-bold text-white mb-2">Admin Panel</h2>
+            <p className="text-gray-400">Sign in to manage your hosting</p>
           </div>
           
           <form onSubmit={handleLocalLogin} className="space-y-6">
