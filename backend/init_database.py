@@ -93,8 +93,8 @@ async def init_hosting_plans(db):
             "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
             "markup_percentage": 0,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=1"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=1"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -118,8 +118,8 @@ async def init_hosting_plans(db):
             "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
             "markup_percentage": 0,
             "is_popular": True,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=2"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=2"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -143,8 +143,8 @@ async def init_hosting_plans(db):
             "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
             "markup_percentage": 0,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=3"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=3"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         
         # HDD Shared Hosting (3 plans)
@@ -170,8 +170,8 @@ async def init_hosting_plans(db):
             "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
             "markup_percentage": 0,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=4"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=4"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -195,8 +195,8 @@ async def init_hosting_plans(db):
             "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
             "markup_percentage": 0,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=5"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=5"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -220,8 +220,8 @@ async def init_hosting_plans(db):
             "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
             "markup_percentage": 0,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=6"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=6"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         
         # Standard VPS (6 plans)
@@ -241,8 +241,8 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=7"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=7"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -260,7 +260,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -278,22 +278,22 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": True,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9",
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9",
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -311,7 +311,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -329,7 +329,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -347,7 +347,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         }
     ]
     
@@ -369,7 +369,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -387,7 +387,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -405,7 +405,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -423,7 +423,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -441,7 +441,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -459,7 +459,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -477,7 +477,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -495,7 +495,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -513,7 +513,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         }
     ]
     
@@ -536,7 +536,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -553,7 +553,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -570,7 +570,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": True
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -587,7 +587,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -604,7 +604,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -621,7 +621,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         }
     ]
     
@@ -644,7 +644,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -661,7 +661,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -678,7 +678,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -695,7 +695,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -712,7 +712,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -729,7 +729,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -746,7 +746,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -763,7 +763,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
@@ -780,7 +780,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         }
     ]
     
