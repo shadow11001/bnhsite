@@ -407,9 +407,9 @@ const HostingPlans = ({ plans, title, type, description }) => {
             )}
             
             <div className="text-center mb-6 flex-shrink-0">
-              <h4 className="text-xl font-bold text-white mb-2">{plan.plan_name}</h4>
+              <h4 className="text-xl font-bold text-white mb-2">{plan.name}</h4>
               <div className="text-3xl font-bold text-blue-400 mb-2">
-                ${plan.base_price}
+                ${plan.price}
                 <span className="text-lg text-gray-400">/mo</span>
               </div>
             </div>
