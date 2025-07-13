@@ -200,6 +200,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "ISSUE RESOLVED: Markup percentages are correctly NOT exposed in public API responses. The backend properly uses PublicHostingPlan model for public endpoints (/api/hosting-plans) which excludes markup_percentage field. Internal markup data is only accessible via admin endpoints (/api/admin/hosting-plans) with proper authentication. This is the correct implementation - public users cannot see internal pricing markup while admins retain access to full data."
+      - working: true
+        agent: "testing"
+        comment: "CONFIRMED: Markup percentages correctly hidden from public API responses. Public endpoint /hosting-plans does not expose markup_percentage field. Admin endpoint /admin/hosting-plans also does not expose markup_percentage (this may be a bug - admin should see markup data). Public API security working correctly - no internal pricing data exposed to users."
 
 frontend:
   - task: "Remove markup percentage display from plans"
