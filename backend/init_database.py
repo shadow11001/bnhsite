@@ -78,9 +78,13 @@ async def init_hosting_plans(db):
             "sub_type": "ssd",
             "price": 1.00,
             "billing_cycle": "monthly",
+            "cpu": "1 Core",
+            "ram": "1 GB",
             "disk_space": "10 GB SSD",
             "bandwidth": "Unlimited",
             "websites": 1,
+            "subdomains": "10",
+            "parked_domains": "5",
             "databases": 10,
             "email_accounts": "Unlimited",
             "ssl_certificate": "Free SSL",
@@ -88,7 +92,8 @@ async def init_hosting_plans(db):
             "support": "24/7 Support",
             "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
             "markup_percentage": 0,
-            "is_popular": False
+            "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=1"
         },
         {
             "id": str(uuid.uuid4()),
