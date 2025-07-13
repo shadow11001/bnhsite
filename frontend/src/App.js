@@ -116,7 +116,7 @@ const PromoCodeBanner = ({ location = "hero" }) => {
     <div className="space-y-4">
       {promoCodes.map(promo => (
         <div key={promo.id} className={`
-          ${location === 'floating' ? 'fixed top-0 left-0 right-0 z-[9999]' : ''}
+          ${location === 'floating' ? 'sticky top-0 left-0 right-0 z-[9999]' : ''}
           ${location === 'hero' ? 'mb-8' : ''}
           ${location === 'pricing' ? 'mb-6' : ''}
           bg-gradient-to-r from-green-600 to-blue-600 text-white p-4 rounded-lg shadow-lg relative
