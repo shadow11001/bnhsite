@@ -506,7 +506,38 @@ const HostingPlans = ({ plans, title, type, description }) => {
 
 // Features Section Component
 const FeaturesSection = () => {
-  const features = [
+  const [featuresContent, setFeaturesContent] = useState(null);
+  
+  useEffect(() => {
+    const fetchFeaturesContent = async () => {
+      try {
+        const response = await axios.get(`${API}/content/features`);
+        setFeaturesContent(response.data);
+      } catch (error) {
+        console.error('Error fetching features content:', error);
+        // Fallback to default content if API fails
+        setFeaturesContent({
+          title: "Why Choose Blue Nebula?",
+          description: "Professional hosting solutions with enterprise-grade infrastructure and 24/7 expert support.",
+          features: [
+            "99.9% Uptime Guarantee",
+            "24/7 Expert Technical Support", 
+            "Enterprise-Grade Security",
+            "Lightning-Fast SSD Storage",
+            "Free SSL Certificates",
+            "Daily Automated Backups",
+            "DDoS Protection",
+            "Easy One-Click Installations"
+          ]
+        });
+      }
+    };
+    
+    fetchFeaturesContent();
+  }, []);
+
+  // Default feature cards (these can be made dynamic later if needed)
+  const defaultFeatures = [
     {
       title: "Shared Hosting",
       description: "Perfect for websites and blogs with HestiaCP control panel and one-click installations.",
@@ -530,16 +561,43 @@ const FeaturesSection = () => {
     }
   ];
 
+  if (!featuresContent) {
+    return (
+      <section className="py-20 bg-gray-900/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-white text-center">Loading features...</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-20 bg-gray-900/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-white mb-4">Why Choose Blue Nebula?</h2>
+          <h2 className="text-4xl font-bold text-white mb-4">
+            {featuresContent.title || "Why Choose Blue Nebula?"}
+          </h2>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            Professional hosting solutions with enterprise-grade infrastructure and 24/7 expert support.
+            {featuresContent.description || "Professional hosting solutions with enterprise-grade infrastructure and 24/7 expert support."}
           </p>
         </div>
         
+        {/* Display database features if available */}
+        {featuresContent.features && featuresContent.features.length > 0 && (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            {featuresContent.features.map((feature, index) => (
+              <div key={index} className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-blue-400 transition-all text-center">
+                <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold">✓</span>
+                </div>
+                <h3 className="text-white font-semibold mb-2">{feature}</h3>
+              </div>
+            ))}
+          </div>
+        )}
+        
+        {/* Default hosting type features */}
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <div key={index} className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 hover:border-blue-400 transition-all">
