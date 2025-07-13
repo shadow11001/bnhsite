@@ -720,66 +720,25 @@ const AdminPanel = () => {
     const loadAllSectionContent = async () => {
       console.log('Loading all website content from database...');
       
-      // First, try to get content from the main websiteContent state
-      if (websiteContent && Object.keys(websiteContent).length > 0) {
-        console.log('Using existing websiteContent:', websiteContent);
-        setAllSectionContent(prev => ({
-          hero: websiteContent.hero || { title: '', subtitle: '', description: '', button_text: '', button_url: '' },
-          features: websiteContent.features || { title: '', subtitle: '', description: '', button_text: '', button_url: '' },
-          about: websiteContent.about || { title: '', subtitle: '', description: '', button_text: '', button_url: '' }
-        }));
-        return;
-      }
-      
-      // Try to load from various backend endpoints
+      // Try to load each section from the admin API
       for (const section of sections) {
         try {
-          console.log(`Attempting to load ${section.key} content...`);
-          let content = null;
+          console.log(`Loading ${section.key} content from admin API...`);
           
-          // Try multiple endpoint variations
-          const endpoints = [
-            `${API}/admin/content/${section.key}`,
-            `${API}/content/${section.key}`,
-            `${API}/admin/website-content`,
-            `${API}/website-content`
-          ];
+          const response = await axios.get(`${API}/admin/content/${section.key}`, { 
+            headers: { 
+              ...getAuthHeaders(),
+              'Cache-Control': 'no-cache'
+            } 
+          });
           
-          for (const endpoint of endpoints) {
-            try {
-              console.log(`Trying endpoint: ${endpoint}`);
-              const response = await axios.get(endpoint, { 
-                headers: { 
-                  ...getAuthHeaders(),
-                  'Cache-Control': 'no-cache'
-                }
-              });
-              
-              if (endpoint.includes('website-content')) {
-                // If it's a bulk endpoint, extract section-specific content
-                content = response.data[section.key] || null;
-              } else {
-                // If it's a section-specific endpoint
-                content = response.data || null;
-              }
-              
-              if (content) {
-                console.log(`${section.key} content loaded from ${endpoint}:`, content);
-                break;
-              }
-            } catch (err) {
-              console.log(`Endpoint ${endpoint} failed:`, err.response?.status, err.response?.statusText);
-              continue;
-            }
-          }
-          
-          // Set the content (or default if not found)
+          console.log(`${section.key} content loaded:`, response.data);
           setAllSectionContent(prev => ({
             ...prev,
-            [section.key]: content || { 
-              title: `Default ${section.label}`, 
+            [section.key]: response.data || { 
+              title: '', 
               subtitle: '', 
-              description: `This is the ${section.label.toLowerCase()}. Content will be loaded from database once backend endpoints are configured.`, 
+              description: '', 
               button_text: '', 
               button_url: '' 
             }
@@ -787,13 +746,14 @@ const AdminPanel = () => {
           
         } catch (error) {
           console.error(`Failed to load ${section.key} content:`, error);
-          // Set informative default content
+          
+          // Set informative default content on error
           setAllSectionContent(prev => ({
             ...prev,
             [section.key]: { 
-              title: `${section.label} (Not Connected)`, 
+              title: `${section.label} (Loading Failed)`, 
               subtitle: '', 
-              description: `Backend content endpoint for ${section.label.toLowerCase()} not available. Please configure database content storage.`, 
+              description: `Could not load ${section.label.toLowerCase()} content from database. ${error.response?.status === 401 ? 'Authentication required.' : 'Please check backend connection.'}`, 
               button_text: '', 
               button_url: '' 
             }
