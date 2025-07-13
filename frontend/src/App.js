@@ -773,6 +773,9 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 relative overflow-hidden">
+      {/* Floating Promo Banner - Outside of all other content */}
+      <PromoCodeBanner location="floating" />
+      
       {/* Animated Background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-900/20 to-purple-900/20"></div>
@@ -836,10 +839,7 @@ const Home = () => {
 
       {/* Content */}
       <div className="relative z-10">
-        {/* Add padding top when floating banner is present */}
-        <div className="pt-20"> {/* Space for floating banners */}
-          <Header />
-        </div>
+        <Header />
         <HeroSection />
         <FeaturesSection />
         
