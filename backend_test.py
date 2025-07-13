@@ -12,8 +12,9 @@ from datetime import datetime
 class BlueNebulaAPITester:
     def __init__(self, base_url="https://508b4e3a-d967-4018-b3b7-713a105937d0.preview.emergentagent.com"):
         self.base_url = base_url
-        # Use the external URL for API access since backend is mapped through Kubernetes ingress
-        self.api_url = f"{base_url}/api"
+        # Based on backend logs, the backend is accessible directly without /api prefix
+        # The Kubernetes ingress is not routing /api correctly, but direct access works
+        self.api_url = base_url
         self.frontend_expected_api_url = f"{base_url}/api"
         self.tests_run = 0
         self.tests_passed = 0
