@@ -205,9 +205,12 @@ const AdminPanel = () => {
   const updatePlan = async (planId, updates) => {
     try {
       await axios.put(`${API}/hosting-plans/${planId}`, updates, {
-        headers: getAuthHeaders()
+        headers: {
+          ...getAuthHeaders(),
+          'Cache-Control': 'no-cache'
+        }
       });
-      await fetchData();
+      await fetchData(true); // Force refresh after update
       alert('Plan updated successfully!');
     } catch (error) {
       if (error.response?.status === 401) {
