@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Blue Nebula Hosting - Production Deployment Script
-# This script helps deploy the Blue Nebula Hosting application with Docker
+# Blue Nebula Hosting - Integration Script for Existing Docker Compose
+# This script helps integrate Blue Nebula Hosting into your existing docker-compose setup
 
 set -e
 
-echo "🚀 Blue Nebula Hosting - Docker Deployment Script"
+echo "🚀 Blue Nebula Hosting - Docker Integration Script"
 echo "================================================="
 
 # Colors for output
@@ -59,131 +59,238 @@ generate_passwords() {
     print_success "Secure passwords generated"
 }
 
-# Update environment files
-setup_environment() {
-    print_status "Setting up environment files..."
+# Create integration environment file
+create_integration_env() {
+    print_status "Creating integration environment file..."
     
-    # Backend environment
-    cat > backend/.env << EOF
-MONGO_URL=mongodb://admin:${MONGO_PASSWORD}@mongodb:27017/blue_nebula_hosting?authSource=admin
-DB_NAME=blue_nebula_hosting
-JWT_SECRET_KEY=${JWT_SECRET}
-UPTIME_KUMA_API_KEY=uk1_USvIQkci-6cYMA5VcOksKY7B1TzT7ul2zrvFOniq
+    cat > .env.blue-nebula-generated << EOF
+# Blue Nebula Hosting - Generated Environment Variables
+# Generated on: $(date)
+
+# MongoDB Configuration
+MONGO_ROOT_PASSWORD=${MONGO_PASSWORD}
+
+# Blue Nebula Backend Configuration  
+BLUE_NEBULA_JWT_SECRET=${JWT_SECRET}
+BLUE_NEBULA_UPTIME_KEY=uk1_USvIQkci-6cYMA5VcOksKY7B1TzT7ul2zrvFOniq
+
+# Port Configuration (customize if needed to avoid conflicts)
+BLUE_NEBULA_FRONTEND_PORT=3000
+BLUE_NEBULA_BACKEND_PORT=8001
+
+# Frontend Backend URL (update with your domain)
+BLUE_NEBULA_BACKEND_URL=http://localhost:8001
+
+# IMPORTANT: Add these variables to your existing .env file
+# Or source this file: source .env.blue-nebula-generated
 EOF
-
-    # Frontend environment (you'll need to update this with your domain)
-    cat > frontend/.env << EOF
-REACT_APP_BACKEND_URL=http://localhost:8001
-EOF
-
-    print_success "Environment files created"
+    
+    print_success "Integration environment file created: .env.blue-nebula-generated"
 }
 
-# Update docker-compose.yml with generated passwords
-update_compose_file() {
-    print_status "Updating docker-compose.yml with secure credentials..."
-    
-    # Create a temporary file with updated passwords
-    sed -e "s/secure_password_change_this/${MONGO_PASSWORD}/g" \
-        -e "s/your_super_secure_jwt_secret_key_change_this/${JWT_SECRET}/g" \
-        docker-compose.yml > docker-compose.yml.tmp
-    
-    mv docker-compose.yml.tmp docker-compose.yml
-    
-    print_success "docker-compose.yml updated with secure credentials"
+# Check for existing docker-compose.yml
+check_existing_compose() {
+    if [ -f "docker-compose.yml" ]; then
+        print_warning "Found existing docker-compose.yml"
+        print_status "You'll need to manually integrate the services from docker-compose.services.yml"
+        MANUAL_INTEGRATION=true
+    else
+        print_status "No existing docker-compose.yml found"
+        MANUAL_INTEGRATION=false
+    fi
 }
 
-# Build and start services
-deploy_services() {
-    print_status "Building and starting services..."
+# Check for port conflicts
+check_port_conflicts() {
+    print_status "Checking for port conflicts..."
     
-    # Stop any existing services
-    docker-compose down 2>/dev/null || true
+    # Check if ports 3000 and 8001 are in use
+    if netstat -tuln 2>/dev/null | grep -q ":3000 "; then
+        print_warning "Port 3000 is already in use. Consider changing BLUE_NEBULA_FRONTEND_PORT"
+    fi
     
-    # Build and start services
-    docker-compose up -d --build
-    
-    print_success "Services started successfully"
+    if netstat -tuln 2>/dev/null | grep -q ":8001 "; then
+        print_warning "Port 8001 is already in use. Consider changing BLUE_NEBULA_BACKEND_PORT"
+    fi
 }
 
-# Wait for services to be healthy
-wait_for_services() {
-    print_status "Waiting for services to be healthy..."
+# Provide integration instructions
+show_integration_instructions() {
+    echo ""
+    print_status "=== INTEGRATION INSTRUCTIONS ==="
+    echo ""
     
-    local max_attempts=30
-    local attempt=1
-    
-    while [ $attempt -le $max_attempts ]; do
-        if docker-compose ps | grep -q "healthy"; then
-            print_success "Services are healthy"
-            return 0
-        fi
-        
-        print_status "Attempt $attempt/$max_attempts - Waiting for services..."
-        sleep 10
-        ((attempt++))
-    done
-    
-    print_warning "Services may still be starting. Check with: docker-compose ps"
-}
-
-# Display service status
-show_status() {
-    print_status "Service Status:"
-    docker-compose ps
+    if [ "$MANUAL_INTEGRATION" = true ]; then
+        print_status "MANUAL INTEGRATION REQUIRED:"
+        echo "1. Copy the services from 'docker-compose.services.yml' into your existing docker-compose.yml"
+        echo "2. Add the environment variables from '.env.blue-nebula-generated' to your .env file"
+        echo "3. Adjust the build context paths to match your directory structure"
+        echo "4. Update network configurations if needed"
+        echo ""
+        print_status "Example integration:"
+        echo "  services:"
+        echo "    # ... your existing services ..."
+        echo "    # Copy the blue-nebula services here"
+        echo ""
+        echo "  volumes:"
+        echo "    # ... your existing volumes ..."
+        echo "    # Add blue nebula volumes"
+        echo ""
+        echo "  networks:"
+        echo "    # ... your existing networks ..."
+        echo "    # Add blue-nebula-network or use existing network"
+    else
+        print_status "NO EXISTING DOCKER-COMPOSE FOUND:"
+        echo "You can use the provided docker-compose.services.yml as your main docker-compose.yml"
+        echo "1. Copy docker-compose.services.yml to docker-compose.yml"
+        echo "2. Add the environment variables from '.env.blue-nebula-generated' to a .env file"
+    fi
     
     echo ""
-    print_status "Service URLs:"
-    echo "Frontend: http://localhost:3000"
-    echo "Backend API: http://localhost:8001"
-    echo "Backend Health: http://localhost:8001/"
-    
+    print_status "IMPORTANT STEPS AFTER INTEGRATION:"
+    echo "1. Update build context paths in your docker-compose.yml to match your directory structure"
+    echo "2. Change BLUE_NEBULA_BACKEND_URL to your domain: https://your-domain.com/api"
+    echo "3. Update port mappings if there are conflicts with your existing services"
+    echo "4. Configure your Caddy reverse proxy (see Caddyfile.example)"
     echo ""
-    print_status "Useful Commands:"
-    echo "View logs: docker-compose logs -f"
-    echo "Stop services: docker-compose down"
-    echo "Restart service: docker-compose restart [service_name]"
 }
 
 # Save credentials for reference
 save_credentials() {
-    cat > .deployment-credentials << EOF
-# Blue Nebula Hosting - Deployment Credentials
+    cat > .blue-nebula-credentials << EOF
+# Blue Nebula Hosting - Integration Credentials
 # Generated on: $(date)
 
 MongoDB Root Password: ${MONGO_PASSWORD}
 JWT Secret Key: ${JWT_SECRET}
 
+# Add these to your .env file:
+MONGO_ROOT_PASSWORD=${MONGO_PASSWORD}
+BLUE_NEBULA_JWT_SECRET=${JWT_SECRET}
+
 # IMPORTANT: Keep this file secure and do not commit to version control!
 EOF
     
-    print_success "Credentials saved to .deployment-credentials"
-    print_warning "Keep the .deployment-credentials file secure!"
+    print_success "Credentials saved to .blue-nebula-credentials"
+    print_warning "Keep the .blue-nebula-credentials file secure!"
 }
 
-# Main deployment process
+# Create example integration docker-compose
+create_example_integration() {
+    print_status "Creating example integrated docker-compose.yml..."
+    
+    cat > docker-compose.example.yml << 'EOF'
+version: '3.8'
+
+services:
+  # Example: Your existing services
+  # your-app:
+  #   image: your-app:latest
+  #   ports:
+  #     - "8080:8080"
+  #   networks:
+  #     - your-network
+
+  # Blue Nebula Hosting Services (copy these to your docker-compose.yml)
+  blue-nebula-mongodb:
+    image: mongo:7.0
+    container_name: blue-nebula-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: blue_nebula_hosting
+    volumes:
+      - blue_nebula_mongodb_data:/data/db
+      - blue_nebula_mongodb_config:/data/configdb
+    networks:
+      - blue-nebula-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  blue-nebula-backend:
+    build:
+      context: ./backend  # Adjust this path to match your structure
+      dockerfile: Dockerfile
+    container_name: blue-nebula-backend
+    restart: unless-stopped
+    environment:
+      - MONGO_URL=mongodb://admin:${MONGO_ROOT_PASSWORD}@blue-nebula-mongodb:27017/blue_nebula_hosting?authSource=admin
+      - DB_NAME=blue_nebula_hosting
+      - JWT_SECRET_KEY=${BLUE_NEBULA_JWT_SECRET}
+      - UPTIME_KUMA_API_KEY=${BLUE_NEBULA_UPTIME_KEY}
+    ports:
+      - "${BLUE_NEBULA_BACKEND_PORT:-8001}:8001"
+    depends_on:
+      blue-nebula-mongodb:
+        condition: service_healthy
+    networks:
+      - blue-nebula-network
+
+  blue-nebula-frontend:
+    build:
+      context: ./frontend  # Adjust this path to match your structure
+      dockerfile: Dockerfile
+    container_name: blue-nebula-frontend
+    restart: unless-stopped
+    environment:
+      - REACT_APP_BACKEND_URL=${BLUE_NEBULA_BACKEND_URL}
+    ports:
+      - "${BLUE_NEBULA_FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      blue-nebula-backend:
+        condition: service_healthy
+    networks:
+      - blue-nebula-network
+
+volumes:
+  # Your existing volumes
+  blue_nebula_mongodb_data:
+    driver: local
+  blue_nebula_mongodb_config:
+    driver: local
+
+networks:
+  # Your existing networks
+  blue-nebula-network:
+    driver: bridge
+EOF
+    
+    print_success "Example docker-compose.yml created: docker-compose.example.yml"
+}
+
+# Main integration process
 main() {
     echo ""
     check_dependencies
     generate_passwords
-    setup_environment
-    update_compose_file
-    deploy_services
-    wait_for_services
-    show_status
+    create_integration_env
+    check_existing_compose
+    check_port_conflicts
     save_credentials
+    create_example_integration
+    show_integration_instructions
     
     echo ""
-    print_success "🎉 Blue Nebula Hosting deployment completed!"
-    print_status "Check the DOCKER_DEPLOYMENT_GUIDE.md for more information"
-    print_warning "Don't forget to update the frontend REACT_APP_BACKEND_URL with your domain"
+    print_success "🎉 Blue Nebula Hosting integration files prepared!"
+    print_status "Next steps:"
+    echo "1. Review the integration instructions above"
+    echo "2. Check the DOCKER_DEPLOYMENT_GUIDE.md for detailed information"
+    echo "3. Adjust build context paths to match your directory structure"
+    echo "4. Update your Caddy configuration using Caddyfile.example"
 }
 
-# Add .deployment-credentials to .gitignore if it exists
+# Add integration files to .gitignore if it exists
 if [ -f .gitignore ]; then
-    if ! grep -q ".deployment-credentials" .gitignore; then
-        echo ".deployment-credentials" >> .gitignore
-    fi
+    for file in ".blue-nebula-credentials" ".env.blue-nebula-generated"; do
+        if ! grep -q "$file" .gitignore; then
+            echo "$file" >> .gitignore
+        fi
+    done
 fi
 
 # Run main function
