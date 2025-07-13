@@ -697,13 +697,31 @@ const AdminPanel = () => {
     const updateSectionContent = async () => {
       setIsLoading(true);
       try {
-        await axios.put(`${API}/content/${selectedSection}`, sectionContent, { headers: getAuthHeaders() });
+        // Try different methods and endpoints
+        const payload = { section: selectedSection, ...sectionContent };
+        
+        let response;
+        try {
+          // Try admin endpoint with POST
+          response = await axios.post(`${API}/admin/website-content`, payload, { headers: getAuthHeaders() });
+        } catch (err) {
+          if (err.response?.status === 405) {
+            // Method not allowed, try PUT
+            response = await axios.put(`${API}/admin/website-content`, payload, { headers: getAuthHeaders() });
+          } else if (err.response?.status === 404) {
+            // Try different endpoint
+            response = await axios.post(`${API}/website-content/${selectedSection}`, sectionContent, { headers: getAuthHeaders() });
+          } else {
+            throw err;
+          }
+        }
+        
         alert('Content updated successfully!');
         // Update the cached content
         setWebsiteContent(prev => ({ ...prev, [selectedSection]: sectionContent }));
       } catch (error) {
         console.error('Error updating content:', error);
-        alert('Error updating content: ' + (error.response?.data?.detail || error.message));
+        alert('Error updating content: ' + (error.response?.data?.detail || error.response?.data?.message || error.message));
       } finally {
         setIsLoading(false);
       }
