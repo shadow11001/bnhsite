@@ -297,9 +297,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Make promo code floating banner sticky to follow scroll"
+    []
   stuck_tasks: 
-    - "Verify markup percentages not exposed in API responses"
+    []
   test_all: false
   test_priority: "high_first"
 
