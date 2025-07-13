@@ -44,6 +44,9 @@ async def init_database():
         # Initialize site settings
         await init_site_settings(db)
         
+        # Initialize SMTP settings
+        await init_smtp_settings(db)
+        
         # Initialize some sample promo codes
         await init_promo_codes(db)
         
