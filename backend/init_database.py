@@ -260,6 +260,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -278,6 +279,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": True,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"pid=9"pid=9",
@@ -312,6 +314,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=10",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -330,6 +333,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=11",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -348,6 +352,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=12",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         }
     ]
@@ -370,6 +375,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=13",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -388,6 +394,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=14",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -406,6 +413,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=15",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -424,6 +432,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=16",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -442,6 +451,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=17",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -460,6 +470,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=18",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -478,6 +489,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=19",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -496,6 +508,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=20",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -514,6 +527,7 @@ async def init_hosting_plans(db):
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=21",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         }
     ]
@@ -537,6 +551,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=22",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -554,6 +569,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=23",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -570,7 +586,8 @@ async def init_hosting_plans(db):
             "players": "Up to 32 players",
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
-            "is_popular": True
+            "is_popular": True,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=24"
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -588,6 +605,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=25",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -605,6 +623,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=26",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -622,6 +641,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=27",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         }
     ]
@@ -645,6 +665,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=28",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -662,6 +683,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=29",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -679,6 +701,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=30",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -696,6 +719,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=31",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -713,6 +737,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=32",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -730,6 +755,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=33",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -747,6 +773,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=34",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -764,6 +791,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=35",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         },
         {
@@ -781,6 +809,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=36",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"pid=9"
         }
     ]
