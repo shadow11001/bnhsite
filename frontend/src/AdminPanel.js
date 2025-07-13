@@ -772,53 +772,57 @@ const AdminPanel = () => {
 
     const updateSectionContent = async () => {
       setIsLoading(true);
+      console.log(`Saving ${selectedSection} content to database:`, currentSectionContent);
+      
       try {
-        // Try different methods and endpoints
-        const payload = { section: selectedSection, ...sectionContent };
-        
+        // Save to database with proper section-specific endpoint
         let response;
         try {
-          // Try admin endpoint with POST
-          response = await axios.post(`${API}/admin/website-content`, payload, { 
+          // Try POST to admin content endpoint with section-specific data
+          response = await axios.post(`${API}/admin/content/${selectedSection}`, currentSectionContent, { 
             headers: {
               ...getAuthHeaders(),
-              'Cache-Control': 'no-cache'
+              'Cache-Control': 'no-cache',
+              'Content-Type': 'application/json'
             }
           });
+          console.log(`${selectedSection} content saved successfully:`, response.data);
         } catch (err) {
           if (err.response?.status === 405) {
             // Method not allowed, try PUT
-            response = await axios.put(`${API}/admin/website-content`, payload, { 
+            response = await axios.put(`${API}/admin/content/${selectedSection}`, currentSectionContent, { 
               headers: {
                 ...getAuthHeaders(),
-                'Cache-Control': 'no-cache'
+                'Cache-Control': 'no-cache',
+                'Content-Type': 'application/json'
               }
             });
+            console.log(`${selectedSection} content updated with PUT:`, response.data);
           } else if (err.response?.status === 404) {
-            // Try different endpoint
-            response = await axios.post(`${API}/website-content/${selectedSection}`, sectionContent, { 
+            // Try different endpoint structure
+            response = await axios.post(`${API}/content/${selectedSection}`, currentSectionContent, { 
               headers: {
                 ...getAuthHeaders(),
-                'Cache-Control': 'no-cache'
+                'Cache-Control': 'no-cache',
+                'Content-Type': 'application/json'
               }
             });
+            console.log(`${selectedSection} content saved to alternative endpoint:`, response.data);
           } else {
             throw err;
           }
         }
         
-        alert('Content updated successfully!');
-        // Update the cached content and force reload
-        setWebsiteContent(prev => ({ ...prev, [selectedSection]: sectionContent }));
+        alert(`${selectedSection.charAt(0).toUpperCase() + selectedSection.slice(1)} content saved successfully to database!`);
         
-        // Force reload the content from server to verify it was saved
+        // Force reload the content from database to verify it was saved
         setTimeout(() => {
-          loadSectionContent(selectedSection);
+          loadAllSectionContent();
         }, 1000);
         
       } catch (error) {
-        console.error('Error updating content:', error);
-        alert('Error updating content: ' + (error.response?.data?.detail || error.response?.data?.message || error.message));
+        console.error(`Error saving ${selectedSection} content:`, error);
+        alert(`Error saving ${selectedSection} content: ` + (error.response?.data?.detail || error.response?.data?.message || error.message));
       } finally {
         setIsLoading(false);
       }
