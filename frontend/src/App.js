@@ -370,19 +370,19 @@ const HeroSection = () => {
 const HostingPlans = ({ plans, title, type, description }) => {
   let filteredPlans = [];
   
-  // Filter plans based on type and sub_type from database
+  // Filter plans based on combined type from database
   if (type === 'ssd_shared') {
-    filteredPlans = plans.filter(plan => plan.type === 'shared' && plan.sub_type === 'ssd');
+    filteredPlans = plans.filter(plan => plan.type === 'ssd_shared');
   } else if (type === 'hdd_shared') {
-    filteredPlans = plans.filter(plan => plan.type === 'shared' && plan.sub_type === 'hdd');
+    filteredPlans = plans.filter(plan => plan.type === 'hdd_shared');
   } else if (type === 'standard_vps') {
-    filteredPlans = plans.filter(plan => plan.type === 'vps' && plan.sub_type === 'standard');
+    filteredPlans = plans.filter(plan => plan.type === 'standard_vps');
   } else if (type === 'performance_vps') {
-    filteredPlans = plans.filter(plan => plan.type === 'vps' && plan.sub_type === 'performance');
+    filteredPlans = plans.filter(plan => plan.type === 'performance_vps');
   } else if (type === 'standard_gameserver') {
-    filteredPlans = plans.filter(plan => plan.type === 'gameserver' && plan.sub_type === 'standard');
+    filteredPlans = plans.filter(plan => plan.type === 'standard_gameserver');
   } else if (type === 'performance_gameserver') {
-    filteredPlans = plans.filter(plan => plan.type === 'gameserver' && plan.sub_type === 'performance');
+    filteredPlans = plans.filter(plan => plan.type === 'performance_gameserver');
   }
   
   if (filteredPlans.length === 0) return null;
