@@ -144,6 +144,7 @@ class PromoCode(BaseModel):
     is_active: bool = True
     display_location: str = "hero"  # "hero", "pricing", "floating", "footer"
     button_text: str = "Copy Code"
+    button_url: Optional[str] = None  # If provided, button links to URL instead of copying code
     created_date: datetime = Field(default_factory=datetime.utcnow)
 
 # Authentication functions
