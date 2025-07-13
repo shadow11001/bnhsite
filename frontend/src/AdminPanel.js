@@ -1834,6 +1834,13 @@ const AdminPanel = () => {
               {loading ? 'Refreshing...' : 'Refresh Data'}
             </button>
             <button
+              onClick={clearAllCaches}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors flex items-center gap-2"
+            >
+              <span>🗑️</span>
+              Clear Cache
+            </button>
+            <button
               onClick={handleLogout}
               className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
             >
