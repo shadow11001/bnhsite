@@ -21,6 +21,24 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Shooting Star Animation */
+@keyframes shooting {
+  0% {
+    transform: translateX(-100px) translateY(0px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(calc(100vw + 100px)) translateY(-50px);
+    opacity: 0;
+  }
+}
+
 /* Custom gradient animations */
 @keyframes gradient-shift {
   0% {
