@@ -211,7 +211,7 @@ const AdminPanel = () => {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          <h3 className="text-xl font-bold text-white mb-4">Edit Plan: {plan.plan_name}</h3>
+          <h3 className="text-xl font-bold text-white mb-4">Edit Plan: {plan.name}</h3>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
