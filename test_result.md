@@ -277,6 +277,18 @@ frontend:
         agent: "testing"
         comment: "BACKEND PROMO CODE SYSTEM VERIFIED: Comprehensive testing of promo code backend functionality confirms all systems working correctly. ✅ Public API (/api/promo-codes) returns only active promo codes with all required fields (id, title, description, code, display_location, is_active). ✅ Admin API (/api/admin/promo-codes) returns all promo codes including inactive ones. ✅ CRUD operations (POST/PUT/DELETE) working perfectly for admin users. ✅ Data structure validation passed - all promo codes have correct field types and valid display_location values (floating, hero, pricing, footer). ✅ Filtering by display_location working correctly. ✅ Authentication properly protects admin endpoints. The frontend CSS change from 'fixed' to 'sticky' positioning does not affect backend promo code functionality - all backend operations remain intact and working as expected."
 
+  - task: "Fix backend database schema to match frontend expectations"
+    implemented: false
+    working: false
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Backend API returns old field names (plan_type, plan_name, base_price, popular) but frontend expects new field names (type, name, price, is_popular). Backend connects to localhost:27017 with old data while init script uses bnhsite-mongodb:27017. Need to sync database schema and API response mapping."
+
   - task: "Fix PlanEditor field mapping in AdminPanel.js"
     implemented: true
     working: true
