@@ -194,16 +194,29 @@ const AdminPanel = () => {
 
   const updateCompanyInfo = async (updates) => {
     try {
-      await axios.put(`${API}/company-info`, updates, {
-        headers: getAuthHeaders()
-      });
+      // Try different endpoints and methods
+      let response;
+      try {
+        response = await axios.put(`${API}/admin/company-info`, updates, { headers: getAuthHeaders() });
+      } catch (err) {
+        if (err.response?.status === 404) {
+          // Try POST method
+          response = await axios.post(`${API}/admin/company-info`, updates, { headers: getAuthHeaders() });
+        } else if (err.response?.status === 405) {
+          // Try different endpoint
+          response = await axios.put(`${API}/company`, updates, { headers: getAuthHeaders() });
+        } else {
+          throw err;
+        }
+      }
       await fetchData();
       alert('Company info updated successfully!');
     } catch (error) {
+      console.error('Error updating company info:', error);
       if (error.response?.status === 401) {
         handleLogout();
       } else {
-        alert('Error updating company info: ' + error.message);
+        alert('Error updating company info: ' + (error.response?.data?.detail || error.response?.data?.message || error.message));
       }
     }
   };
