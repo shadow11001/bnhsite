@@ -321,12 +321,12 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Fresh comprehensive testing of all functionality"
-    - "Make promo code floating banner sticky to follow scroll"
+    - "Fix PlanEditor field mapping in AdminPanel.js"
+    - "Verify hosting plans display correctly on homepage and admin panel"
   stuck_tasks: 
     - "Verify markup percentages not exposed in API responses"
-  test_all: true
-  test_priority: "comprehensive"
+  test_all: false
+  test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
