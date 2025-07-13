@@ -412,6 +412,15 @@ const HostingPlans = ({ plans, title, type, description }) => {
                 ${plan.price}
                 <span className="text-lg text-gray-400">/mo</span>
               </div>
+              
+              {/* Technical Specifications */}
+              {(plan.cpu || plan.ram || plan.disk_space) && (
+                <div className="text-sm text-gray-400 mb-4 space-y-1">
+                  {plan.cpu && <div>CPU: {plan.cpu} {plan.cpu.includes('vCPU') ? '' : (plan.type === 'shared' ? 'Core' : 'vCPU')}</div>}
+                  {plan.ram && <div>RAM: {plan.ram} {plan.ram.includes('GB') ? '' : 'GB'}</div>}
+                  {plan.disk_space && <div>Storage: {plan.disk_space}</div>}
+                </div>
+              )}
             </div>
             
             <ul className="space-y-2 mb-8 flex-grow">
