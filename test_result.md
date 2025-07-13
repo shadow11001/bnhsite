@@ -343,6 +343,21 @@ frontend:
         agent: "main"
         comment: "Admin panel needs enhanced features for content management - can be added in future iterations"
 
+  - task: "Add missing admin panel backend endpoints"
+    implemented: false
+    working: false
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reports admin sections failing: Navigation Menu (Error updating navigation: Not Found), Company Info (Error updating company info: Request failed with status code 500), Legal Pages (doesn't actually save anything), SMTP (Error updating SMTP settings: Not Found)"
+      - working: false
+        agent: "main"
+        comment: "Analysis shows missing endpoints: /admin/navigation, /admin/smtp-settings not found. Company info endpoint exists at /company-info but frontend calls /admin/company-info. Legal pages saving may have implementation issues."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
