@@ -60,7 +60,7 @@ const LegalPage = ({ type }) => {
 };
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = BACKEND_URL; // Remove the extra /api since BACKEND_URL already includes it
+const API = BACKEND_URL; // BACKEND_URL should be https://bluenebulahosting.com/api
 
 // Promo Code Component
 const PromoCodeBanner = ({ location = "hero" }) => {
