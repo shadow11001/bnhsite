@@ -68,6 +68,23 @@ const AdminPanel = () => {
     }
   }, [isAuthenticated]);
 
+  // Utility function to clear all browser caches
+  const clearAllCaches = () => {
+    try {
+      // Clear localStorage
+      localStorage.clear();
+      // Clear sessionStorage  
+      sessionStorage.clear();
+      // Clear any stored data
+      console.log('Browser storage cleared');
+      
+      // Force reload from server
+      window.location.reload(true);
+    } catch (error) {
+      console.error('Error clearing caches:', error);
+    }
+  };
+
   const fetchData = async (forceClear = false) => {
     if (!isAuthenticated) return;
     
