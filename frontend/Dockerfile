@@ -10,7 +10,7 @@ COPY package.json yarn.lock ./
 # Install dependencies with exact versions for reproducible builds
 RUN yarn install --frozen-lockfile --network-timeout 300000
 
-# Copy source code
+# Copy all source code including public folder
 COPY . .
 
 # Build the application for production
