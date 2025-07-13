@@ -984,8 +984,26 @@ const AdminPanel = () => {
                   disabled={isLoading}
                   className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
                 >
-                  {isLoading ? 'Updating...' : 'Update Content'}
+                  {isLoading ? 'Saving...' : 'Save to Database'}
                 </button>
+                
+                <button
+                  onClick={loadAllSectionContent}
+                  className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                >
+                  🔄 Reload from Database
+                </button>
+              </div>
+              
+              {/* Debug Information */}
+              <div className="mt-6 bg-gray-800 p-4 rounded-lg">
+                <h5 className="text-white font-semibold mb-2">🔧 Debug Information</h5>
+                <div className="text-xs text-gray-400 space-y-1">
+                  <div><strong>Selected Section:</strong> {selectedSection}</div>
+                  <div><strong>Content State:</strong> {JSON.stringify(currentSectionContent, null, 2)}</div>
+                  <div><strong>All Sections:</strong> {Object.keys(allSectionContent).join(', ')}</div>
+                  <div><strong>API Base:</strong> {API}</div>
+                </div>
               </div>
             </div>
           </div>
