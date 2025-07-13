@@ -29,21 +29,21 @@ services:
     #   - "27017:27017"
 
   # Backend API for Blue Nebula Hosting
-  blue-nebula-backend:
+  bnhsite-backend:
     build:
-      context: ./blue-nebula-hosting/backend
+      context: ./backend
       dockerfile: Dockerfile
-    container_name: blue-nebula-backend
+    container_name: bnhsite-backend
     restart: unless-stopped
     environment:
-      - MONGO_URL=mongodb://admin:${MONGO_ROOT_PASSWORD:-secure_password_change_this}@blue-nebula-mongodb:27017/blue_nebula_hosting?authSource=admin
+      - MONGO_URL=mongodb://admin:${MONGO_ROOT_PASSWORD:-secure_password_change_this}@bnhsite-mongodb:27017/blue_nebula_hosting?authSource=admin
       - DB_NAME=blue_nebula_hosting
       - JWT_SECRET_KEY=${BLUE_NEBULA_JWT_SECRET:-your_super_secure_jwt_secret_key_change_this}
       - UPTIME_KUMA_API_KEY=${BLUE_NEBULA_UPTIME_KEY:-uk1_USvIQkci-6cYMA5VcOksKY7B1TzT7ul2zrvFOniq}
     ports:
       - "${BLUE_NEBULA_BACKEND_PORT:-8001}:8001"
     depends_on:
-      blue-nebula-mongodb:
+      bnhsite-mongodb:
         condition: service_healthy
     networks:
       - blue-nebula-network
@@ -57,18 +57,18 @@ services:
       - no-new-privileges:true
 
   # Frontend Application for Blue Nebula Hosting
-  blue-nebula-frontend:
+  bnhsite-frontend:
     build:
-      context: ./blue-nebula-hosting/frontend
+      context: ./frontend
       dockerfile: Dockerfile
-    container_name: blue-nebula-frontend
+    container_name: bnhsite-frontend
     restart: unless-stopped
     environment:
       - REACT_APP_BACKEND_URL=${BLUE_NEBULA_BACKEND_URL:-http://localhost:8001}
     ports:
       - "${BLUE_NEBULA_FRONTEND_PORT:-3000}:3000"
     depends_on:
-      blue-nebula-backend:
+      bnhsite-backend:
         condition: service_healthy
     networks:
       - blue-nebula-network
