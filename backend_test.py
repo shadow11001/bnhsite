@@ -10,7 +10,7 @@ import json
 from datetime import datetime
 
 class BlueNebulaAPITester:
-    def __init__(self, base_url="https://fa80d249-71c7-4150-b832-bab579c8d70e.preview.emergentagent.com"):
+    def __init__(self, base_url="https://508b4e3a-d967-4018-b3b7-713a105937d0.preview.emergentagent.com"):
         self.base_url = base_url
         # CRITICAL ISSUE: API routes are not prefixed with /api but frontend expects them to be
         # Backend is running on localhost:8001, frontend expects API at base_url/api
