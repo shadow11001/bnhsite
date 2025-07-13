@@ -1557,20 +1557,45 @@ const AdminPanel = () => {
 
     const loadSiteSettings = async () => {
       try {
-        const response = await axios.get(`${API}/site-settings`, { headers: getAuthHeaders() });
+        // Try admin endpoint
+        const response = await axios.get(`${API}/admin/site-settings`, { headers: getAuthHeaders() });
         setSettings(prev => ({ ...prev, ...response.data }));
       } catch (error) {
         console.error('Error loading site settings:', error);
+        if (error.response?.status === 404) {
+          // Try alternative endpoint
+          try {
+            const response = await axios.get(`${API}/settings`, { headers: getAuthHeaders() });
+            setSettings(prev => ({ ...prev, ...response.data }));
+          } catch (altError) {
+            console.error('Error loading alt site settings:', altError);
+          }
+        }
       }
     };
 
     const saveSiteSettings = async () => {
       setIsLoading(true);
       try {
-        await axios.put(`${API}/site-settings`, settings, { headers: getAuthHeaders() });
+        // Try admin endpoint
+        let response;
+        try {
+          response = await axios.put(`${API}/admin/site-settings`, settings, { headers: getAuthHeaders() });
+        } catch (err) {
+          if (err.response?.status === 404) {
+            // Try alternative endpoint
+            response = await axios.put(`${API}/settings`, settings, { headers: getAuthHeaders() });
+          } else if (err.response?.status === 405) {
+            // Try POST method
+            response = await axios.post(`${API}/admin/site-settings`, settings, { headers: getAuthHeaders() });
+          } else {
+            throw err;
+          }
+        }
         alert('Site settings updated successfully! Some changes may require a server restart.');
       } catch (error) {
-        alert('Error updating site settings: ' + error.message);
+        console.error('Error updating site settings:', error);
+        alert('Error updating site settings: ' + (error.response?.data?.detail || error.response?.data?.message || error.message));
       } finally {
         setIsLoading(false);
       }
