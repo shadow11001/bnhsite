@@ -23,10 +23,8 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code and scripts
+# Copy application code
 COPY . .
-COPY ../init_database.py ./
-COPY ../change_admin_credentials.py ./
 
 # Change ownership to non-root user
 RUN chown -R appuser:appuser /app
