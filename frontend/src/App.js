@@ -65,6 +65,7 @@ const API = `${BACKEND_URL}/api`;
 // Promo Code Component
 const PromoCodeBanner = ({ location = "hero" }) => {
   const [promoCodes, setPromoCodes] = useState([]);
+  const [dismissedFloating, setDismissedFloating] = useState(false);
 
   useEffect(() => {
     const fetchPromoCodes = async () => {
@@ -79,6 +80,12 @@ const PromoCodeBanner = ({ location = "hero" }) => {
       }
     };
     fetchPromoCodes();
+    
+    // Check if floating banner was dismissed
+    if (location === 'floating') {
+      const dismissed = localStorage.getItem('promo_floating_dismissed');
+      setDismissedFloating(dismissed === 'true');
+    }
   }, [location]);
 
   const copyToClipboard = (code) => {
@@ -87,7 +94,23 @@ const PromoCodeBanner = ({ location = "hero" }) => {
     });
   };
 
+  const dismissFloatingBanner = () => {
+    setDismissedFloating(true);
+    localStorage.setItem('promo_floating_dismissed', 'true');
+  };
+
+  const handleButtonClick = (promo) => {
+    if (promo.button_url) {
+      // Open URL in new tab
+      window.open(promo.button_url, '_blank');
+    } else {
+      // Copy code to clipboard
+      copyToClipboard(promo.code);
+    }
+  };
+
   if (promoCodes.length === 0) return null;
+  if (location === 'floating' && dismissedFloating) return null;
 
   return (
     <div className="space-y-4">
@@ -96,8 +119,21 @@ const PromoCodeBanner = ({ location = "hero" }) => {
           ${location === 'floating' ? 'fixed top-0 left-0 right-0 z-50' : ''}
           ${location === 'hero' ? 'mb-8' : ''}
           ${location === 'pricing' ? 'mb-6' : ''}
-          bg-gradient-to-r from-green-600 to-blue-600 text-white p-4 rounded-lg shadow-lg
+          bg-gradient-to-r from-green-600 to-blue-600 text-white p-4 rounded-lg shadow-lg relative
         `}>
+          {/* Dismiss button for floating banners */}
+          {location === 'floating' && (
+            <button
+              onClick={dismissFloatingBanner}
+              className="absolute top-2 right-2 text-white/80 hover:text-white transition-colors"
+              aria-label="Dismiss"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+          
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
               <h3 className="font-bold text-lg">{promo.title}</h3>
@@ -117,7 +153,7 @@ const PromoCodeBanner = ({ location = "hero" }) => {
               </div>
               
               <button
-                onClick={() => copyToClipboard(promo.code)}
+                onClick={() => handleButtonClick(promo)}
                 className="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
               >
                 {promo.button_text}
