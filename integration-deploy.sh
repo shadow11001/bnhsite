@@ -205,17 +205,17 @@ services:
   #     - your-network
 
   # Blue Nebula Hosting Services (copy these to your docker-compose.yml)
-  blue-nebula-mongodb:
-    image: mongo:7.0
-    container_name: blue-nebula-mongodb
+  bnhsite-mongodb:
+    image: mongo:4.4.6
+    container_name: bnhsite-mongodb
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: blue_nebula_hosting
     volumes:
-      - blue_nebula_mongodb_data:/data/db
-      - blue_nebula_mongodb_config:/data/configdb
+      - bnhsite_mongodb_data:/data/db
+      - bnhsite_mongodb_config:/data/configdb
     networks:
       - blue-nebula-network
     healthcheck:
@@ -225,46 +225,46 @@ services:
       retries: 3
       start_period: 30s
 
-  blue-nebula-backend:
+  bnhsite-backend:
     build:
       context: ./backend  # Adjust this path to match your structure
       dockerfile: Dockerfile
-    container_name: blue-nebula-backend
+    container_name: bnhsite-backend
     restart: unless-stopped
     environment:
-      - MONGO_URL=mongodb://admin:${MONGO_ROOT_PASSWORD}@blue-nebula-mongodb:27017/blue_nebula_hosting?authSource=admin
+      - MONGO_URL=mongodb://admin:${MONGO_ROOT_PASSWORD}@bnhsite-mongodb:27017/blue_nebula_hosting?authSource=admin
       - DB_NAME=blue_nebula_hosting
       - JWT_SECRET_KEY=${BLUE_NEBULA_JWT_SECRET}
       - UPTIME_KUMA_API_KEY=${BLUE_NEBULA_UPTIME_KEY}
     ports:
       - "${BLUE_NEBULA_BACKEND_PORT:-8001}:8001"
     depends_on:
-      blue-nebula-mongodb:
+      bnhsite-mongodb:
         condition: service_healthy
     networks:
       - blue-nebula-network
 
-  blue-nebula-frontend:
+  bnhsite-frontend:
     build:
       context: ./frontend  # Adjust this path to match your structure
       dockerfile: Dockerfile
-    container_name: blue-nebula-frontend
+    container_name: bnhsite-frontend
     restart: unless-stopped
     environment:
       - REACT_APP_BACKEND_URL=${BLUE_NEBULA_BACKEND_URL}
     ports:
       - "${BLUE_NEBULA_FRONTEND_PORT:-3000}:3000"
     depends_on:
-      blue-nebula-backend:
+      bnhsite-backend:
         condition: service_healthy
     networks:
       - blue-nebula-network
 
 volumes:
   # Your existing volumes
-  blue_nebula_mongodb_data:
+  bnhsite_mongodb_data:
     driver: local
-  blue_nebula_mongodb_config:
+  bnhsite_mongodb_config:
     driver: local
 
 networks:
