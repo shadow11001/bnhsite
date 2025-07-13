@@ -297,11 +297,12 @@ metadata:
 
 test_plan:
   current_focus:
-    []
+    - "Fresh comprehensive testing of all functionality"
+    - "Make promo code floating banner sticky to follow scroll"
   stuck_tasks: 
-    []
-  test_all: false
-  test_priority: "high_first"
+    - "Verify markup percentages not exposed in API responses"
+  test_all: true
+  test_priority: "comprehensive"
 
 agent_communication:
   - agent: "main"
