@@ -656,11 +656,28 @@ const AdminPanel = () => {
     const loadSectionContent = async (section) => {
       try {
         console.log('Loading section content for:', section);
-        const response = await axios.get(`${API}/content/${section}`);
-        console.log('Section content loaded:', response.data);
-        setSectionContent(response.data);
+        // Try different endpoint patterns
+        let response;
+        try {
+          response = await axios.get(`${API}/admin/website-content`, { headers: getAuthHeaders() });
+          const content = response.data[section] || {};
+          setSectionContent(content);
+          console.log('Section content loaded:', content);
+        } catch (err) {
+          // Fallback to individual content endpoints
+          response = await axios.get(`${API}/website-content/${section}`);
+          setSectionContent(response.data);
+        }
       } catch (error) {
         console.error('Error loading section content:', error);
+        // Set default content if loading fails
+        setSectionContent({
+          title: '',
+          subtitle: '',
+          description: '',
+          button_text: '',
+          button_url: ''
+        });
       }
     };
 
