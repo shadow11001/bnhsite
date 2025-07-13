@@ -338,34 +338,25 @@ async def get_admin_hosting_plans(current_user: str = Depends(get_current_user))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@api_router.get("/hosting-plans", response_model=List[PublicHostingPlan])
+@api_router.get("/hosting-plans", response_model=List[dict])
 async def get_hosting_plans(plan_type: Optional[str] = None):
     """Get all hosting plans or filter by type"""
     try:
         query = {}
         if plan_type:
-            query["plan_type"] = plan_type
+            query["type"] = plan_type
         
         plans = await db.hosting_plans.find(query).to_list(1000)
         
-        # Convert to public model without markup_percentage
+        # Convert ObjectIds to strings and return clean data without markup_percentage
         public_plans = []
         for plan in plans:
-            plan_dict = {
-                "id": plan["id"],
-                "plan_type": plan["plan_type"],
-                "plan_name": plan["plan_name"],
-                "base_price": plan["base_price"],
-                "cpu_cores": plan.get("cpu_cores"),
-                "memory_gb": plan.get("memory_gb"),
-                "disk_gb": plan.get("disk_gb"),
-                "disk_type": plan.get("disk_type", "SSD"),
-                "bandwidth": plan.get("bandwidth"),
-                "supported_games": plan.get("supported_games"),
-                "features": plan.get("features", []),
-                "popular": plan.get("popular", False)
-            }
-            public_plans.append(PublicHostingPlan(**plan_dict))
+            if "_id" in plan:
+                del plan["_id"]
+            # Remove markup_percentage for public API
+            if "markup_percentage" in plan:
+                del plan["markup_percentage"]
+            public_plans.append(plan)
         
         return public_plans
     except Exception as e:
