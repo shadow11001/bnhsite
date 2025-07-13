@@ -782,93 +782,74 @@ const AdminPanel = () => {
 
     const updateSectionContent = async () => {
       setIsLoading(true);
-      console.log(`Attempting to save ${selectedSection} content to database:`, currentSectionContent);
+      console.log(`Attempting to save ${selectedSection} content:`, currentSectionContent);
       
       try {
-        // Try multiple endpoint and method combinations
-        const endpoints = [
-          { url: `${API}/admin/content/${selectedSection}`, method: 'POST' },
-          { url: `${API}/admin/content/${selectedSection}`, method: 'PUT' },
-          { url: `${API}/content/${selectedSection}`, method: 'POST' },
-          { url: `${API}/content/${selectedSection}`, method: 'PUT' },
-          { url: `${API}/admin/website-content`, method: 'POST', payload: { section: selectedSection, content: currentSectionContent } },
-          { url: `${API}/website-content`, method: 'POST', payload: { section: selectedSection, content: currentSectionContent } }
-        ];
-        
-        let success = false;
-        let lastError = null;
-        
-        for (const endpoint of endpoints) {
-          try {
-            console.log(`Trying ${endpoint.method} ${endpoint.url}`);
-            
-            const payload = endpoint.payload || currentSectionContent;
-            const config = {
-              headers: {
-                ...getAuthHeaders(),
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'application/json'
-              }
-            };
-            
-            let response;
-            if (endpoint.method === 'POST') {
-              response = await axios.post(endpoint.url, payload, config);
-            } else {
-              response = await axios.put(endpoint.url, payload, config);
+        // Try the admin POST endpoint first (preferred)
+        try {
+          console.log(`Trying POST ${API}/admin/content/${selectedSection}`);
+          const response = await axios.post(`${API}/admin/content/${selectedSection}`, currentSectionContent, { 
+            headers: {
+              ...getAuthHeaders(),
+              'Cache-Control': 'no-cache',
+              'Content-Type': 'application/json'
             }
-            
-            console.log(`${selectedSection} content saved successfully via ${endpoint.method} ${endpoint.url}:`, response.data);
-            success = true;
-            break;
-            
-          } catch (err) {
-            console.log(`${endpoint.method} ${endpoint.url} failed:`, err.response?.status, err.response?.statusText);
-            lastError = err;
-            continue;
-          }
-        }
-        
-        if (success) {
-          alert(`✅ ${selectedSection.charAt(0).toUpperCase() + selectedSection.slice(1)} content saved to database successfully!`);
+          });
           
-          // Update the main websiteContent state to keep it in sync
-          setWebsiteContent(prev => ({ 
-            ...prev, 
-            [selectedSection]: currentSectionContent 
-          }));
+          console.log(`${selectedSection} content saved successfully:`, response.data);
+          alert(`✅ ${selectedSection.charAt(0).toUpperCase() + selectedSection.slice(1)} content saved to database!`);
           
           // Force reload content to verify save
           setTimeout(() => {
             loadAllSectionContent();
           }, 1000);
-        } else {
-          throw lastError || new Error('All save endpoints failed');
+          
+          return; // Exit successfully
+          
+        } catch (err) {
+          console.log(`POST failed (${err.response?.status}):`, err.response?.data);
+          
+          if (err.response?.status === 405) {
+            // Method not allowed, try PUT
+            console.log(`Trying PUT ${API}/admin/content/${selectedSection}`);
+            const response = await axios.put(`${API}/admin/content/${selectedSection}`, currentSectionContent, { 
+              headers: {
+                ...getAuthHeaders(),
+                'Cache-Control': 'no-cache',
+                'Content-Type': 'application/json'
+              }
+            });
+            
+            console.log(`${selectedSection} content updated with PUT:`, response.data);
+            alert(`✅ ${selectedSection.charAt(0).toUpperCase() + selectedSection.slice(1)} content updated!`);
+            
+            // Force reload content to verify save
+            setTimeout(() => {
+              loadAllSectionContent();
+            }, 1000);
+            
+            return; // Exit successfully
+          } else {
+            throw err; // Re-throw to be caught by outer catch
+          }
         }
         
       } catch (error) {
         console.error(`Error saving ${selectedSection} content:`, error);
         
         // Provide helpful error message
-        let errorMessage = `Failed to save ${selectedSection} content. `;
+        let errorMessage = `Failed to save ${selectedSection} content.\n\n`;
         if (error.response?.status === 404) {
-          errorMessage += 'Backend content endpoints not found. Please ensure database content storage is configured.';
-        } else if (error.response?.status === 405) {
-          errorMessage += 'HTTP method not allowed. Backend may need endpoint configuration updates.';
+          errorMessage += 'Backend content endpoints not found. Please ensure the backend server is running and content endpoints are configured.';
         } else if (error.response?.status === 401) {
           errorMessage += 'Authentication failed. Please log in again.';
+        } else if (error.response?.status === 405) {
+          errorMessage += 'HTTP method not allowed. Backend endpoints may need configuration.';
         } else {
-          errorMessage += (error.response?.data?.detail || error.response?.data?.message || error.message);
+          errorMessage += `Error: ${error.response?.data?.detail || error.response?.data?.message || error.message}`;
         }
         
         alert(`❌ ${errorMessage}`);
-        
-        // For now, save to local state so user doesn't lose work
-        console.log('Saving to local state as fallback...');
-        setWebsiteContent(prev => ({ 
-          ...prev, 
-          [selectedSection]: currentSectionContent 
-        }));
         
       } finally {
         setIsLoading(false);
