@@ -517,28 +517,28 @@ class BlueNebulaAPITester:
         """Test for API prefix routing issues"""
         try:
             # Test if /api/ prefix works (what frontend expects)
-            api_response = requests.get(f"{self.base_url}/api/", timeout=10)
+            api_response = requests.get(f"{self.frontend_expected_api_url}/", timeout=10)
             api_works = api_response.status_code == 200
             
-            # Test if direct routes work (what backend actually serves)
-            direct_response = requests.get(f"{self.base_url}/", timeout=10)
-            direct_works = direct_response.status_code == 200
+            # Test if direct backend works (what backend actually serves)
+            backend_response = requests.get(f"{self.api_url}/", timeout=10)
+            backend_works = backend_response.status_code == 200
             
-            if not api_works and direct_works:
-                details = "ROUTING ISSUE: Backend serves routes without /api prefix, but frontend expects /api prefix. This breaks frontend-backend communication."
+            if not api_works and backend_works:
+                details = f"ROUTING ISSUE: Backend serves routes at {self.api_url}, but frontend expects API at {self.frontend_expected_api_url}. This breaks frontend-backend communication."
                 success = False
             elif api_works:
                 details = "API prefix routing working correctly"
                 success = True
             else:
-                details = "Both API prefix and direct routes failing"
+                details = "Both API prefix and direct backend routes failing"
                 success = False
                 
-            self.log_test("API Prefix Routing (/api/ vs direct)", success, details)
+            self.log_test("API Prefix Routing (Frontend vs Backend)", success, details)
             return success
             
         except Exception as e:
-            self.log_test("API Prefix Routing (/api/ vs direct)", False, str(e))
+            self.log_test("API Prefix Routing (Frontend vs Backend)", False, str(e))
             return False
 
     def test_markup_not_exposed(self, plans):
