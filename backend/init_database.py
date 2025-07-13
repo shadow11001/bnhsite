@@ -283,6 +283,7 @@ async def init_hosting_plans(db):
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9",
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9",
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"
         },
         {
