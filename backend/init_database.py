@@ -723,24 +723,41 @@ async def init_website_content(db):
             "section": "hero",
             "title": "Fast, Reliable, and Affordable",
             "subtitle": "Hosting Solutions—Starting at $1/mo",
-            "description": "Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions with 24/7 support, 99.9% uptime guarantee, and professional managed services for shared hosting, VPS, and GameServers."
+            "description": "Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions with 24/7 support, 99.9% uptime guarantee, and professional managed services for shared hosting, VPS, and GameServers.",
+            "button_text": "Get Started Today",
+            "button_url": "https://billing.bluenebulahosting.com",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
         },
         {
             "id": str(uuid.uuid4()),
-            "section": "about",
+            "section": "about", 
             "title": "About Blue Nebula Hosting",
-            "description": "Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions for individuals and businesses. Our managed hosting services include shared hosting, VPS, and GameServers with 24/7 support.\n\nWe pride ourselves on delivering enterprise-grade infrastructure with personal support, ensuring your websites and applications run smoothly while you focus on growing your business."
+            "subtitle": "Your trusted hosting partner since 2020",
+            "description": "Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions for individuals and businesses. Our managed hosting services include shared hosting, VPS, and GameServers with 24/7 support.\n\nWe pride ourselves on delivering enterprise-grade infrastructure with personal support, ensuring your websites and applications run smoothly while you focus on growing your business.",
+            "button_text": "Learn More",
+            "button_url": "/about",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
         },
         {
             "id": str(uuid.uuid4()),
             "section": "features",
             "title": "Why Choose Blue Nebula?",
-            "subtitle": "Professional hosting solutions with enterprise-grade infrastructure and 24/7 expert support.",
+            "subtitle": "Professional hosting solutions with enterprise-grade infrastructure and 24/7 expert support",
+            "description": "We deliver exceptional hosting services with industry-leading performance, reliability, and support. Our infrastructure is designed to scale with your business needs.",
+            "button_text": "View Plans",
+            "button_url": "#hosting",
             "features": [
                 "99.9% Uptime Guarantee",
-                "24/7 Expert Support",
-                "5000+ Happy Customers"
-            ]
+                "24/7 Expert Support", 
+                "5000+ Happy Customers",
+                "Enterprise SSD Storage",
+                "Free SSL Certificates",
+                "Daily Backups Included"
+            ],
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
         }
     ]
     
