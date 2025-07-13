@@ -277,7 +277,8 @@ async def init_hosting_plans(db):
             "os_choices": "Multiple OS",
             "features": ["Full Root Access", "Choice of OS", "DDOS Protection", "Scalable Resources"],
             "markup_percentage": 20,
-            "is_popular": True
+            "is_popular": True,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=9"
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"
         },
         {
