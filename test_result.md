@@ -291,8 +291,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Add system status integration with Uptime Kuma"
-    - "Verify markup percentages not exposed in API responses"
+    - "Make promo code floating banner sticky to follow scroll"
   stuck_tasks: 
     - "Verify markup percentages not exposed in API responses"
   test_all: false
