@@ -10,7 +10,7 @@ import json
 from datetime import datetime
 
 class BlueNebulaAPITester:
-    def __init__(self, base_url="https://a7e55ebe-bad3-431d-86a6-b8f9f278960e.preview.emergentagent.com"):
+    def __init__(self, base_url="https://fa80d249-71c7-4150-b832-bab579c8d70e.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.tests_run = 0
