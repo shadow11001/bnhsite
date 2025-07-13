@@ -339,9 +339,6 @@ const HeroSection = () => {
   return (
     <section id="home" className="pt-20 pb-20 min-h-screen flex items-center">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Floating Promo Bar */}
-        <PromoCodeBanner location="floating" />
-        
         {/* Hero Promo Banner */}
         <PromoCodeBanner location="hero" />
         
