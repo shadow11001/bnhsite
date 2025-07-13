@@ -277,6 +277,30 @@ frontend:
         agent: "testing"
         comment: "BACKEND PROMO CODE SYSTEM VERIFIED: Comprehensive testing of promo code backend functionality confirms all systems working correctly. ✅ Public API (/api/promo-codes) returns only active promo codes with all required fields (id, title, description, code, display_location, is_active). ✅ Admin API (/api/admin/promo-codes) returns all promo codes including inactive ones. ✅ CRUD operations (POST/PUT/DELETE) working perfectly for admin users. ✅ Data structure validation passed - all promo codes have correct field types and valid display_location values (floating, hero, pricing, footer). ✅ Filtering by display_location working correctly. ✅ Authentication properly protects admin endpoints. The frontend CSS change from 'fixed' to 'sticky' positioning does not affect backend promo code functionality - all backend operations remain intact and working as expected."
 
+  - task: "Fix PlanEditor field mapping in AdminPanel.js"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/AdminPanel.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "PlanEditor component uses old field names (plan_name, base_price, popular) but database returns new fields (name, price, is_popular). This prevents proper plan editing in admin panel."
+
+  - task: "Verify Navigation menu content loading in AdminPanel.js"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/AdminPanel.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "NavigationEditor component properly loads navigationItems from state and has CRUD operations. Should work correctly."
+
   - task: "Enhanced admin features for links, showcase, promo codes"
     implemented: false
     working: false
