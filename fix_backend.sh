@@ -11,10 +11,10 @@ fi
 
 # Rebuild and restart backend
 echo "🔄 Rebuilding backend with fixes..."
-docker-compose build blue-nebula-backend
+docker-compose build bnhsite-backend
 
 echo "🔄 Restarting backend..."
-docker-compose restart blue-nebula-backend
+docker-compose restart bnhsite-backend
 
 echo "⏳ Waiting for backend to start..."
 sleep 10
