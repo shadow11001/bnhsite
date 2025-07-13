@@ -397,8 +397,8 @@ const HostingPlans = ({ plans, title, type, description }) => {
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center max-w-6xl mx-auto">
         {filteredPlans.map((plan) => (
-          <div key={plan.id} className={`relative bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border ${plan.popular ? 'border-blue-500 ring-2 ring-blue-500/50' : 'border-gray-700'} hover:border-blue-400 transition-all w-full max-w-sm flex flex-col h-full min-h-[400px]`}>
-            {plan.popular && (
+          <div key={plan.id} className={`relative bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border ${plan.is_popular ? 'border-blue-500 ring-2 ring-blue-500/50' : 'border-gray-700'} hover:border-blue-400 transition-all w-full max-w-sm flex flex-col h-full min-h-[400px]`}>
+            {plan.is_popular && (
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                 <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
                   Popular
