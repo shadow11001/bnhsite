@@ -13,8 +13,9 @@ class BlueNebulaAPITester:
     def __init__(self, base_url="https://fa80d249-71c7-4150-b832-bab579c8d70e.preview.emergentagent.com"):
         self.base_url = base_url
         # CRITICAL ISSUE: API routes are not prefixed with /api but frontend expects them to be
-        # Testing direct backend routes for now to identify field mapping issues
-        self.api_url = f"{base_url}"
+        # Backend is running on localhost:8001, frontend expects API at base_url/api
+        self.api_url = "http://localhost:8001"
+        self.frontend_expected_api_url = f"{base_url}/api"
         self.tests_run = 0
         self.tests_passed = 0
         self.errors = []
