@@ -279,8 +279,8 @@ const AdminPanel = () => {
             <div className="flex items-center">
               <input
                 type="checkbox"
-                checked={formData.popular}
-                onChange={(e) => setFormData({...formData, popular: e.target.checked})}
+                checked={formData.is_popular}
+                onChange={(e) => setFormData({...formData, is_popular: e.target.checked})}
                 className="mr-2"
               />
               <label className="text-gray-300">Popular Plan</label>
