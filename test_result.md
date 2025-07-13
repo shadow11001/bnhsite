@@ -281,13 +281,16 @@ frontend:
     implemented: false
     working: false
     file: "/app/backend/server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "main"
         comment: "Backend API returns old field names (plan_type, plan_name, base_price, popular) but frontend expects new field names (type, name, price, is_popular). Backend connects to localhost:27017 with old data while init script uses bnhsite-mongodb:27017. Need to sync database schema and API response mapping."
+      - working: false
+        agent: "testing"
+        comment: "CRITICAL ISSUES IDENTIFIED: 1) API ROUTING ISSUE: Backend serves routes at http://localhost:8001 but frontend expects API at https://fa80d249-71c7-4150-b832-bab579c8d70e.preview.emergentagent.com/api - this breaks all frontend-backend communication. 2) FIELD MAPPING ISSUE: Backend returns old field names ['plan_type', 'plan_name', 'base_price', 'popular'] but frontend expects ['type', 'name', 'price', 'is_popular'] - this causes homepage loading issues and admin panel editing problems. 3) PLAN FILTERING BROKEN: API code filters by 'type' field (line 351 in server.py) but database has 'plan_type' field - all plan filtering returns 0 results. 4) All 36 hosting plans exist with correct names but cannot be accessed by frontend due to these issues."
 
   - task: "Fix PlanEditor field mapping in AdminPanel.js"
     implemented: true
