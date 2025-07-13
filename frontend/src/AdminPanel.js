@@ -1231,10 +1231,20 @@ const AdminPanel = () => {
 
     const loadPromoCodes = async () => {
       try {
+        // Try admin endpoint first
         const response = await axios.get(`${API}/admin/promo-codes`, { headers: getAuthHeaders() });
         setPromoCodes(response.data);
+        console.log('Admin promo codes loaded:', response.data);
       } catch (error) {
-        console.error('Error loading promo codes:', error);
+        console.error('Error loading admin promo codes:', error);
+        try {
+          // Fallback to public endpoint
+          const response = await axios.get(`${API}/promo-codes`);
+          setPromoCodes(response.data);
+          console.log('Public promo codes loaded as fallback:', response.data);
+        } catch (fallbackError) {
+          console.error('Error loading public promo codes:', fallbackError);
+        }
       }
     };
 
