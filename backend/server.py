@@ -644,3 +644,18 @@ logger = logging.getLogger(__name__)
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+
+# Debug endpoint
+@api_router.get("/debug")
+async def debug():
+    """Debug endpoint to check API health"""
+    import os
+    return {
+        "status": "API Working",
+        "environment": {
+            "MONGO_URL": "Set" if os.environ.get('MONGO_URL') else "Not Set",
+            "DB_NAME": os.environ.get('DB_NAME', 'blue_nebula_hosting'),
+            "JWT_SECRET_KEY": "Set" if os.environ.get('JWT_SECRET_KEY') else "Not Set"
+        },
+        "timestamp": datetime.utcnow().isoformat()
+    }
