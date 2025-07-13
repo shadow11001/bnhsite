@@ -685,13 +685,27 @@ const AdminPanel = () => {
         // Try different endpoint patterns
         let response;
         try {
-          response = await axios.get(`${API}/admin/website-content`, { headers: getAuthHeaders() });
+          // Add cache-busting parameter
+          const timestamp = new Date().getTime();
+          response = await axios.get(`${API}/admin/website-content?_t=${timestamp}`, { 
+            headers: { 
+              ...getAuthHeaders(),
+              'Cache-Control': 'no-cache',
+              'Pragma': 'no-cache'
+            } 
+          });
           const content = response.data[section] || {};
           setSectionContent(content);
           console.log('Section content loaded:', content);
         } catch (err) {
           // Fallback to individual content endpoints
-          response = await axios.get(`${API}/website-content/${section}`);
+          const timestamp = new Date().getTime();
+          response = await axios.get(`${API}/website-content/${section}?_t=${timestamp}`, {
+            headers: {
+              'Cache-Control': 'no-cache',
+              'Pragma': 'no-cache'
+            }
+          });
           setSectionContent(response.data);
         }
       } catch (error) {
