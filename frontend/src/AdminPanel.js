@@ -219,8 +219,8 @@ const AdminPanel = () => {
                 <label className="block text-gray-300 mb-2">Plan Name</label>
                 <input
                   type="text"
-                  value={formData.plan_name}
-                  onChange={(e) => setFormData({...formData, plan_name: e.target.value})}
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
                   className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
                 />
               </div>
