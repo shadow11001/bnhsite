@@ -292,6 +292,18 @@ const AdminPanel = () => {
               />
             </div>
             
+            <div>
+              <label className="block text-gray-300 mb-2">Order URL</label>
+              <input
+                type="url"
+                value={formData.order_url || ''}
+                onChange={(e) => setFormData({...formData, order_url: e.target.value})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                placeholder="https://billing.bluenebulahosting.com"
+              />
+              <p className="text-xs text-gray-400 mt-1">Leave empty to use default billing URL</p>
+            </div>
+            
             <div className="flex items-center">
               <input
                 type="checkbox"
