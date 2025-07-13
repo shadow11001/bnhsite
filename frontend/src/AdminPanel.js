@@ -703,7 +703,11 @@ const AdminPanel = () => {
   // Website Content Editor
   const ContentEditor = () => {
     const [selectedSection, setSelectedSection] = useState('hero');
-    const [sectionContent, setSectionContent] = useState({});
+    const [allSectionContent, setAllSectionContent] = useState({
+      hero: { title: '', subtitle: '', description: '', button_text: '', button_url: '' },
+      features: { title: '', subtitle: '', description: '', button_text: '', button_url: '' },
+      about: { title: '', subtitle: '', description: '', button_text: '', button_url: '' }
+    });
     const [isLoading, setIsLoading] = useState(false);
 
     const sections = [
@@ -712,60 +716,59 @@ const AdminPanel = () => {
       { key: 'about', label: 'About Section', description: 'Company information' }
     ];
 
-    const loadSectionContent = async (section) => {
-      try {
-        console.log('Loading section content for:', section);
-        // Try different endpoint patterns
-        let response;
+    // Load all content sections from database
+    const loadAllSectionContent = async () => {
+      console.log('Loading all website content from database...');
+      
+      for (const section of sections) {
         try {
-          // Add cache-busting parameter
-          const timestamp = new Date().getTime();
-          response = await axios.get(`${API}/admin/website-content?_t=${timestamp}`, { 
-            headers: { 
-              ...getAuthHeaders(),
-              'Cache-Control': 'no-cache',
-              'Pragma': 'no-cache'
-            } 
-          });
-          const content = response.data[section] || {};
-          setSectionContent(content);
-          console.log('Section content loaded:', content);
-        } catch (err) {
-          // Fallback to individual content endpoints
-          const timestamp = new Date().getTime();
-          response = await axios.get(`${API}/website-content/${section}?_t=${timestamp}`, {
-            headers: {
-              'Cache-Control': 'no-cache',
-              'Pragma': 'no-cache'
-            }
-          });
-          setSectionContent(response.data);
+          // Try to load from database-stored content
+          let response;
+          try {
+            // Try the database content endpoint
+            response = await axios.get(`${API}/admin/content/${section.key}`, { 
+              headers: { 
+                ...getAuthHeaders(),
+                'Cache-Control': 'no-cache'
+              }
+            });
+            
+            console.log(`${section.key} content loaded from database:`, response.data);
+            setAllSectionContent(prev => ({
+              ...prev,
+              [section.key]: response.data || { title: '', subtitle: '', description: '', button_text: '', button_url: '' }
+            }));
+          } catch (err) {
+            console.error(`Error loading ${section.key} content:`, err);
+            // Set default empty content if loading fails
+            setAllSectionContent(prev => ({
+              ...prev,
+              [section.key]: { title: '', subtitle: '', description: '', button_text: '', button_url: '' }
+            }));
+          }
+        } catch (error) {
+          console.error(`Failed to load ${section.key} content:`, error);
         }
-      } catch (error) {
-        console.error('Error loading section content:', error);
-        // Set default content if loading fails
-        setSectionContent({
-          title: '',
-          subtitle: '',
-          description: '',
-          button_text: '',
-          button_url: ''
-        });
       }
     };
 
     useEffect(() => {
-      console.log('Content editor: selectedSection changed to:', selectedSection);
-      console.log('Current websiteContent:', websiteContent);
-      
-      if (websiteContent && websiteContent[selectedSection]) {
-        console.log('Using cached content for', selectedSection);
-        setSectionContent(websiteContent[selectedSection]);
-      } else {
-        console.log('Loading fresh content for', selectedSection);
-        loadSectionContent(selectedSection);
-      }
-    }, [selectedSection, websiteContent]);
+      loadAllSectionContent();
+    }, []);
+
+    // Get current section content
+    const currentSectionContent = allSectionContent[selectedSection] || { title: '', subtitle: '', description: '', button_text: '', button_url: '' };
+
+    // Update current section content
+    const updateCurrentSectionContent = (field, value) => {
+      setAllSectionContent(prev => ({
+        ...prev,
+        [selectedSection]: {
+          ...prev[selectedSection],
+          [field]: value
+        }
+      }));
+    };
 
     const updateSectionContent = async () => {
       setIsLoading(true);
