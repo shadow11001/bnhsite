@@ -34,6 +34,97 @@ security = HTTPBearer()
 # Create the main app without a prefix
 app = FastAPI(title="Blue Nebula Hosting API", version="1.0.0")
 
+# Debug endpoint to check what endpoints are available
+@app.get("/debug/endpoints")
+async def debug_endpoints():
+    """Debug endpoint to show available routes"""
+    routes = []
+    for route in app.routes:
+        if hasattr(route, 'path') and hasattr(route, 'methods'):
+            routes.append({
+                "path": route.path,
+                "methods": list(route.methods),
+                "name": getattr(route, 'name', 'unnamed')
+            })
+    return {"available_routes": routes}
+
+# Content management endpoints - add directly to app for debugging
+@app.get("/admin/content/{section}")
+async def get_admin_content_direct(section: str, authorization: str = Header(None)):
+    """Get website content by section for admin editing - direct endpoint"""
+    try:
+        # Simple auth check
+        if not authorization or not authorization.startswith("Bearer "):
+            raise HTTPException(status_code=401, detail="Authentication required")
+        
+        token = authorization.split(" ")[1]
+        # Basic token validation (you can enhance this)
+        
+        content = await db.website_content.find_one({"section": section})
+        if not content:
+            # Return default editable content structure
+            default_content = {
+                "section": section,
+                "title": f"Default {section.title()} Title",
+                "subtitle": "",
+                "description": f"This is the default {section} content. Edit this in the admin panel.",
+                "button_text": "Learn More",
+                "button_url": "#"
+            }
+            if section == "features":
+                default_content["features"] = [
+                    "99.9% Uptime Guarantee",
+                    "24/7 Expert Support", 
+                    "Enterprise SSD Storage"
+                ]
+            return default_content
+        
+        # Remove MongoDB _id field
+        if "_id" in content:
+            del content["_id"]
+        
+        return content
+    except Exception as e:
+        print(f"Error in get_admin_content_direct: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/admin/content/{section}")
+async def save_admin_content_direct(section: str, content_data: dict, authorization: str = Header(None)):
+    """Save website content by section - direct endpoint"""
+    try:
+        # Simple auth check
+        if not authorization or not authorization.startswith("Bearer "):
+            raise HTTPException(status_code=401, detail="Authentication required")
+        
+        # Add section and timestamps
+        content_data["section"] = section
+        content_data["updated_at"] = datetime.utcnow()
+        
+        # Check if content already exists
+        existing = await db.website_content.find_one({"section": section})
+        
+        if existing:
+            # Update existing content
+            content_data["id"] = existing.get("id", str(uuid.uuid4()))
+            result = await db.website_content.update_one(
+                {"section": section},
+                {"$set": content_data}
+            )
+            if result.modified_count == 0:
+                raise HTTPException(status_code=400, detail="Failed to update content")
+        else:
+            # Create new content
+            content_data["id"] = str(uuid.uuid4())
+            content_data["created_at"] = datetime.utcnow()
+            result = await db.website_content.insert_one(content_data)
+            if not result.inserted_id:
+                raise HTTPException(status_code=400, detail="Failed to create content")
+        
+        return {"message": f"Content for {section} saved successfully", "section": section}
+    except Exception as e:
+        print(f"Error in save_admin_content_direct: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Create a router without prefix (Caddy will handle the /api routing)
 api_router = APIRouter()
 
