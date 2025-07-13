@@ -1600,14 +1600,14 @@ const AdminPanel = () => {
                         {typePlans.map(plan => (
                           <div key={plan.id} className="bg-gray-700 rounded-lg p-4">
                             <div className="flex justify-between items-start mb-2">
-                              <h4 className="font-bold text-white">{plan.plan_name}</h4>
-                              {plan.popular && (
+                              <h4 className="font-bold text-white">{plan.name}</h4>
+                              {plan.is_popular && (
                                 <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs">Popular</span>
                               )}
                             </div>
                             
                             <div className="text-blue-400 font-bold text-lg mb-2">
-                              ${plan.base_price}/mo
+                              ${plan.price}/mo
                             </div>
                             
                             <div className="text-gray-300 text-sm mb-4">
