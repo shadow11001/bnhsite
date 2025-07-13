@@ -864,8 +864,8 @@ const AdminPanel = () => {
                   <label className="block text-gray-300 mb-2">Title</label>
                   <input
                     type="text"
-                    value={sectionContent.title || ''}
-                    onChange={(e) => setSectionContent({...sectionContent, title: e.target.value})}
+                    value={currentSectionContent.title || ''}
+                    onChange={(e) => updateCurrentSectionContent('title', e.target.value)}
                     className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
                   />
                 </div>
@@ -875,8 +875,8 @@ const AdminPanel = () => {
                     <label className="block text-gray-300 mb-2">Subtitle</label>
                     <input
                       type="text"
-                      value={sectionContent.subtitle || ''}
-                      onChange={(e) => setSectionContent({...sectionContent, subtitle: e.target.value})}
+                      value={currentSectionContent.subtitle || ''}
+                      onChange={(e) => updateCurrentSectionContent('subtitle', e.target.value)}
                       className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
                     />
                   </div>
@@ -886,8 +886,8 @@ const AdminPanel = () => {
                   <label className="block text-gray-300 mb-2">Description</label>
                   <textarea
                     rows={4}
-                    value={sectionContent.description || ''}
-                    onChange={(e) => setSectionContent({...sectionContent, description: e.target.value})}
+                    value={currentSectionContent.description || ''}
+                    onChange={(e) => updateCurrentSectionContent('description', e.target.value)}
                     className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
                   />
                 </div>
