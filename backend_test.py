@@ -862,6 +862,233 @@ class BlueNebulaAPITester:
         self.log_test("Plan Pricing & Features Validation", success, details)
         return success
 
+    def test_admin_navigation_endpoints(self):
+        """Test Navigation Menu admin endpoints - POST/PUT/GET /api/admin/navigation"""
+        if not self.auth_token:
+            self.log_test("Admin Navigation Endpoints", False, "No auth token available")
+            return False
+            
+        headers = {"Authorization": f"Bearer {self.auth_token}"}
+        
+        try:
+            # Test GET /api/admin/navigation
+            get_response = requests.get(f"{self.api_url}/admin/navigation", headers=headers, timeout=10)
+            get_success = get_response.status_code == 200
+            
+            if get_success:
+                nav_items = get_response.json()
+                get_success = isinstance(nav_items, list)
+            
+            # Test POST /api/admin/navigation with sample navigation data
+            test_navigation = [
+                {
+                    "label": "Home",
+                    "href": "/",
+                    "order": 1,
+                    "is_external": False
+                },
+                {
+                    "label": "Hosting Plans",
+                    "href": "/hosting",
+                    "order": 2,
+                    "is_external": False
+                },
+                {
+                    "label": "Contact",
+                    "href": "/contact",
+                    "order": 3,
+                    "is_external": False
+                }
+            ]
+            
+            post_response = requests.post(f"{self.api_url}/admin/navigation", 
+                                        json=test_navigation, headers=headers, timeout=10)
+            post_success = post_response.status_code == 200
+            
+            # Test PUT /api/admin/navigation with updated navigation data
+            updated_navigation = [
+                {
+                    "label": "Home",
+                    "href": "/",
+                    "order": 1,
+                    "is_external": False
+                },
+                {
+                    "label": "Services",
+                    "href": "/services",
+                    "order": 2,
+                    "is_external": False
+                }
+            ]
+            
+            put_response = requests.put(f"{self.api_url}/admin/navigation", 
+                                      json=updated_navigation, headers=headers, timeout=10)
+            put_success = put_response.status_code == 200
+            
+            success = get_success and post_success and put_success
+            details = f"GET: {get_success}, POST: {post_success}, PUT: {put_success}"
+            
+            self.log_test("Admin Navigation Endpoints", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Admin Navigation Endpoints", False, str(e))
+            return False
+
+    def test_admin_company_info_endpoints(self):
+        """Test Company Info admin endpoints - GET/PUT /api/admin/company-info"""
+        if not self.auth_token:
+            self.log_test("Admin Company Info Endpoints", False, "No auth token available")
+            return False
+            
+        headers = {"Authorization": f"Bearer {self.auth_token}"}
+        
+        try:
+            # Test GET /api/admin/company-info
+            get_response = requests.get(f"{self.api_url}/admin/company-info", headers=headers, timeout=10)
+            get_success = get_response.status_code == 200
+            
+            if get_success:
+                company_info = get_response.json()
+                required_fields = ['name', 'tagline', 'description']
+                get_success = all(field in company_info for field in required_fields)
+            
+            # Test PUT /api/admin/company-info with updated data
+            test_company_update = {
+                "name": "Blue Nebula Hosting",
+                "tagline": "Fast, Reliable, and Affordable Hosting Solutions",
+                "description": "Updated description for testing admin panel functionality",
+                "founded_year": 2020,
+                "features": [
+                    "99.9% Uptime Guarantee",
+                    "24/7 Expert Support",
+                    "Enterprise SSD Storage"
+                ]
+            }
+            
+            put_response = requests.put(f"{self.api_url}/admin/company-info", 
+                                      json=test_company_update, headers=headers, timeout=10)
+            put_success = put_response.status_code == 200
+            
+            success = get_success and put_success
+            details = f"GET: {get_success}, PUT: {put_success}"
+            
+            self.log_test("Admin Company Info Endpoints", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Admin Company Info Endpoints", False, str(e))
+            return False
+
+    def test_admin_smtp_settings_endpoints(self):
+        """Test SMTP Settings admin endpoints - GET/PUT /api/admin/smtp-settings, POST /api/admin/smtp-test"""
+        if not self.auth_token:
+            self.log_test("Admin SMTP Settings Endpoints", False, "No auth token available")
+            return False
+            
+        headers = {"Authorization": f"Bearer {self.auth_token}"}
+        
+        try:
+            # Test GET /api/admin/smtp-settings
+            get_response = requests.get(f"{self.api_url}/admin/smtp-settings", headers=headers, timeout=10)
+            get_success = get_response.status_code == 200
+            
+            if get_success:
+                smtp_settings = get_response.json()
+                expected_fields = ['smtp_host', 'smtp_port', 'smtp_username', 'smtp_use_tls', 'from_email', 'from_name']
+                get_success = all(field in smtp_settings for field in expected_fields)
+            
+            # Test PUT /api/admin/smtp-settings with sample SMTP data
+            test_smtp_settings = {
+                "smtp_host": "smtp.example.com",
+                "smtp_port": 587,
+                "smtp_username": "test@example.com",
+                "smtp_password": "testpassword",
+                "smtp_use_tls": True,
+                "from_email": "noreply@bluenebulahosting.com",
+                "from_name": "Blue Nebula Hosting"
+            }
+            
+            put_response = requests.put(f"{self.api_url}/admin/smtp-settings", 
+                                      json=test_smtp_settings, headers=headers, timeout=10)
+            put_success = put_response.status_code == 200
+            
+            # Test POST /api/admin/smtp-test (this should fail with invalid SMTP settings, but endpoint should exist)
+            test_response = requests.post(f"{self.api_url}/admin/smtp-test", 
+                                        json=test_smtp_settings, headers=headers, timeout=10)
+            # Accept both success (200) and failure (400) as valid responses - endpoint exists
+            test_success = test_response.status_code in [200, 400]
+            
+            success = get_success and put_success and test_success
+            details = f"GET: {get_success}, PUT: {put_success}, TEST: {test_success} (status: {test_response.status_code})"
+            
+            self.log_test("Admin SMTP Settings Endpoints", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Admin SMTP Settings Endpoints", False, str(e))
+            return False
+
+    def test_legal_content_saving(self):
+        """Test Legal Content saving via PUT /api/content endpoint"""
+        if not self.auth_token:
+            self.log_test("Legal Content Saving", False, "No auth token available")
+            return False
+            
+        headers = {"Authorization": f"Bearer {self.auth_token}"}
+        
+        try:
+            # Test saving Terms of Service content
+            terms_content = {
+                "section": "terms",
+                "title": "Terms of Service",
+                "description": "These are the updated terms of service for Blue Nebula Hosting. This content was saved via the admin panel testing."
+            }
+            
+            terms_response = requests.put(f"{self.api_url}/content", 
+                                        json=terms_content, headers=headers, timeout=10)
+            terms_success = terms_response.status_code == 200
+            
+            # Test saving Privacy Policy content
+            privacy_content = {
+                "section": "privacy",
+                "title": "Privacy Policy", 
+                "description": "This is the updated privacy policy for Blue Nebula Hosting. This content was saved via the admin panel testing."
+            }
+            
+            privacy_response = requests.put(f"{self.api_url}/content", 
+                                          json=privacy_content, headers=headers, timeout=10)
+            privacy_success = privacy_response.status_code == 200
+            
+            # Verify the content was actually saved by retrieving it
+            terms_get_response = requests.get(f"{self.api_url}/content/terms", timeout=10)
+            terms_get_success = terms_get_response.status_code == 200
+            
+            privacy_get_response = requests.get(f"{self.api_url}/content/privacy", timeout=10)
+            privacy_get_success = privacy_get_response.status_code == 200
+            
+            # Check if the saved content matches what we sent
+            content_matches = True
+            if terms_get_success:
+                terms_data = terms_get_response.json()
+                if terms_data.get('title') != terms_content['title']:
+                    content_matches = False
+            
+            if privacy_get_success:
+                privacy_data = privacy_get_response.json()
+                if privacy_data.get('title') != privacy_content['title']:
+                    content_matches = False
+            
+            success = terms_success and privacy_success and terms_get_success and privacy_get_success and content_matches
+            details = f"Terms PUT: {terms_success}, Privacy PUT: {privacy_success}, Terms GET: {terms_get_success}, Privacy GET: {privacy_get_success}, Content matches: {content_matches}"
+            
+            self.log_test("Legal Content Saving", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Legal Content Saving", False, str(e))
+            return False
+
     def run_all_tests(self):
         """Run all API tests"""
         print("🚀 Starting Blue Nebula Hosting API Tests")
