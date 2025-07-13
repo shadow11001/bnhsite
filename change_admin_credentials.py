@@ -11,7 +11,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 
 # MongoDB connection
-MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://admin:secure_password_change_this@localhost:27017/blue_nebula_hosting?authSource=admin')
+MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://admin:WEvSMiUiYlASPYN4Pqb7zLO8E@bnhsite-mongodb:27017/blue_nebula_hosting?authSource=admin')
 DB_NAME = os.environ.get('DB_NAME', 'blue_nebula_hosting')
 
 def hash_password(password: str) -> str:
