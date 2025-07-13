@@ -130,18 +130,31 @@ const AdminPanel = () => {
       
       // Fetch content sections
       try {
-        const [heroResponse, aboutResponse, featuresResponse] = await Promise.all([
-          axios.get(`${API}/content/hero`),
-          axios.get(`${API}/content/about`),
-          axios.get(`${API}/content/features`)
-        ]);
-        console.log('Content loaded:', { hero: heroResponse.data, about: aboutResponse.data, features: featuresResponse.data });
-        setWebsiteContent(prev => ({ 
-          ...prev, 
-          hero: heroResponse.data,
-          about: aboutResponse.data, 
-          features: featuresResponse.data
-        }));
+        // Try to load all content sections separately
+        const contentSections = ['hero', 'about', 'features'];
+        const contentPromises = contentSections.map(async (section) => {
+          try {
+            const response = await axios.get(`${API}/admin/website-content`, { headers: getAuthHeaders() });
+            return { section, data: response.data[section] || {} };
+          } catch (err) {
+            try {
+              const response = await axios.get(`${API}/website-content/${section}`);
+              return { section, data: response.data };
+            } catch (err2) {
+              console.error(`Error loading ${section} content:`, err2);
+              return { section, data: {} };
+            }
+          }
+        });
+        
+        const contentResults = await Promise.all(contentPromises);
+        const contentObj = {};
+        contentResults.forEach(result => {
+          contentObj[result.section] = result.data;
+        });
+        
+        console.log('Content loaded:', contentObj);
+        setWebsiteContent(prev => ({ ...prev, ...contentObj }));
       } catch (error) {
         console.error('Error loading content:', error);
       }
