@@ -1602,14 +1602,21 @@ const AdminPanel = () => {
               </div>
             ) : (
               <div className="grid gap-6">
-                {['ssd_shared', 'hdd_shared', 'standard_vps', 'performance_vps', 'standard_gameserver', 'performance_gameserver'].map(planType => {
-                  const typePlans = hostingPlans.filter(p => p.type === planType);
+                {[
+                  {key: 'ssd_shared', label: 'SSD Shared', filter: (p) => p.type === 'shared' && p.sub_type === 'ssd'},
+                  {key: 'hdd_shared', label: 'HDD Shared', filter: (p) => p.type === 'shared' && p.sub_type === 'hdd'},
+                  {key: 'standard_vps', label: 'Standard VPS', filter: (p) => p.type === 'vps' && p.sub_type === 'standard'},
+                  {key: 'performance_vps', label: 'Performance VPS', filter: (p) => p.type === 'vps' && p.sub_type === 'performance'},
+                  {key: 'standard_gameserver', label: 'Standard GameServer', filter: (p) => p.type === 'gameserver' && p.sub_type === 'standard'},
+                  {key: 'performance_gameserver', label: 'Performance GameServer', filter: (p) => p.type === 'gameserver' && p.sub_type === 'performance'}
+                ].map(planCategory => {
+                  const typePlans = hostingPlans.filter(planCategory.filter);
                   if (typePlans.length === 0) return null;
                   
                   return (
-                    <div key={planType} className="bg-gray-800 rounded-lg p-6">
-                      <h3 className="text-xl font-bold text-white mb-4 capitalize">
-                        {planType.replace('_', ' ')} ({typePlans.length} plans)
+                    <div key={planCategory.key} className="bg-gray-800 rounded-lg p-6">
+                      <h3 className="text-xl font-bold text-white mb-4">
+                        {planCategory.label} ({typePlans.length} plans)
                       </h3>
                       
                       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
