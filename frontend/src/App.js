@@ -414,11 +414,12 @@ const HostingPlans = ({ plans, title, type, description }) => {
               </div>
               
               {/* Technical Specifications */}
-              {(plan.cpu || plan.ram || plan.disk_space) && (
+              {(plan.cpu || plan.ram || plan.disk_space || plan.bandwidth) && (
                 <div className="text-sm text-gray-400 mb-4 space-y-1">
                   {plan.cpu && <div>CPU: {plan.cpu} {plan.cpu.includes('vCPU') ? '' : (plan.type === 'shared' ? 'Core' : 'vCPU')}</div>}
                   {plan.ram && <div>RAM: {plan.ram} {plan.ram.includes('GB') ? '' : 'GB'}</div>}
                   {plan.disk_space && <div>Storage: {plan.disk_space}</div>}
+                  {plan.bandwidth && <div>Bandwidth: {plan.bandwidth}</div>}
                 </div>
               )}
             </div>
