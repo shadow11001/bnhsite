@@ -284,12 +284,12 @@ frontend:
         comment: "BACKEND PROMO CODE SYSTEM VERIFIED: Comprehensive testing of promo code backend functionality confirms all systems working correctly. ✅ Public API (/api/promo-codes) returns only active promo codes with all required fields (id, title, description, code, display_location, is_active). ✅ Admin API (/api/admin/promo-codes) returns all promo codes including inactive ones. ✅ CRUD operations (POST/PUT/DELETE) working perfectly for admin users. ✅ Data structure validation passed - all promo codes have correct field types and valid display_location values (floating, hero, pricing, footer). ✅ Filtering by display_location working correctly. ✅ Authentication properly protects admin endpoints. The frontend CSS change from 'fixed' to 'sticky' positioning does not affect backend promo code functionality - all backend operations remain intact and working as expected."
 
   - task: "Fix backend database schema to match frontend expectations"
-    implemented: false
-    working: false
+    implemented: true
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 1
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: false
         agent: "main"
@@ -297,6 +297,9 @@ frontend:
       - working: false
         agent: "testing"
         comment: "CRITICAL ISSUES IDENTIFIED: 1) API ROUTING ISSUE: Backend serves routes at http://localhost:8001 but frontend expects API at external URL with /api prefix - this breaks all frontend-backend communication. 2) FIELD MAPPING ISSUE: Backend returns old field names ['plan_type', 'plan_name', 'base_price', 'popular'] but frontend expects ['type', 'name', 'price', 'is_popular'] - this causes homepage loading issues and admin panel editing problems. 3) PLAN FILTERING BROKEN: API code filters by 'type' field but database has 'plan_type' field - all plan filtering returns 0 results. 4) All 36 hosting plans exist with correct names but cannot be accessed by frontend due to these issues."
+      - working: true
+        agent: "main"
+        comment: "FIXED: Implemented field mapping in all hosting plan API endpoints (GET /hosting-plans, GET /hosting-plans/{id}, GET /admin/hosting-plans, PUT /hosting-plans/{id}). Backend now maps database field names to frontend-expected field names: plan_type->type, plan_name->name, base_price->price, popular->is_popular. Also fixed plan filtering to use correct database field name 'plan_type'. API responses now match frontend expectations exactly."
 
   - task: "Fix PlanEditor field mapping in AdminPanel.js"
     implemented: true
