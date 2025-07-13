@@ -236,32 +236,48 @@ const AdminPanel = () => {
               </div>
             </div>
             
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-300 mb-2">CPU Cores</label>
+                <label className="block text-gray-300 mb-2">CPU</label>
                 <input
-                  type="number"
-                  value={formData.cpu_cores || ''}
-                  onChange={(e) => setFormData({...formData, cpu_cores: e.target.value ? parseInt(e.target.value) : null})}
+                  type="text"
+                  value={formData.cpu || ''}
+                  onChange={(e) => setFormData({...formData, cpu: e.target.value})}
                   className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 1 vCPU"
                 />
               </div>
               <div>
-                <label className="block text-gray-300 mb-2">Memory (GB)</label>
+                <label className="block text-gray-300 mb-2">RAM</label>
                 <input
-                  type="number"
-                  value={formData.memory_gb || ''}
-                  onChange={(e) => setFormData({...formData, memory_gb: e.target.value ? parseInt(e.target.value) : null})}
+                  type="text"
+                  value={formData.ram || ''}
+                  onChange={(e) => setFormData({...formData, ram: e.target.value})}
                   className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 1 GB RAM"
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-300 mb-2">Disk Space</label>
+                <input
+                  type="text"
+                  value={formData.disk_space || ''}
+                  onChange={(e) => setFormData({...formData, disk_space: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 10 GB SSD"
                 />
               </div>
               <div>
-                <label className="block text-gray-300 mb-2">Disk (GB)</label>
+                <label className="block text-gray-300 mb-2">Bandwidth</label>
                 <input
-                  type="number"
-                  value={formData.disk_gb || ''}
-                  onChange={(e) => setFormData({...formData, disk_gb: e.target.value ? parseInt(e.target.value) : null})}
+                  type="text"
+                  value={formData.bandwidth || ''}
+                  onChange={(e) => setFormData({...formData, bandwidth: e.target.value})}
                   className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., Unlimited"
                 />
               </div>
             </div>
