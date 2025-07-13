@@ -362,7 +362,7 @@ async def get_hosting_plans(plan_type: Optional[str] = None):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@api_router.get("/hosting-plans/{plan_id}", response_model=PublicHostingPlan)
+@api_router.get("/hosting-plans/{plan_id}")
 async def get_hosting_plan(plan_id: str):
     """Get specific hosting plan by ID"""
     try:
@@ -370,22 +370,13 @@ async def get_hosting_plan(plan_id: str):
         if not plan:
             raise HTTPException(status_code=404, detail="Plan not found")
         
-        # Convert to public model without markup_percentage
-        plan_dict = {
-            "id": plan["id"],
-            "plan_type": plan["plan_type"],
-            "plan_name": plan["plan_name"],
-            "base_price": plan["base_price"],
-            "cpu_cores": plan.get("cpu_cores"),
-            "memory_gb": plan.get("memory_gb"),
-            "disk_gb": plan.get("disk_gb"),
-            "disk_type": plan.get("disk_type", "SSD"),
-            "bandwidth": plan.get("bandwidth"),
-            "supported_games": plan.get("supported_games"),
-            "features": plan.get("features", []),
-            "popular": plan.get("popular", False)
-        }
-        return PublicHostingPlan(**plan_dict)
+        # Remove internal fields for public API
+        if "_id" in plan:
+            del plan["_id"]
+        if "markup_percentage" in plan:
+            del plan["markup_percentage"]
+            
+        return plan
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
