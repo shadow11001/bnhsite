@@ -762,11 +762,36 @@ async def update_content(content_update: ContentUpdate, current_user: str = Depe
     """Update website content - for admin use"""
     try:
         update_data = content_update.dict(exclude_unset=True)
-        await db.website_content.update_one(
-            {"section": content_update.section},
-            {"$set": update_data},
-            upsert=True
-        )
+        
+        # Special handling for legal content
+        if content_update.section in ["terms", "privacy"]:
+            # Convert to legal content format
+            legal_data = {
+                "type": content_update.section,
+                "title": update_data.get("title", ""),
+                "content": update_data.get("description", ""),  # Use description as content
+                "last_updated": datetime.utcnow()
+            }
+            
+            await db.legal_content.update_one(
+                {"type": content_update.section},
+                {
+                    "$set": legal_data,
+                    "$setOnInsert": {
+                        "id": str(uuid.uuid4()),
+                        "created_at": datetime.utcnow()
+                    }
+                },
+                upsert=True
+            )
+        else:
+            # Regular website content
+            await db.website_content.update_one(
+                {"section": content_update.section},
+                {"$set": update_data},
+                upsert=True
+            )
+        
         return {"message": f"Content for {content_update.section} updated successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
