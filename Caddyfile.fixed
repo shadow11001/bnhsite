@@ -1,0 +1,64 @@
+bluenebulahosting.com {
+    # Frontend - Serve React application
+    handle /* {
+        reverse_proxy bnhsite-frontend:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+        }
+    }
+    
+    # Backend API - Proxy all /api requests to FastAPI (strip /api prefix)
+    handle /api/* {
+        uri strip_prefix /api
+        reverse_proxy bnhsite-backend:8001 {
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+        }
+    }
+    
+    # Security headers
+    header {
+        # Prevent clickjacking
+        X-Frame-Options DENY
+        
+        # Prevent MIME type sniffing
+        X-Content-Type-Options nosniff
+        
+        # Enable XSS protection
+        X-XSS-Protection "1; mode=block"
+        
+        # Force HTTPS
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        
+        # Content Security Policy (adjust as needed)
+        Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:;"
+        
+        # Referrer Policy
+        Referrer-Policy "strict-origin-when-cross-origin"
+        
+        # Remove server information
+        -Server
+    }
+    
+    # Enable compression for better performance
+    encode {
+        gzip 6
+        minimum_length 1024
+    }
+    
+    # Logging
+    log {
+        output file /var/log/caddy/blue-nebula.log {
+            roll_size 100mb
+            roll_keep 10
+            roll_keep_for 720h
+        }
+        format json
+        level INFO
+    }
+}
+
+# Optional: Redirect www to non-www
+www.bluenebulahosting.com {
+    redir https://bluenebulahosting.com{uri} permanent
+}
