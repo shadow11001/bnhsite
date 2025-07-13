@@ -34,8 +34,8 @@ security = HTTPBearer()
 # Create the main app without a prefix
 app = FastAPI(title="Blue Nebula Hosting API", version="1.0.0")
 
-# Create a router with the /api prefix
-api_router = APIRouter(prefix="/api")
+# Create a router without prefix (Caddy will handle the /api routing)
+api_router = APIRouter()
 
 
 # Define Models
