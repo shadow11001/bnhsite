@@ -30,30 +30,19 @@ print_error() {
 }
 
 # Check if backend container is running
-print_status "Checking if Blue Nebula backend container is running..."
+print_status "Checking if backend container is running..."
 
-if docker-compose ps | grep -q "blue-nebula-backend.*Up"; then
+if docker-compose ps | grep -q "bnhsite-backend.*Up"; then
     print_success "Backend container is running"
 else
     print_error "Backend container is not running. Please start it first with:"
-    echo "  docker-compose up -d blue-nebula-backend"
+    echo "  docker-compose up -d bnhsite-backend"
     exit 1
 fi
 
-# Copy the initialization script to the backend container
-print_status "Copying database initialization script to backend container..."
-docker cp init_database.py blue-nebula-backend:/app/init_database.py
-
-if [ $? -eq 0 ]; then
-    print_success "Script copied successfully"
-else
-    print_error "Failed to copy script to container"
-    exit 1
-fi
-
-# Run the initialization script inside the backend container
+# Run the initialization script inside the backend container (script is already copied during build)
 print_status "Running database initialization..."
-docker exec blue-nebula-backend python3 init_database.py
+docker exec bnhsite-backend python3 init_database.py
 
 if [ $? -eq 0 ]; then
     print_success "🎉 Database initialization completed successfully!"
@@ -73,7 +62,3 @@ else
     print_error "Database initialization failed. Check the logs above for details."
     exit 1
 fi
-
-# Clean up
-docker exec blue-nebula-backend rm -f /app/init_database.py
-print_status "Cleanup completed"
