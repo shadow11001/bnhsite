@@ -642,7 +642,65 @@ async def get_features():
         ]
     }
 
-@api_router.put("/content")
+# Legal Content Management
+@api_router.get("/admin/legal/{legal_type}")
+async def get_admin_legal_content(legal_type: str, current_user: str = Depends(get_current_user)):
+    """Get legal content (terms/privacy) for admin editing"""
+    try:
+        if legal_type not in ["terms", "privacy"]:
+            raise HTTPException(status_code=400, detail="Invalid legal content type")
+        
+        content = await db.legal_content.find_one({"type": legal_type})
+        if not content:
+            # Return default content
+            default_titles = {"terms": "Terms of Service", "privacy": "Privacy Policy"}
+            return {
+                "type": legal_type,
+                "title": default_titles[legal_type],
+                "content": f"{default_titles[legal_type]} content will be updated by the administrator."
+            }
+        
+        # Remove MongoDB _id field
+        if "_id" in content:
+            del content["_id"]
+        
+        return content
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/admin/legal/{legal_type}")
+async def update_admin_legal_content(legal_type: str, legal_data: dict, current_user: str = Depends(get_current_user)):
+    """Update legal content (terms/privacy) - admin only"""
+    try:
+        if legal_type not in ["terms", "privacy"]:
+            raise HTTPException(status_code=400, detail="Invalid legal content type")
+        
+        # Add type and timestamps
+        legal_data["type"] = legal_type
+        legal_data["last_updated"] = datetime.utcnow()
+        
+        # Remove any _id field to avoid conflicts
+        if "_id" in legal_data:
+            del legal_data["_id"]
+        
+        # Update or insert (upsert)
+        result = await db.legal_content.update_one(
+            {"type": legal_type},
+            {
+                "$set": legal_data,
+                "$setOnInsert": {
+                    "id": str(uuid.uuid4()),
+                    "created_at": datetime.utcnow()
+                }
+            },
+            upsert=True
+        )
+        
+        return {"message": f"{legal_type.title()} content updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Update the existing /content PUT endpoint to handle legal content better
 async def update_content(content_update: ContentUpdate, current_user: str = Depends(get_current_user)):
     """Update website content - for admin use"""
     try:
