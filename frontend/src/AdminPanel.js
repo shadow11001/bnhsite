@@ -68,15 +68,26 @@ const AdminPanel = () => {
     }
   }, [isAuthenticated]);
 
-  const fetchData = async () => {
+  const fetchData = async (forceClear = false) => {
     if (!isAuthenticated) return;
     
     try {
-      console.log('Fetching admin data...');
+      setIsLoading(true);
+      console.log('Fetching admin data...', forceClear ? '(force refresh)' : '');
+      
+      // Create cache-busting timestamp
+      const timestamp = new Date().getTime();
+      const cacheHeaders = {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      };
       
       // Fetch admin hosting plans
       try {
-        const adminPlansResponse = await axios.get(`${API}/admin/hosting-plans`, { headers: getAuthHeaders() });
+        const adminPlansResponse = await axios.get(`${API}/admin/hosting-plans?_t=${timestamp}`, { 
+          headers: { ...getAuthHeaders(), ...cacheHeaders }
+        });
         console.log('Hosting plans loaded:', adminPlansResponse.data.length, 'plans');
         setHostingPlans(adminPlansResponse.data);
       } catch (error) {
@@ -85,7 +96,9 @@ const AdminPanel = () => {
       
       // Fetch company info
       try {
-        const companyResponse = await axios.get(`${API}/company-info`);
+        const companyResponse = await axios.get(`${API}/company-info?_t=${timestamp}`, {
+          headers: cacheHeaders
+        });
         console.log('Company info loaded:', companyResponse.data);
         setCompanyInfo(companyResponse.data);
       } catch (error) {
