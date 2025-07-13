@@ -1122,7 +1122,15 @@ class BlueNebulaAPITester:
             self.test_token_verification()
             self.test_protected_endpoints()
         
-        # Test promo code system (focus of current testing)
+        # Test admin panel endpoints (focus of current testing)
+        print("\n🛠️ Testing Admin Panel Endpoints...")
+        if auth_success:
+            self.test_admin_navigation_endpoints()
+            self.test_admin_company_info_endpoints()
+            self.test_admin_smtp_settings_endpoints()
+            self.test_legal_content_saving()
+        
+        # Test promo code system
         print("\n🎟️ Testing Promo Code System...")
         promo_success, public_promos = self.test_promo_codes_public()
         if promo_success:
