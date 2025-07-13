@@ -12,7 +12,9 @@ from datetime import datetime
 class BlueNebulaAPITester:
     def __init__(self, base_url="https://fa80d249-71c7-4150-b832-bab579c8d70e.preview.emergentagent.com"):
         self.base_url = base_url
-        self.api_url = f"{base_url}/api"
+        # CRITICAL ISSUE: API routes are not prefixed with /api but frontend expects them to be
+        # Testing direct backend routes for now to identify field mapping issues
+        self.api_url = f"{base_url}"
         self.tests_run = 0
         self.tests_passed = 0
         self.errors = []
