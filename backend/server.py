@@ -621,26 +621,7 @@ async def get_system_status():
             "text": "Status Unknown"
         }
 
-# COMMENTED OUT - Using database initialization script instead
-# @api_router.post("/init-data")
-# async def initialize_data():
-#     """Initialize hosting plans data with exact names from pricing table"""
-#     try:
-#         # Clear existing data
-#         await db.hosting_plans.delete_many({})
-#         
-#         # SSD Shared Hosting Plans (correct names from user)
-#         ssd_shared_plans = [
-#             {
-#             {
-#                 "plan_type": "ssd_shared",
-#                 "plan_name": "Opal",
-#                 "base_price": 1.0,
-#                 "disk_gb": 10,
-#                 "disk_type": "SSD",
-#                 "features": ["1 Website", "10 GB SSD Storage", "Unlimited Bandwidth", "Free SSL", "Daily Backups"],
-#                 "popular": False
-#             },
+# Hardcoded hosting plans removed - using database initialization script instead
             {
                 "plan_type": "ssd_shared", 
                 "plan_name": "Topaz",
