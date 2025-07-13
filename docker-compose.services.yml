@@ -3,9 +3,9 @@
 
 services:
   # MongoDB Database for Blue Nebula Hosting
-  blue-nebula-mongodb:
+  bnhsite-mongodb:
     image: mongo:4.4.6
-    container_name: blue-nebula-mongodb
+    container_name: bnhsite-mongodb
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
