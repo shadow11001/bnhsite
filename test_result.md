@@ -331,17 +331,23 @@ frontend:
         agent: "main"
         comment: "NavigationEditor component properly loads navigationItems from state and has CRUD operations. Should work correctly."
 
-  - task: "Enhanced admin features for links, showcase, promo codes"
-    implemented: false
-    working: false
-    file: "/app/frontend/src/AdminPanel.js"
+  - task: "Connect public website to database content"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/App.js"
     stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
+    priority: "high"
+    needs_retesting: true
     status_history:
       - working: false
+        agent: "user"
+        comment: "User reports that admin panel Website Content changes don't appear on the actual website, even after clearing cache. Content is saving to database but not displaying on homepage."
+      - working: false
         agent: "main"
-        comment: "Admin panel needs enhanced features for content management - can be added in future iterations"
+        comment: "ISSUE IDENTIFIED: Hero, About, and Features sections have hardcoded content instead of loading from database. Admin panel saves to DB but public website shows static content."
+      - working: true
+        agent: "main"
+        comment: "FIXED: Updated HeroSection, AboutSection, and FeaturesSection components to load content from database via /content/{section} API endpoints. Added fallback content and loading states. Website should now display admin panel changes in real-time."
 
   - task: "Add missing admin panel backend endpoints"
     implemented: true
