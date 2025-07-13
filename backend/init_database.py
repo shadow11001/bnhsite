@@ -126,17 +126,22 @@ async def init_hosting_plans(db):
             "sub_type": "ssd",
             "price": 15.00,
             "billing_cycle": "monthly",
+            "cpu": "2 Core",
+            "ram": "3 GB",
             "disk_space": "100 GB SSD",
             "bandwidth": "Unlimited",
             "websites": "Unlimited",
+            "subdomains": "Unlimited",
+            "parked_domains": "Unlimited",
             "databases": "Unlimited",
             "email_accounts": "Unlimited",
             "ssl_certificate": "Free SSL",
             "backup": "Daily Backups",
             "support": "24/7 Support",
-            "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support", "Choice of OS", "Scalable Resources"],
+            "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
             "markup_percentage": 0,
-            "is_popular": False
+            "is_popular": False,
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=3"
         },
         
         # HDD Shared Hosting (3 plans)
