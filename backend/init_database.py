@@ -1011,5 +1011,99 @@ async def init_promo_codes(db):
     result = await db.promo_codes.insert_many(promo_codes)
     print(f"✅ Inserted {len(result.inserted_ids)} promo codes")
 
+async def migrate_database():
+    """
+    Migration function to safely update existing database with new features
+    without losing existing data.
+    """
+    print("🔄 Running database migration...")
+    
+    # Connect to MongoDB
+    client = AsyncIOMotorClient(MONGO_URL)
+    db = client[DB_NAME]
+    
+    try:
+        # Test connection
+        await client.admin.command('ping')
+        print("✅ Connected to MongoDB successfully")
+        
+        # Check if collections exist and migrate as needed
+        collections = await db.list_collection_names()
+        print(f"📋 Found existing collections: {collections}")
+        
+        # Migrate hosting plans if needed
+        if "hosting_plans" in collections:
+            await migrate_hosting_plans(db)
+        
+        # Migrate content structures
+        if "website_content" in collections:
+            await migrate_website_content(db)
+        
+        # Add missing collections safely
+        await init_navigation_menu(db, migration_mode=True)
+        await init_smtp_settings(db, migration_mode=True)
+        await init_legal_content(db, migration_mode=True)
+        
+        print("✅ Database migration completed successfully!")
+        
+    except Exception as e:
+        print(f"❌ Migration failed: {e}")
+        raise e
+    finally:
+        client.close()
+
+async def migrate_hosting_plans(db):
+    """Migrate hosting plans to ensure they have all required fields"""
+    plans = await db.hosting_plans.find().to_list(1000)
+    updated_count = 0
+    
+    for plan in plans:
+        updates = {}
+        
+        # Ensure all plans have order_url
+        if "order_url" not in plan:
+            updates["order_url"] = "https://billing.bluenebulahosting.com"
+        
+        # Ensure technical specs exist for non-shared plans
+        if plan.get("plan_type") in ["standard_vps", "performance_vps", "standard_gameserver", "performance_gameserver"]:
+            if "cpu" not in plan and "cpu_cores" in plan:
+                updates["cpu"] = plan["cpu_cores"]
+            if "ram" not in plan and "memory_gb" in plan:
+                updates["ram"] = plan["memory_gb"]
+            if "disk_space" not in plan and "disk_gb" in plan:
+                updates["disk_space"] = plan["disk_gb"]
+        
+        if updates:
+            await db.hosting_plans.update_one({"id": plan["id"]}, {"$set": updates})
+            updated_count += 1
+    
+    print(f"✅ Migrated {updated_count} hosting plans")
+
+async def migrate_website_content(db):
+    """Migrate website content to ensure proper structure"""
+    # Check if content has proper section structure
+    content_items = await db.website_content.find().to_list(100)
+    
+    # Ensure basic sections exist
+    required_sections = ["hero", "about", "features"]
+    existing_sections = [item.get("section") for item in content_items]
+    
+    for section in required_sections:
+        if section not in existing_sections:
+            await db.website_content.insert_one({
+                "id": str(uuid.uuid4()),
+                "section": section,
+                "title": f"Default {section.title()} Title",
+                "subtitle": "",
+                "description": f"Default {section} content",
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            })
+            print(f"✅ Created missing {section} content section")
+
 if __name__ == "__main__":
-    asyncio.run(init_database())
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "--migrate":
+        asyncio.run(migrate_database())
+    else:
+        asyncio.run(init_database())
