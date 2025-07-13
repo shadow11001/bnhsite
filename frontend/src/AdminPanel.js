@@ -1012,11 +1012,12 @@ const AdminPanel = () => {
     const saveSMTPSettings = async () => {
       setIsLoading(true);
       try {
-        await axios.put(`${API}/smtp-settings`, smtpData, { headers: getAuthHeaders() });
+        await axios.put(`${API}/admin/smtp-settings`, smtpData, { headers: getAuthHeaders() });
         alert('SMTP settings updated successfully!');
         setSmtpSettings(smtpData);
       } catch (error) {
-        alert('Error updating SMTP settings: ' + error.message);
+        console.error('Error updating SMTP settings:', error);
+        alert('Error updating SMTP settings: ' + (error.response?.data?.detail || error.message));
       } finally {
         setIsLoading(false);
       }
@@ -1026,10 +1027,11 @@ const AdminPanel = () => {
       setIsLoading(true);
       setTestResult('Testing...');
       try {
-        // This would be implemented in the backend
+        const response = await axios.post(`${API}/admin/smtp-test`, smtpData, { headers: getAuthHeaders() });
         setTestResult('✅ SMTP connection successful!');
       } catch (error) {
-        setTestResult('❌ SMTP connection failed: ' + error.message);
+        console.error('Error testing SMTP connection:', error);
+        setTestResult('❌ SMTP connection failed: ' + (error.response?.data?.detail || error.message));
       } finally {
         setIsLoading(false);
       }
