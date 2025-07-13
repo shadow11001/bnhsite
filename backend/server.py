@@ -711,6 +711,207 @@ async def get_content(section: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# Navigation Management Endpoints
+@api_router.get("/admin/navigation")
+async def get_admin_navigation(current_user: str = Depends(get_current_user)):
+    """Get navigation menu items - admin only"""
+    try:
+        nav_items = await db.navigation_items.find().sort("order", 1).to_list(100)
+        # Convert ObjectIds to strings
+        for item in nav_items:
+            if "_id" in item:
+                del item["_id"]
+        return nav_items
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/navigation")
+async def save_admin_navigation(navigation_data: list, current_user: str = Depends(get_current_user)):
+    """Save navigation menu items - admin only"""
+    try:
+        # Clear existing navigation items
+        await db.navigation_items.delete_many({})
+        
+        # Insert new navigation items
+        for item in navigation_data:
+            if "_id" in item:
+                del item["_id"]
+            if "id" not in item:
+                item["id"] = str(uuid.uuid4())
+        
+        if navigation_data:
+            await db.navigation_items.insert_many(navigation_data)
+        
+        return {"message": "Navigation updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/admin/navigation")
+async def update_admin_navigation(navigation_data: list, current_user: str = Depends(get_current_user)):
+    """Update navigation menu items - admin only (alternative PUT method)"""
+    try:
+        # Clear existing navigation items
+        await db.navigation_items.delete_many({})
+        
+        # Insert new navigation items
+        for item in navigation_data:
+            if "_id" in item:
+                del item["_id"]
+            if "id" not in item:
+                item["id"] = str(uuid.uuid4())
+        
+        if navigation_data:
+            await db.navigation_items.insert_many(navigation_data)
+        
+        return {"message": "Navigation updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# SMTP Settings Management
+@api_router.get("/admin/smtp-settings")
+async def get_admin_smtp_settings(current_user: str = Depends(get_current_user)):
+    """Get SMTP settings - admin only"""
+    try:
+        smtp_settings = await db.smtp_settings.find_one()
+        if not smtp_settings:
+            return {
+                "smtp_host": "",
+                "smtp_port": 587,
+                "smtp_username": "",
+                "smtp_password": "",
+                "smtp_use_tls": True,
+                "from_email": "",
+                "from_name": "Blue Nebula Hosting"
+            }
+        
+        # Remove MongoDB _id field
+        if "_id" in smtp_settings:
+            del smtp_settings["_id"]
+        
+        return smtp_settings
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/admin/smtp-settings")
+async def update_admin_smtp_settings(smtp_data: dict, current_user: str = Depends(get_current_user)):
+    """Update SMTP settings - admin only"""
+    try:
+        # Add ID and timestamp
+        smtp_data["updated_at"] = datetime.utcnow()
+        
+        # Remove any _id field to avoid conflicts
+        if "_id" in smtp_data:
+            del smtp_data["_id"]
+        
+        # Update or insert (upsert)
+        result = await db.smtp_settings.update_one(
+            {},
+            {
+                "$set": smtp_data,
+                "$setOnInsert": {
+                    "id": str(uuid.uuid4()),
+                    "created_at": datetime.utcnow()
+                }
+            },
+            upsert=True
+        )
+        
+        return {"message": "SMTP settings updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/smtp-test")
+async def test_smtp_connection(smtp_data: dict, current_user: str = Depends(get_current_user)):
+    """Test SMTP connection - admin only"""
+    try:
+        import smtplib
+        from email.mime.text import MIMEText
+        
+        # Extract SMTP settings
+        host = smtp_data.get("smtp_host", "")
+        port = smtp_data.get("smtp_port", 587)
+        username = smtp_data.get("smtp_username", "")
+        password = smtp_data.get("smtp_password", "")
+        use_tls = smtp_data.get("smtp_use_tls", True)
+        
+        if not all([host, username, password]):
+            raise HTTPException(status_code=400, detail="Missing required SMTP settings")
+        
+        # Test connection
+        with smtplib.SMTP(host, port) as server:
+            if use_tls:
+                server.starttls()
+            server.login(username, password)
+        
+        return {"message": "SMTP connection successful"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"SMTP connection failed: {str(e)}")
+
+# Company Info Admin Endpoint (to match frontend expectations)
+@api_router.get("/admin/company-info")
+async def get_admin_company_info(current_user: str = Depends(get_current_user)):
+    """Get company information for admin editing"""
+    try:
+        company = await db.company_info.find_one()
+        if not company:
+            # Return default company information
+            return {
+                "id": str(uuid.uuid4()),
+                "name": "Blue Nebula Hosting",
+                "tagline": "Fast, Reliable, and Affordable Hosting Solutions",
+                "description": "Blue Nebula Hosting is a premier web hosting provider offering reliable, affordable hosting solutions for businesses of all sizes. We specialize in shared hosting, VPS hosting, and GameServer hosting with enterprise-grade infrastructure, 99.9% uptime guarantee, and 24/7 expert support. Our mission is to empower businesses with robust hosting solutions that scale with their growth.",
+                "founded_year": 2020,
+                "features": [
+                    "99.9% Uptime Guarantee",
+                    "24/7 Expert Technical Support",
+                    "Enterprise-Grade Security", 
+                    "Lightning-Fast SSD Storage",
+                    "Free SSL Certificates",
+                    "Daily Automated Backups",
+                    "DDoS Protection",
+                    "Easy One-Click Installations"
+                ],
+                "contact_email": "support@bluenebulahosting.com",
+                "phone": "+1 (555) 123-4567",
+                "address": "123 Tech Street, Cloud City, CC 12345"
+            }
+        
+        # Remove MongoDB _id field
+        if "_id" in company:
+            del company["_id"]
+        
+        return company
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/admin/company-info")
+async def update_admin_company_info(company_update: dict, current_user: str = Depends(get_current_user)):
+    """Update company information - admin only"""
+    try:
+        # Add timestamp
+        company_update["updated_at"] = datetime.utcnow()
+        
+        # Remove any _id field to avoid conflicts
+        if "_id" in company_update:
+            del company_update["_id"]
+        
+        # Update or insert (upsert)
+        result = await db.company_info.update_one(
+            {},
+            {
+                "$set": company_update,
+                "$setOnInsert": {
+                    "id": str(uuid.uuid4()),
+                    "created_at": datetime.utcnow()
+                }
+            },
+            upsert=True
+        )
+        
+        return {"message": "Company info updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Admin Content Management Endpoints
 @api_router.get("/admin/content/{section}")
 async def get_admin_content(section: str, current_user: str = Depends(get_current_user)):
