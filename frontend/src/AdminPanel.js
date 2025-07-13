@@ -839,11 +839,26 @@ const AdminPanel = () => {
     const saveNavigation = async () => {
       setIsLoading(true);
       try {
-        await axios.put(`${API}/navigation`, navItems, { headers: getAuthHeaders() });
+        // Try different endpoints and methods
+        let response;
+        try {
+          response = await axios.post(`${API}/admin/navigation`, navItems, { headers: getAuthHeaders() });
+        } catch (err) {
+          if (err.response?.status === 404) {
+            // Try PUT method
+            response = await axios.put(`${API}/admin/navigation`, navItems, { headers: getAuthHeaders() });
+          } else if (err.response?.status === 405) {
+            // Try different endpoint
+            response = await axios.post(`${API}/navigation-menu`, navItems, { headers: getAuthHeaders() });
+          } else {
+            throw err;
+          }
+        }
         alert('Navigation updated successfully!');
         setNavigationItems(navItems);
       } catch (error) {
-        alert('Error updating navigation: ' + error.message);
+        console.error('Error updating navigation:', error);
+        alert('Error updating navigation: ' + (error.response?.data?.detail || error.response?.data?.message || error.message));
       } finally {
         setIsLoading(false);
       }
