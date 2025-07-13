@@ -329,12 +329,16 @@ async def update_site_settings(settings_data: dict, current_user: str = Depends(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@api_router.get("/admin/hosting-plans", response_model=List[HostingPlan])
+@api_router.get("/admin/hosting-plans")
 async def get_admin_hosting_plans(current_user: str = Depends(get_current_user)):
     """Get all hosting plans with markup data - admin only"""
     try:
         plans = await db.hosting_plans.find().to_list(1000)
-        return [HostingPlan(**plan) for plan in plans]
+        # Convert ObjectIds to strings for JSON serialization
+        for plan in plans:
+            if "_id" in plan:
+                del plan["_id"]
+        return plans
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
