@@ -1091,6 +1091,7 @@ const AdminPanel = () => {
         expiry_date: '',
         display_location: 'hero',
         button_text: 'Copy Code',
+        button_url: '',
         is_active: true
       });
 
@@ -1207,6 +1208,22 @@ const AdminPanel = () => {
                   placeholder="Copy Code"
                 />
               </div>
+            </div>
+            
+            <div>
+              <label className="block text-gray-300 mb-2">
+                Button URL <span className="text-sm text-gray-400">(Optional - if provided, button links to URL instead of copying code)</span>
+              </label>
+              <input
+                type="url"
+                value={formData.button_url}
+                onChange={(e) => setFormData({...formData, button_url: e.target.value})}
+                className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-400 focus:outline-none"
+                placeholder="https://billing.bluenebulahosting.com/?promo=SAVE20"
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                Leave empty for "Copy Code" functionality, or add URL to redirect users directly to billing/signup
+              </p>
             </div>
             
             <div className="flex items-center">
