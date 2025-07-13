@@ -828,6 +828,18 @@ class BlueNebulaAPITester:
             # Test that markup percentages are not exposed
             self.test_markup_not_exposed(plans)
         
+        # Test promo code system (focus of current testing)
+        print("\n🎟️ Testing Promo Code System...")
+        promo_success, public_promos = self.test_promo_codes_public()
+        if promo_success:
+            self.test_promo_code_data_structure(public_promos)
+            self.test_promo_code_filtering_by_location(public_promos)
+        
+        if auth_success:
+            admin_promo_success, admin_promos = self.test_promo_codes_admin()
+            if admin_promo_success:
+                self.test_promo_code_crud_operations()
+        
         # Test system status (NEW feature)
         print("\n📊 Testing System Status...")
         self.test_system_status()
