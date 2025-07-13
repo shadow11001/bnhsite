@@ -295,11 +295,12 @@ main() {
     echo "2. Check the DOCKER_DEPLOYMENT_GUIDE.md for detailed information"
     echo "3. Adjust build context paths to match your directory structure"
     echo "4. Update your Caddy configuration using Caddyfile.example"
+    echo "5. Use container names: bnhsite-mongodb, bnhsite-backend, bnhsite-frontend"
 }
 
 # Add integration files to .gitignore if it exists
 if [ -f .gitignore ]; then
-    for file in ".blue-nebula-credentials" ".env.blue-nebula-generated"; do
+    for file in ".bnhsite-credentials" ".env.blue-nebula-generated"; do
         if ! grep -q "$file" .gitignore; then
             echo "$file" >> .gitignore
         fi
