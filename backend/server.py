@@ -621,10 +621,10 @@ async def get_system_status():
             "text": "Status Unknown"
         }
 
-# Initialize hosting plans data with EXACT names from pricing table
-@api_router.post("/init-data")
-async def initialize_data():
-    """Initialize hosting plans data with exact names from pricing table"""
+# COMMENTED OUT - Using database initialization script instead
+# @api_router.post("/init-data")
+# async def initialize_data():
+#     """Initialize hosting plans data with exact names from pricing table"""
     try:
         # Clear existing data
         await db.hosting_plans.delete_many({})
