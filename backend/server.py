@@ -204,10 +204,10 @@ async def root():
 async def login(login_request: LoginRequest):
     """Admin login endpoint"""
     try:
-        # Simple authentication (in production, use proper user management)
-        if (login_request.username == DEFAULT_ADMIN_USERNAME and 
-            verify_password(login_request.password, DEFAULT_ADMIN_PASSWORD)):
-            
+        # Check database for admin user
+        admin_user = await db.admin_users.find_one({"username": login_request.username})
+        
+        if admin_user and verify_password(login_request.password, admin_user["password"]):
             access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
             access_token = create_access_token(
                 data={"sub": login_request.username}, expires_delta=access_token_expires
