@@ -589,13 +589,15 @@ async def get_content(section: str):
                     "section": "hero",
                     "title": "Fast, Reliable, and Affordable",
                     "subtitle": "Hosting Solutions—Starting at $1/mo",
-                    "description": "Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions with 24/7 support, 99.9% uptime guarantee, and professional managed services for shared hosting, VPS, and GameServers."
+                    "description": "Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions.",
+                    "button_text": "Get Started Today",
+                    "button_url": "https://billing.bluenebulahosting.com"
                 }
             elif section == "about":
                 return {
                     "section": "about",
                     "title": "About Blue Nebula Hosting",
-                    "description": "Founded with a mission to provide reliable, affordable hosting solutions, Blue Nebula Hosting combines cutting-edge technology with exceptional customer support. We specialize in shared hosting, VPS solutions, and GameServer hosting, serving customers worldwide with 99.9% uptime guarantee and 24/7 technical support."
+                    "description": "Professional hosting solutions with enterprise-grade infrastructure and 24/7 support."
                 }
             elif section == "features":
                 return {
@@ -615,6 +617,95 @@ async def get_content(section: str):
                 }
             return {"section": section, "message": "No custom content found"}
         return content
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Admin Content Management Endpoints
+@api_router.get("/admin/content/{section}")
+async def get_admin_content(section: str, current_user: str = Depends(get_current_user)):
+    """Get website content by section for admin editing"""
+    try:
+        content = await db.website_content.find_one({"section": section})
+        if not content:
+            # Return default editable content structure
+            default_content = {
+                "section": section,
+                "title": f"Default {section.title()} Title",
+                "subtitle": "",
+                "description": f"This is the default {section} content. Edit this in the admin panel.",
+                "button_text": "Learn More",
+                "button_url": "#"
+            }
+            if section == "features":
+                default_content["features"] = [
+                    "99.9% Uptime Guarantee",
+                    "24/7 Expert Support",
+                    "Enterprise SSD Storage"
+                ]
+            return default_content
+        
+        # Remove MongoDB _id field
+        if "_id" in content:
+            del content["_id"]
+        
+        return content
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/content/{section}")
+async def create_or_update_admin_content(section: str, content_data: dict, current_user: str = Depends(get_current_user)):
+    """Create or update website content by section"""
+    try:
+        # Add section and timestamps
+        content_data["section"] = section
+        content_data["updated_at"] = datetime.utcnow()
+        
+        # Check if content already exists
+        existing = await db.website_content.find_one({"section": section})
+        
+        if existing:
+            # Update existing content
+            content_data["id"] = existing.get("id", str(uuid.uuid4()))
+            result = await db.website_content.update_one(
+                {"section": section},
+                {"$set": content_data}
+            )
+            if result.modified_count == 0:
+                raise HTTPException(status_code=400, detail="Failed to update content")
+        else:
+            # Create new content
+            content_data["id"] = str(uuid.uuid4())
+            content_data["created_at"] = datetime.utcnow()
+            result = await db.website_content.insert_one(content_data)
+            if not result.inserted_id:
+                raise HTTPException(status_code=400, detail="Failed to create content")
+        
+        return {"message": f"Content for {section} saved successfully", "section": section}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/admin/content/{section}")
+async def update_admin_content(section: str, content_data: dict, current_user: str = Depends(get_current_user)):
+    """Update website content by section (alternative PUT method)"""
+    try:
+        # Add section and timestamp
+        content_data["section"] = section
+        content_data["updated_at"] = datetime.utcnow()
+        
+        # Update or insert (upsert)
+        result = await db.website_content.update_one(
+            {"section": section},
+            {
+                "$set": content_data,
+                "$setOnInsert": {
+                    "id": str(uuid.uuid4()),
+                    "created_at": datetime.utcnow()
+                }
+            },
+            upsert=True
+        )
+        
+        return {"message": f"Content for {section} updated successfully", "section": section}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
