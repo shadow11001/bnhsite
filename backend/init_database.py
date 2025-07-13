@@ -818,14 +818,14 @@ async def init_website_content(db):
     result = await db.website_content.insert_many(website_content)
     print(f"✅ Inserted {len(result.inserted_ids)} website content items")
 
-async def init_navigation_menu(db):
+async def init_navigation_menu(db, migration_mode=False):
     print("🧭 Initializing navigation menu...")
     
-    # Check if navigation already exists
-    existing_count = await db.navigation_menu.count_documents({})
-    if existing_count > 0:
-        print(f"⚠️  Found {existing_count} existing navigation items. Skipping navigation initialization.")
-        return
+    if migration_mode:
+        existing_count = await db.navigation_items.count_documents({})
+        if existing_count > 0:
+            print(f"📋 Found {existing_count} existing navigation items - skipping initialization")
+            return
     
     navigation_items = [
         {
