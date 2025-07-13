@@ -72,7 +72,7 @@ const AdminPanel = () => {
     if (!isAuthenticated) return;
     
     try {
-      setIsLoading(true);
+      setLoading(true);
       console.log('Fetching admin data...', forceClear ? '(force refresh)' : '');
       
       // Create cache-busting timestamp
