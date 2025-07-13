@@ -699,18 +699,19 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 flex items-center justify-center">
                 <img 
                   src="/logo.png" 
                   alt="Blue Nebula Hosting" 
-                  className="w-8 h-8 object-contain"
+                  className="w-10 h-10 object-contain"
                   onError={(e) => {
                     e.target.style.display = 'none';
                     e.target.nextSibling.style.display = 'flex';
                   }}
                 />
-                <span className="text-white font-bold text-xl hidden">BN</span>
-              </div>
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-600 rounded-lg items-center justify-center text-white font-bold text-xl" style={{display: 'none'}}>
+                  BN
+                </div>
               <div className="text-white">
                 <h3 className="font-bold text-lg">Blue Nebula Hosting</h3>
               </div>
