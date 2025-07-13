@@ -953,8 +953,14 @@ async def init_site_settings(db):
     result = await db.site_settings.insert_one(site_settings)
     print(f"✅ Inserted site settings")
 
-async def init_smtp_settings(db):
+async def init_smtp_settings(db, migration_mode=False):
     print("📧 Initializing SMTP settings...")
+    
+    if migration_mode:
+        existing_count = await db.smtp_settings.count_documents({})
+        if existing_count > 0:
+            print(f"📋 Found {existing_count} existing SMTP settings - skipping initialization")
+            return
     
     # Check if SMTP settings already exist
     existing = await db.smtp_settings.find_one({})
