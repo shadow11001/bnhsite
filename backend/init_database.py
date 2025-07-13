@@ -94,6 +94,7 @@ async def init_hosting_plans(db):
             "markup_percentage": 0,
             "is_popular": False,
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=1"
         },
         {
             "id": str(uuid.uuid4()),
@@ -118,6 +119,7 @@ async def init_hosting_plans(db):
             "markup_percentage": 0,
             "is_popular": True,
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=2"
         },
         {
             "id": str(uuid.uuid4()),
@@ -142,6 +144,7 @@ async def init_hosting_plans(db):
             "markup_percentage": 0,
             "is_popular": False,
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=3"
         },
         
         # HDD Shared Hosting (3 plans)
@@ -168,6 +171,7 @@ async def init_hosting_plans(db):
             "markup_percentage": 0,
             "is_popular": False,
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=4"
         },
         {
             "id": str(uuid.uuid4()),
@@ -192,6 +196,7 @@ async def init_hosting_plans(db):
             "markup_percentage": 0,
             "is_popular": False,
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=5"
         },
         {
             "id": str(uuid.uuid4()),
@@ -216,6 +221,7 @@ async def init_hosting_plans(db):
             "markup_percentage": 0,
             "is_popular": False,
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=6"
         },
         
         # Standard VPS (6 plans)
@@ -236,6 +242,7 @@ async def init_hosting_plans(db):
             "markup_percentage": 20,
             "is_popular": False,
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=8"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=7"
         },
         {
             "id": str(uuid.uuid4()),
