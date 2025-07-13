@@ -735,91 +735,155 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      <Header />
-      <HeroSection />
-      <FeaturesSection />
-      
-      {/* Hosting Plans Section */}
-      <section id="hosting" className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Choose Your Hosting Plan</h2>
-            <p className="text-lg text-gray-300">
-              Professional hosting solutions tailored to your needs
-            </p>
-          </div>
-          
-          {/* Pricing Promo Banner */}
-          <PromoCodeBanner location="pricing" />
-          <HostingPlans 
-            plans={hostingPlans} 
-            title="SSD Shared Hosting" 
-            type="ssd_shared"
-            description="Fast SSD-powered shared hosting with premium features"
-          />
-          <HostingPlans 
-            plans={hostingPlans} 
-            title="HDD Shared Hosting" 
-            type="hdd_shared"
-            description="Affordable shared hosting with reliable HDD storage"
-          />
+    <div className="min-h-screen bg-gray-900 relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-900/20 to-purple-900/20"></div>
+        
+        {/* Starfield Animation */}
+        <div className="stars absolute inset-0">
+          <div className="star absolute bg-white rounded-full opacity-80 animate-pulse" style={{
+            width: '2px', height: '2px', top: '20%', left: '25%',
+            animationDelay: '0s', animationDuration: '3s'
+          }}></div>
+          <div className="star absolute bg-white rounded-full opacity-60 animate-pulse" style={{
+            width: '1px', height: '1px', top: '30%', left: '80%',
+            animationDelay: '1s', animationDuration: '4s'
+          }}></div>
+          <div className="star absolute bg-white rounded-full opacity-90 animate-pulse" style={{
+            width: '2px', height: '2px', top: '60%', left: '15%',
+            animationDelay: '2s', animationDuration: '2s'
+          }}></div>
+          <div className="star absolute bg-white rounded-full opacity-70 animate-pulse" style={{
+            width: '1px', height: '1px', top: '80%', left: '70%',
+            animationDelay: '0.5s', animationDuration: '3.5s'
+          }}></div>
+          <div className="star absolute bg-white rounded-full opacity-85 animate-pulse" style={{
+            width: '2px', height: '2px', top: '40%', left: '60%',
+            animationDelay: '1.5s', animationDuration: '2.5s'
+          }}></div>
+          <div className="star absolute bg-white rounded-full opacity-65 animate-pulse" style={{
+            width: '1px', height: '1px', top: '10%', left: '40%',
+            animationDelay: '2.5s', animationDuration: '4s'
+          }}></div>
+          <div className="star absolute bg-white rounded-full opacity-75 animate-pulse" style={{
+            width: '1px', height: '1px', top: '70%', left: '90%',
+            animationDelay: '0.8s', animationDuration: '3s'
+          }}></div>
+          <div className="star absolute bg-white rounded-full opacity-80 animate-pulse" style={{
+            width: '2px', height: '2px', top: '50%', left: '10%',
+            animationDelay: '1.8s', animationDuration: '2.8s'
+          }}></div>
+          <div className="star absolute bg-white rounded-full opacity-70 animate-pulse" style={{
+            width: '1px', height: '1px', top: '90%', left: '30%',
+            animationDelay: '0.3s', animationDuration: '3.8s'
+          }}></div>
+          <div className="star absolute bg-white rounded-full opacity-90 animate-pulse" style={{
+            width: '2px', height: '2px', top: '15%', left: '75%',
+            animationDelay: '2.2s', animationDuration: '2.2s'
+          }}></div>
         </div>
-      </section>
-      
-      {/* VPS Section */}
-      <section id="vps" className="py-20 bg-gray-900/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">VPS Hosting Solutions</h2>
-            <p className="text-lg text-gray-300">
-              Scalable virtual private servers with full control and managed support
-            </p>
+        
+        {/* Shooting Stars */}
+        <div className="shooting-star absolute bg-gradient-to-r from-blue-400 to-transparent h-px opacity-70" style={{
+          width: '100px', top: '25%', left: '-100px',
+          animation: 'shooting 8s linear infinite',
+          animationDelay: '3s'
+        }}></div>
+        <div className="shooting-star absolute bg-gradient-to-r from-purple-400 to-transparent h-px opacity-50" style={{
+          width: '80px', top: '60%', left: '-80px',
+          animation: 'shooting 12s linear infinite',
+          animationDelay: '6s'
+        }}></div>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10">
+        <Header />
+        <HeroSection />
+        <FeaturesSection />
+        
+        {/* Hosting Plans Section */}
+        <section id="hosting" className="py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-white mb-4">Choose Your Hosting Plan</h2>
+              <p className="text-lg text-gray-300">
+                Professional hosting solutions tailored to your needs
+              </p>
+            </div>
+            
+            {/* Pricing Promo Banner */}
+            <PromoCodeBanner location="pricing" />
+            <HostingPlans 
+              plans={hostingPlans} 
+              title="SSD Shared Hosting" 
+              type="ssd_shared"
+              description="Fast SSD-powered shared hosting with premium features"
+            />
+            <HostingPlans 
+              plans={hostingPlans} 
+              title="HDD Shared Hosting" 
+              type="hdd_shared"
+              description="Affordable shared hosting with reliable HDD storage"
+            />
           </div>
-          
-          <HostingPlans 
-            plans={hostingPlans} 
-            title="Standard VPS" 
-            type="standard_vps"
-            description="Reliable VPS hosting with balanced performance and pricing"
-          />
-          <HostingPlans 
-            plans={hostingPlans} 
-            title="Performance VPS" 
-            type="performance_vps"
-            description="High-performance VPS with premium hardware and optimizations"
-          />
-        </div>
-      </section>
-      
-      {/* GameServers Section */}
-      <section id="gameservers" className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">GameServer Hosting</h2>
-            <p className="text-lg text-gray-300">
-              High-performance game servers with Pterodactyl panel management
-            </p>
+        </section>
+        
+        {/* VPS Section */}
+        <section id="vps" className="py-20 bg-gray-900/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-white mb-4">VPS Hosting Solutions</h2>
+              <p className="text-lg text-gray-300">
+                Scalable virtual private servers with full control and managed support
+              </p>
+            </div>
+            
+            <HostingPlans 
+              plans={hostingPlans} 
+              title="Standard VPS" 
+              type="standard_vps"
+              description="Reliable VPS hosting with balanced performance and pricing"
+            />
+            <HostingPlans 
+              plans={hostingPlans} 
+              title="Performance VPS" 
+              type="performance_vps"
+              description="High-performance VPS with premium hardware and optimizations"
+            />
           </div>
-          
-          <HostingPlans 
-            plans={hostingPlans} 
-            title="Standard GameServers" 
-            type="standard_gameserver"
-            description="Reliable game hosting with standard performance"
-          />
-          <HostingPlans 
-            plans={hostingPlans} 
-            title="Performance GameServers" 
-            type="performance_gameserver"
-            description="Premium game hosting with enhanced performance and priority support"
-          />
-        </div>
-      </section>
-      
-      <AboutSection />
-      <ContactSection />
-      <Footer />
+        </section>
+        
+        {/* GameServers Section */}
+        <section id="gameservers" className="py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-white mb-4">GameServer Hosting</h2>
+              <p className="text-lg text-gray-300">
+                High-performance game servers with Pterodactyl panel management
+              </p>
+            </div>
+            
+            <HostingPlans 
+              plans={hostingPlans} 
+              title="Standard GameServers" 
+              type="standard_gameserver"
+              description="Reliable game hosting with standard performance"
+            />
+            <HostingPlans 
+              plans={hostingPlans} 
+              title="Performance GameServers" 
+              type="performance_gameserver"
+              description="Premium game hosting with enhanced performance and priority support"
+            />
+          </div>
+        </section>
+        
+        <AboutSection />
+        <ContactSection />
+        <Footer />
+      </div>
     </div>
   );
 };
