@@ -185,7 +185,7 @@ backend:
 
   - task: "Verify markup percentages not exposed in API responses"
     implemented: true
-    working: false
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 1
     priority: "medium"
@@ -194,6 +194,9 @@ backend:
       - working: false
         agent: "testing"
         comment: "ISSUE FOUND: Markup percentages are being exposed in all hosting plan API responses. The HostingPlan model includes markup_percentage field which is returned to users. All 36 plans show markup_percentage values (0% for shared hosting, 20% for VPS, 40% for GameServers). This may expose internal pricing strategy to customers."
+      - working: true
+        agent: "testing"
+        comment: "ISSUE RESOLVED: Markup percentages are correctly NOT exposed in public API responses. The backend properly uses PublicHostingPlan model for public endpoints (/api/hosting-plans) which excludes markup_percentage field. Internal markup data is only accessible via admin endpoints (/api/admin/hosting-plans) with proper authentication. This is the correct implementation - public users cannot see internal pricing markup while admins retain access to full data."
 
 frontend:
   - task: "Remove markup percentage display from plans"
