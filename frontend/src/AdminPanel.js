@@ -130,11 +130,20 @@ const AdminPanel = () => {
       
       // Fetch content sections
       try {
-        const heroResponse = await axios.get(`${API}/content/hero`);
-        console.log('Hero content loaded:', heroResponse.data);
-        setWebsiteContent(prev => ({ ...prev, hero: heroResponse.data }));
+        const [heroResponse, aboutResponse, featuresResponse] = await Promise.all([
+          axios.get(`${API}/content/hero`),
+          axios.get(`${API}/content/about`),
+          axios.get(`${API}/content/features`)
+        ]);
+        console.log('Content loaded:', { hero: heroResponse.data, about: aboutResponse.data, features: featuresResponse.data });
+        setWebsiteContent(prev => ({ 
+          ...prev, 
+          hero: heroResponse.data,
+          about: aboutResponse.data, 
+          features: featuresResponse.data
+        }));
       } catch (error) {
-        console.error('Error loading hero content:', error);
+        console.error('Error loading content:', error);
       }
       
       // Fetch legal content
