@@ -437,9 +437,23 @@ async def get_hosting_plan(plan_id: str):
 async def update_hosting_plan(plan_id: str, plan_update: dict, current_user: str = Depends(get_current_user)):
     """Update hosting plan - for admin use"""
     try:
+        # Map frontend field names back to database field names
+        db_update = {}
+        for key, value in plan_update.items():
+            if key == "type":
+                db_update["plan_type"] = value
+            elif key == "name":
+                db_update["plan_name"] = value
+            elif key == "price":
+                db_update["base_price"] = value
+            elif key == "is_popular":
+                db_update["popular"] = value
+            else:
+                db_update[key] = value
+        
         result = await db.hosting_plans.update_one(
             {"id": plan_id}, 
-            {"$set": plan_update}
+            {"$set": db_update}
         )
         if result.matched_count == 0:
             raise HTTPException(status_code=404, detail="Plan not found")
