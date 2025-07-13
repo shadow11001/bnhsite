@@ -575,20 +575,67 @@ const FeaturesSection = () => {
 
 // About Section Component
 const AboutSection = () => {
+  const [aboutContent, setAboutContent] = useState(null);
+  
+  useEffect(() => {
+    const fetchAboutContent = async () => {
+      try {
+        const response = await axios.get(`${API}/content/about`);
+        setAboutContent(response.data);
+      } catch (error) {
+        console.error('Error fetching about content:', error);
+        // Fallback to default content if API fails
+        setAboutContent({
+          title: "About Blue Nebula Hosting",
+          description: "Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions for individuals and businesses. Our managed hosting services include shared hosting, VPS, and GameServer hosting with 24/7 support. We pride ourselves on delivering enterprise-grade infrastructure with personal support, ensuring your websites and applications run smoothly while you focus on growing your business."
+        });
+      }
+    };
+    
+    fetchAboutContent();
+  }, []);
+
+  if (!aboutContent) {
+    return (
+      <section id="about" className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-white text-center">Loading about section...</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="about" className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-4xl font-bold text-white mb-6">About Blue Nebula Hosting</h2>
-            <p className="text-lg text-gray-300 mb-6">
-              Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions for individuals and businesses. 
-              Our managed hosting services include shared hosting, VPS, and GameServer hosting with 24/7 support.
-            </p>
-            <p className="text-gray-300 mb-8">
-              We pride ourselves on delivering enterprise-grade infrastructure with personal support, ensuring your 
-              websites and applications run smoothly while you focus on growing your business.
-            </p>
+            <h2 className="text-4xl font-bold text-white mb-6">
+              {aboutContent.title || "About Blue Nebula Hosting"}
+            </h2>
+            <div className="text-lg text-gray-300 mb-6">
+              {aboutContent.description ? (
+                // Split description into paragraphs if it contains line breaks
+                aboutContent.description.split('\n').map((paragraph, index) => (
+                  paragraph.trim() && (
+                    <p key={index} className={index > 0 ? "mt-4" : ""}>
+                      {paragraph.trim()}
+                    </p>
+                  )
+                ))
+              ) : (
+                <>
+                  <p className="mb-4">
+                    Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions for individuals and businesses. 
+                    Our managed hosting services include shared hosting, VPS, and GameServer hosting with 24/7 support.
+                  </p>
+                  <p>
+                    We pride ourselves on delivering enterprise-grade infrastructure with personal support, ensuring your 
+                    websites and applications run smoothly while you focus on growing your business.
+                  </p>
+                </>
+              )}
+            </div>
             
             <div className="grid sm:grid-cols-3 gap-6 mb-8">
               <div className="text-center">
