@@ -836,7 +836,10 @@ const Home = () => {
 
       {/* Content */}
       <div className="relative z-10">
-        <Header />
+        {/* Add padding top when floating banner is present */}
+        <div className="pt-20"> {/* Space for floating banners */}
+          <Header />
+        </div>
         <HeroSection />
         <FeaturesSection />
         
