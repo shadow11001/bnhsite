@@ -632,14 +632,15 @@ async def get_system_status():
 #         # SSD Shared Hosting Plans (correct names from user)
 #         ssd_shared_plans = [
 #             {
-                "plan_type": "ssd_shared",
-                "plan_name": "Opal",
-                "base_price": 1.0,
-                "disk_gb": 10,
-                "disk_type": "SSD",
-                "features": ["1 Website", "10 GB SSD Storage", "Unlimited Bandwidth", "Free SSL", "Daily Backups"],
-                "popular": False
-            },
+#             {
+#                 "plan_type": "ssd_shared",
+#                 "plan_name": "Opal",
+#                 "base_price": 1.0,
+#                 "disk_gb": 10,
+#                 "disk_type": "SSD",
+#                 "features": ["1 Website", "10 GB SSD Storage", "Unlimited Bandwidth", "Free SSL", "Daily Backups"],
+#                 "popular": False
+#             },
             {
                 "plan_type": "ssd_shared", 
                 "plan_name": "Topaz",
