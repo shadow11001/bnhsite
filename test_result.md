@@ -345,10 +345,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Fix PlanEditor field mapping in AdminPanel.js"
-    - "Verify hosting plans display correctly on homepage and admin panel"
+    - "Fix backend database schema to match frontend expectations"
+    - "Fix API routing to serve endpoints with /api prefix"
   stuck_tasks: 
-    - "Verify markup percentages not exposed in API responses"
+    - "Fix backend database schema to match frontend expectations"
   test_all: false
   test_priority: "high_first"
 
