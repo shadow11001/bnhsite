@@ -93,7 +93,7 @@ async def init_hosting_plans(db):
             "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
             "markup_percentage": 0,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=1"
         },
         {
@@ -118,7 +118,7 @@ async def init_hosting_plans(db):
             "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
             "markup_percentage": 0,
             "is_popular": True,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=2"
         },
         {
@@ -143,7 +143,7 @@ async def init_hosting_plans(db):
             "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
             "markup_percentage": 0,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=3"
         },
         
@@ -170,7 +170,7 @@ async def init_hosting_plans(db):
             "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
             "markup_percentage": 0,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=4"
         },
         {
@@ -195,7 +195,7 @@ async def init_hosting_plans(db):
             "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
             "markup_percentage": 0,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=5"
         },
         {
@@ -220,7 +220,7 @@ async def init_hosting_plans(db):
             "features": ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
             "markup_percentage": 0,
             "is_popular": False,
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"
             "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=6"
         },
         
@@ -560,7 +560,7 @@ async def init_hosting_plans(db):
             "features": ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
             "markup_percentage": 40,
             "is_popular": True
-            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"
+            "order_url": "https://billing.bluenebulahosting.com/cart.php?a=add"order_url": "https://billing.bluenebulahosting.com/cart.php?a=add&pid=NEW_ID"pid=9"
         },
         {
             "id": str(uuid.uuid4()),
