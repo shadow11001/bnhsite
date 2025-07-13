@@ -1,5 +1,5 @@
 # Blue Nebula Hosting Services for Docker Compose Integration
-# Copy these service definitions into your existing docker-compose.yml
+# Copy these service definitions into your existing docker-compose.services.yml
 
 services:
   # MongoDB Database for Blue Nebula Hosting
