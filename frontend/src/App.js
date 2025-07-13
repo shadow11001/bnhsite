@@ -712,6 +712,7 @@ const Footer = () => {
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-600 rounded-lg items-center justify-center text-white font-bold text-xl" style={{display: 'none'}}>
                   BN
                 </div>
+              </div>
               <div className="text-white">
                 <h3 className="font-bold text-lg">Blue Nebula Hosting</h3>
               </div>
