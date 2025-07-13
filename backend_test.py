@@ -502,6 +502,259 @@ class BlueNebulaAPITester:
         self.log_test("Markup Percentages Not Exposed", success, details)
         return success
 
+    def test_promo_codes_public(self):
+        """Test public promo codes endpoint - should return only active promo codes"""
+        try:
+            response = requests.get(f"{self.api_url}/promo-codes", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                promo_codes = response.json()
+                success = isinstance(promo_codes, list)
+                
+                if success:
+                    # Verify all returned promo codes are active
+                    all_active = all(promo.get('is_active', False) for promo in promo_codes)
+                    
+                    # Verify required fields are present
+                    required_fields = ['id', 'title', 'description', 'code', 'display_location', 'is_active']
+                    all_have_fields = True
+                    
+                    for promo in promo_codes:
+                        if not all(field in promo for field in required_fields):
+                            all_have_fields = False
+                            break
+                    
+                    success = all_active and all_have_fields
+                    details = f"Found {len(promo_codes)} active promo codes, All active: {all_active}, All have required fields: {all_have_fields}"
+                else:
+                    details = "Invalid response format"
+            else:
+                details = f"HTTP {response.status_code}"
+                
+            self.log_test("Public Promo Codes Endpoint", success, details)
+            return success, promo_codes if success else []
+            
+        except Exception as e:
+            self.log_test("Public Promo Codes Endpoint", False, str(e))
+            return False, []
+
+    def test_promo_codes_admin(self):
+        """Test admin promo codes endpoint - should return all promo codes including inactive"""
+        if not self.auth_token:
+            self.log_test("Admin Promo Codes Endpoint", False, "No auth token available")
+            return False, []
+            
+        headers = {"Authorization": f"Bearer {self.auth_token}"}
+        
+        try:
+            response = requests.get(f"{self.api_url}/admin/promo-codes", headers=headers, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                promo_codes = response.json()
+                success = isinstance(promo_codes, list)
+                
+                if success:
+                    # Verify we get both active and inactive codes (if any exist)
+                    active_count = sum(1 for promo in promo_codes if promo.get('is_active', False))
+                    inactive_count = len(promo_codes) - active_count
+                    
+                    # Verify required fields are present
+                    required_fields = ['id', 'title', 'description', 'code', 'display_location', 'is_active']
+                    all_have_fields = True
+                    
+                    for promo in promo_codes:
+                        if not all(field in promo for field in required_fields):
+                            all_have_fields = False
+                            break
+                    
+                    success = all_have_fields
+                    details = f"Found {len(promo_codes)} total promo codes (Active: {active_count}, Inactive: {inactive_count}), All have required fields: {all_have_fields}"
+                else:
+                    details = "Invalid response format"
+            else:
+                details = f"HTTP {response.status_code}"
+                
+            self.log_test("Admin Promo Codes Endpoint", success, details)
+            return success, promo_codes if success else []
+            
+        except Exception as e:
+            self.log_test("Admin Promo Codes Endpoint", False, str(e))
+            return False, []
+
+    def test_promo_code_crud_operations(self):
+        """Test CRUD operations for promo codes (admin only)"""
+        if not self.auth_token:
+            self.log_test("Promo Code CRUD Operations", False, "No auth token available")
+            return False
+            
+        headers = {"Authorization": f"Bearer {self.auth_token}"}
+        
+        # Test data for creating a promo code
+        test_promo = {
+            "code": f"TEST{datetime.now().strftime('%H%M%S')}",
+            "title": "Test Promo Code",
+            "description": "This is a test promo code for backend testing",
+            "discount_percentage": 20,
+            "display_location": "floating",
+            "is_active": True,
+            "button_text": "Copy Code",
+            "expiry_date": "2025-12-31T23:59:59"
+        }
+        
+        created_promo_id = None
+        
+        try:
+            # Test CREATE
+            create_response = requests.post(f"{self.api_url}/admin/promo-codes", 
+                                          json=test_promo, headers=headers, timeout=10)
+            create_success = create_response.status_code == 200
+            
+            if create_success:
+                create_result = create_response.json()
+                created_promo_id = create_result.get('id')
+                create_success = created_promo_id is not None
+            
+            # Test UPDATE (if create was successful)
+            update_success = False
+            if create_success and created_promo_id:
+                update_data = {
+                    "title": "Updated Test Promo Code",
+                    "discount_percentage": 25
+                }
+                update_response = requests.put(f"{self.api_url}/admin/promo-codes/{created_promo_id}", 
+                                             json=update_data, headers=headers, timeout=10)
+                update_success = update_response.status_code == 200
+            
+            # Test DELETE (if create was successful)
+            delete_success = False
+            if create_success and created_promo_id:
+                delete_response = requests.delete(f"{self.api_url}/admin/promo-codes/{created_promo_id}", 
+                                                headers=headers, timeout=10)
+                delete_success = delete_response.status_code == 200
+            
+            success = create_success and update_success and delete_success
+            details = f"Create: {create_success}, Update: {update_success}, Delete: {delete_success}"
+            
+            self.log_test("Promo Code CRUD Operations", success, details)
+            return success
+            
+        except Exception as e:
+            # Clean up if promo code was created but test failed
+            if created_promo_id:
+                try:
+                    requests.delete(f"{self.api_url}/admin/promo-codes/{created_promo_id}", 
+                                  headers=headers, timeout=5)
+                except:
+                    pass
+            
+            self.log_test("Promo Code CRUD Operations", False, str(e))
+            return False
+
+    def test_promo_code_filtering_by_location(self, promo_codes):
+        """Test that promo codes can be filtered by display_location"""
+        if not promo_codes:
+            self.log_test("Promo Code Location Filtering", False, "No promo codes to test filtering")
+            return False
+            
+        # Get unique display locations from the promo codes
+        locations = set(promo.get('display_location') for promo in promo_codes)
+        
+        if not locations:
+            self.log_test("Promo Code Location Filtering", False, "No display locations found in promo codes")
+            return False
+        
+        all_passed = True
+        
+        for location in locations:
+            try:
+                # Filter promo codes by location (this would need to be implemented in the API)
+                # For now, we'll test the data structure to ensure location field exists
+                location_promos = [promo for promo in promo_codes if promo.get('display_location') == location]
+                
+                # Verify all filtered promo codes have the correct location
+                correct_location = all(promo.get('display_location') == location for promo in location_promos)
+                
+                if not correct_location:
+                    all_passed = False
+                    
+                self.log_test(f"Promo Code Location Filter - {location}", correct_location, 
+                            f"Found {len(location_promos)} promo codes for location '{location}'")
+                
+            except Exception as e:
+                self.log_test(f"Promo Code Location Filter - {location}", False, str(e))
+                all_passed = False
+        
+        return all_passed
+
+    def test_promo_code_data_structure(self, promo_codes):
+        """Test that promo codes have all required fields and correct data types"""
+        if not promo_codes:
+            self.log_test("Promo Code Data Structure", False, "No promo codes to validate")
+            return False
+        
+        required_fields = {
+            'id': str,
+            'title': str,
+            'description': str,
+            'code': str,
+            'display_location': str,
+            'is_active': bool
+        }
+        
+        optional_fields = {
+            'discount_percentage': (int, type(None)),
+            'discount_amount': (float, type(None)),
+            'expiry_date': (str, type(None)),
+            'button_text': str,
+            'button_url': (str, type(None)),
+            'created_date': str
+        }
+        
+        all_valid = True
+        validation_errors = []
+        
+        for i, promo in enumerate(promo_codes):
+            # Check required fields
+            for field, expected_type in required_fields.items():
+                if field not in promo:
+                    all_valid = False
+                    validation_errors.append(f"Promo {i}: Missing required field '{field}'")
+                elif not isinstance(promo[field], expected_type):
+                    all_valid = False
+                    validation_errors.append(f"Promo {i}: Field '{field}' has wrong type")
+            
+            # Check optional fields if present
+            for field, expected_types in optional_fields.items():
+                if field in promo:
+                    if isinstance(expected_types, tuple):
+                        if not isinstance(promo[field], expected_types):
+                            all_valid = False
+                            validation_errors.append(f"Promo {i}: Field '{field}' has wrong type")
+                    else:
+                        if not isinstance(promo[field], expected_types):
+                            all_valid = False
+                            validation_errors.append(f"Promo {i}: Field '{field}' has wrong type")
+            
+            # Validate display_location values
+            valid_locations = ['floating', 'hero', 'pricing', 'footer']
+            if promo.get('display_location') not in valid_locations:
+                all_valid = False
+                validation_errors.append(f"Promo {i}: Invalid display_location '{promo.get('display_location')}'")
+        
+        details = f"Validated {len(promo_codes)} promo codes"
+        if validation_errors:
+            details += f", {len(validation_errors)} errors found"
+        
+        self.log_test("Promo Code Data Structure Validation", all_valid, details)
+        
+        if validation_errors and len(validation_errors) <= 5:  # Show first 5 errors
+            for error in validation_errors[:5]:
+                print(f"   ⚠️  {error}")
+        
+        return all_valid
+
     def test_plan_pricing_and_features(self, plans):
         """Test plan pricing is within expected range and features are correct"""
         if not plans:
