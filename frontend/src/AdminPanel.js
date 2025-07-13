@@ -282,6 +282,78 @@ const AdminPanel = () => {
               </div>
             </div>
             
+            {/* Shared Hosting Specific Fields */}
+            {(formData.type === 'shared') && (
+              <div className="bg-gray-700 p-4 rounded-lg">
+                <h4 className="text-lg font-semibold text-white mb-4">Shared Hosting Limits</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-300 mb-2">Domains</label>
+                    <input
+                      type="text"
+                      value={formData.websites || ''}
+                      onChange={(e) => setFormData({...formData, websites: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                      placeholder="e.g., 1, 5, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Subdomains</label>
+                    <input
+                      type="text"
+                      value={formData.subdomains || ''}
+                      onChange={(e) => setFormData({...formData, subdomains: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                      placeholder="e.g., 10, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Parked Domains</label>
+                    <input
+                      type="text"
+                      value={formData.parked_domains || ''}
+                      onChange={(e) => setFormData({...formData, parked_domains: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                      placeholder="e.g., 5, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Databases</label>
+                    <input
+                      type="text"
+                      value={formData.databases || ''}
+                      onChange={(e) => setFormData({...formData, databases: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                      placeholder="e.g., 1, 10, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Email Accounts</label>
+                    <input
+                      type="text"
+                      value={formData.email_accounts || ''}
+                      onChange={(e) => setFormData({...formData, email_accounts: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                      placeholder="e.g., 5, Unlimited"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <div>
+              <label className="block text-gray-300 mb-2">Markup Percentage</label>
+              <input
+                type="number"
+                step="0.01"
+                value={formData.markup_percentage || 0}
+                onChange={(e) => setFormData({...formData, markup_percentage: parseFloat(e.target.value)})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                placeholder="e.g., 20, 40"
+              />
+              <p className="text-xs text-gray-400 mt-1">Markup percentage for internal pricing strategy</p>
+            </div>
+            
             <div>
               <label className="block text-gray-300 mb-2">Features (one per line)</label>
               <textarea
