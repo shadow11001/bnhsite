@@ -1603,7 +1603,7 @@ const AdminPanel = () => {
             ) : (
               <div className="grid gap-6">
                 {['ssd_shared', 'hdd_shared', 'standard_vps', 'performance_vps', 'standard_gameserver', 'performance_gameserver'].map(planType => {
-                  const typePlans = hostingPlans.filter(p => p.plan_type === planType);
+                  const typePlans = hostingPlans.filter(p => p.type === planType);
                   if (typePlans.length === 0) return null;
                   
                   return (
