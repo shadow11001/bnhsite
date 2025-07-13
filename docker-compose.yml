@@ -1,18 +1,19 @@
-version: '3.8'
+# Blue Nebula Hosting Services for Docker Compose Integration
+# Copy these service definitions into your existing docker-compose.yml
 
 services:
-  # MongoDB Database
-  mongodb:
+  # MongoDB Database for Blue Nebula Hosting
+  blue-nebula-mongodb:
     image: mongo:7.0
     container_name: blue-nebula-mongodb
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: secure_password_change_this
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-secure_password_change_this}
       MONGO_INITDB_DATABASE: blue_nebula_hosting
     volumes:
-      - mongodb_data:/data/db
-      - mongodb_config:/data/configdb
+      - blue_nebula_mongodb_data:/data/db
+      - blue_nebula_mongodb_config:/data/configdb
     networks:
       - blue-nebula-network
     healthcheck:
@@ -27,22 +28,22 @@ services:
     # ports:
     #   - "27017:27017"
 
-  # Backend API
-  backend:
+  # Backend API for Blue Nebula Hosting
+  blue-nebula-backend:
     build:
-      context: ./backend
+      context: ./blue-nebula-hosting/backend
       dockerfile: Dockerfile
     container_name: blue-nebula-backend
     restart: unless-stopped
     environment:
-      - MONGO_URL=mongodb://admin:secure_password_change_this@mongodb:27017/blue_nebula_hosting?authSource=admin
+      - MONGO_URL=mongodb://admin:${MONGO_ROOT_PASSWORD:-secure_password_change_this}@blue-nebula-mongodb:27017/blue_nebula_hosting?authSource=admin
       - DB_NAME=blue_nebula_hosting
-      - JWT_SECRET_KEY=your_super_secure_jwt_secret_key_change_this
-      - UPTIME_KUMA_API_KEY=uk1_USvIQkci-6cYMA5VcOksKY7B1TzT7ul2zrvFOniq
+      - JWT_SECRET_KEY=${BLUE_NEBULA_JWT_SECRET:-your_super_secure_jwt_secret_key_change_this}
+      - UPTIME_KUMA_API_KEY=${BLUE_NEBULA_UPTIME_KEY:-uk1_USvIQkci-6cYMA5VcOksKY7B1TzT7ul2zrvFOniq}
     ports:
-      - "8001:8001"
+      - "${BLUE_NEBULA_BACKEND_PORT:-8001}:8001"
     depends_on:
-      mongodb:
+      blue-nebula-mongodb:
         condition: service_healthy
     networks:
       - blue-nebula-network
@@ -55,19 +56,19 @@ services:
     security_opt:
       - no-new-privileges:true
 
-  # Frontend Application
-  frontend:
+  # Frontend Application for Blue Nebula Hosting
+  blue-nebula-frontend:
     build:
-      context: ./frontend
+      context: ./blue-nebula-hosting/frontend
       dockerfile: Dockerfile
     container_name: blue-nebula-frontend
     restart: unless-stopped
     environment:
-      - REACT_APP_BACKEND_URL=http://localhost:8001
+      - REACT_APP_BACKEND_URL=${BLUE_NEBULA_BACKEND_URL:-http://localhost:8001}
     ports:
-      - "3000:3000"
+      - "${BLUE_NEBULA_FRONTEND_PORT:-3000}:3000"
     depends_on:
-      backend:
+      blue-nebula-backend:
         condition: service_healthy
     networks:
       - blue-nebula-network
@@ -80,12 +81,14 @@ services:
     security_opt:
       - no-new-privileges:true
 
+# Volumes for Blue Nebula Hosting (add to your volumes section)
 volumes:
-  mongodb_data:
+  blue_nebula_mongodb_data:
     driver: local
-  mongodb_config:
+  blue_nebula_mongodb_config:
     driver: local
 
+# Networks for Blue Nebula Hosting (add to your networks section)
 networks:
   blue-nebula-network:
     driver: bridge
