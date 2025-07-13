@@ -59,7 +59,11 @@ const AdminPanel = () => {
   // Get auth token for API requests
   const getAuthHeaders = () => {
     const token = localStorage.getItem('admin_token');
-    return token ? { Authorization: `Bearer ${token}` } : {};
+    console.log('Getting auth headers, token:', token ? 'exists' : 'missing');
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    };
   };
 
   useEffect(() => {
