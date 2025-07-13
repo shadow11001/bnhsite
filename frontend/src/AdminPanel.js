@@ -121,7 +121,7 @@ const AdminPanel = () => {
       
       // Fetch SMTP settings
       try {
-        const smtpResponse = await axios.get(`${API}/smtp-settings`, { headers: getAuthHeaders() });
+        const smtpResponse = await axios.get(`${API}/admin/smtp-settings`, { headers: getAuthHeaders() });
         console.log('SMTP settings loaded:', smtpResponse.data);
         setSmtpSettings(smtpResponse.data);
       } catch (error) {
