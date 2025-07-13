@@ -348,11 +348,12 @@ async def get_hosting_plans(plan_type: Optional[str] = None):
     try:
         query = {}
         if plan_type:
-            query["type"] = plan_type
+            query["plan_type"] = plan_type  # Fixed: database field is 'plan_type' not 'type'
         
         plans = await db.hosting_plans.find(query).to_list(1000)
         
         # Convert ObjectIds to strings and return clean data without markup_percentage
+        # Also map old field names to new field names expected by frontend
         public_plans = []
         for plan in plans:
             if "_id" in plan:
@@ -360,7 +361,22 @@ async def get_hosting_plans(plan_type: Optional[str] = None):
             # Remove markup_percentage for public API
             if "markup_percentage" in plan:
                 del plan["markup_percentage"]
-            public_plans.append(plan)
+            
+            # Map old field names to new field names for frontend compatibility
+            mapped_plan = {}
+            for key, value in plan.items():
+                if key == "plan_type":
+                    mapped_plan["type"] = value
+                elif key == "plan_name":
+                    mapped_plan["name"] = value
+                elif key == "base_price":
+                    mapped_plan["price"] = value
+                elif key == "popular":
+                    mapped_plan["is_popular"] = value
+                else:
+                    mapped_plan[key] = value
+            
+            public_plans.append(mapped_plan)
         
         return public_plans
     except Exception as e:
