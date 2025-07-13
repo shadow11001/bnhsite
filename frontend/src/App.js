@@ -329,32 +329,6 @@ const HeroSection = () => {
     </section>
   );
 };
-        
-        {/* Quick Links */}
-        <div className="mt-12 flex flex-wrap justify-center gap-4 text-sm">
-          <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-300 hover:text-blue-400 transition-colors">
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            Client Portal
-          </a>
-          <a href="https://panel.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-300 hover:text-blue-400 transition-colors">
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l7 7-7 7z" />
-            </svg>
-            Game Panel
-          </a>
-          <a href="https://status.bluenebulahosting.com/status/bnh" target="_blank" rel="noopener noreferrer" className="flex items-center text-green-400 hover:text-green-300 transition-colors">
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            System Status
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-};
 
 // Hosting Plans Component
 const HostingPlans = ({ plans, title, type, description }) => {
