@@ -599,7 +599,7 @@ const FeaturesSection = () => {
         
         {/* Default hosting type features */}
         <div className="grid md:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
+          {defaultFeatures.map((feature, index) => (
             <div key={index} className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 hover:border-blue-400 transition-all">
               <img 
                 src={feature.image} 
