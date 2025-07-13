@@ -926,7 +926,11 @@ const AdminPanel = () => {
               {sections.map(section => (
                 <button
                   key={section.key}
-                  onClick={() => setSelectedSection(section.key)}
+                  onClick={() => {
+                    console.log(`Switching from ${selectedSection} to ${section.key}`);
+                    console.log('Current content before switch:', currentSectionContent);
+                    setSelectedSection(section.key);
+                  }}
                   className={`w-full text-left p-3 rounded transition-colors ${
                     selectedSection === section.key
                       ? 'bg-blue-600 text-white'
@@ -935,6 +939,9 @@ const AdminPanel = () => {
                 >
                   <div className="font-medium">{section.label}</div>
                   <div className="text-xs opacity-75">{section.description}</div>
+                  <div className="text-xs mt-1 opacity-60">
+                    Content: {allSectionContent[section.key]?.title ? '✓' : '✗'}
+                  </div>
                 </button>
               ))}
             </div>
