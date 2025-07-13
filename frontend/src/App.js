@@ -441,7 +441,7 @@ const HostingPlans = ({ plans, title, type, description }) => {
             
             <div className="mt-auto flex-shrink-0">
               <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className={`block w-full py-3 rounded-lg font-semibold transition-all text-center ${
-                plan.popular 
+                plan.is_popular 
                   ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700' 
                   : 'border border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-gray-900'
               }`}>
