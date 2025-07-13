@@ -763,7 +763,6 @@ class BlueNebulaAPITester:
             
         pricing_valid = True
         popular_plans = []
-        markup_plans = []
         
         for plan in plans:
             price = plan.get('base_price', 0)
@@ -778,25 +777,18 @@ class BlueNebulaAPITester:
             # Track popular plans
             if plan.get('popular'):
                 popular_plans.append(plan_name)
-            
-            # Track managed plans with markup
-            if plan.get('markup_percentage', 0) > 0:
-                markup_plans.append(f"{plan_name} ({plan.get('markup_percentage')}%)")
         
         # Verify expected popular plans (updated for new plan names)
         expected_popular = ['Topaz', 'Asteroid', 'Lander', 'Flare', 'Pulsar']
         popular_correct = len(popular_plans) > 0  # Just check that some plans are marked popular
         
-        # Verify markup percentages
-        vps_plans = [p for p in plans if 'vps' in p.get('plan_type', '')]
-        gameserver_plans = [p for p in plans if 'gameserver' in p.get('plan_type', '')]
+        # Note: markup_percentage should NOT be present in public API responses
+        # This is correct behavior - markup is internal data only
+        markup_not_exposed = all('markup_percentage' not in plan for plan in plans)
         
-        vps_markup_correct = all(p.get('markup_percentage') == 20 for p in vps_plans)
-        gameserver_markup_correct = all(p.get('markup_percentage') == 40 for p in gameserver_plans)
+        success = pricing_valid and popular_correct and markup_not_exposed
         
-        success = pricing_valid and popular_correct and vps_markup_correct and gameserver_markup_correct
-        
-        details = f"Pricing: {'✓' if pricing_valid else '✗'}, Popular: {popular_plans}, Markup plans: {len(markup_plans)}"
+        details = f"Pricing: {'✓' if pricing_valid else '✗'}, Popular: {popular_plans}, Markup correctly hidden: {'✓' if markup_not_exposed else '✗'}"
         
         self.log_test("Plan Pricing & Features Validation", success, details)
         return success
