@@ -642,15 +642,6 @@ async def get_features():
         ]
     }
 
-                }
-            },
-            upsert=True
-        )
-        
-        return {"message": f"{legal_type.title()} content updated successfully"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
 # Update the existing /content PUT endpoint to handle legal content better
 async def update_content(content_update: ContentUpdate, current_user: str = Depends(get_current_user)):
     """Update website content - for admin use"""
