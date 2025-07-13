@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+const API = BACKEND_URL; // Remove the extra /api since BACKEND_URL already includes it
 
 const AdminPanel = () => {
   const [hostingPlans, setHostingPlans] = useState([]);
