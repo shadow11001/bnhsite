@@ -232,6 +232,10 @@ async def get_promo_codes():
     """Get all active promo codes"""
     try:
         promo_codes = await db.promo_codes.find({"is_active": True}).to_list(100)
+        # Convert ObjectIds to strings for JSON serialization
+        for promo in promo_codes:
+            if "_id" in promo:
+                del promo["_id"]  # Remove MongoDB ObjectId
         return promo_codes
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -241,6 +245,10 @@ async def get_admin_promo_codes(current_user: str = Depends(get_current_user)):
     """Get all promo codes for admin - includes inactive"""
     try:
         promo_codes = await db.promo_codes.find().to_list(100)
+        # Convert ObjectIds to strings for JSON serialization
+        for promo in promo_codes:
+            if "_id" in promo:
+                del promo["_id"]  # Remove MongoDB ObjectId
         return promo_codes
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -249,8 +257,13 @@ async def get_admin_promo_codes(current_user: str = Depends(get_current_user)):
 async def create_promo_code(promo_data: dict, current_user: str = Depends(get_current_user)):
     """Create new promo code - admin only"""
     try:
+        # Ensure we use string ID, not ObjectId
         promo_data["id"] = str(uuid.uuid4())
         promo_data["created_date"] = datetime.utcnow().isoformat()
+        
+        # Remove any _id field to avoid conflicts
+        if "_id" in promo_data:
+            del promo_data["_id"]
         
         await db.promo_codes.insert_one(promo_data)
         return {"message": "Promo code created successfully", "id": promo_data["id"]}
@@ -261,6 +274,10 @@ async def create_promo_code(promo_data: dict, current_user: str = Depends(get_cu
 async def update_promo_code(promo_id: str, promo_data: dict, current_user: str = Depends(get_current_user)):
     """Update promo code - admin only"""
     try:
+        # Remove any _id field to avoid conflicts
+        if "_id" in promo_data:
+            del promo_data["_id"]
+            
         await db.promo_codes.update_one(
             {"id": promo_id},
             {"$set": promo_data}
@@ -273,7 +290,9 @@ async def update_promo_code(promo_id: str, promo_data: dict, current_user: str =
 async def delete_promo_code(promo_id: str, current_user: str = Depends(get_current_user)):
     """Delete promo code - admin only"""
     try:
-        await db.promo_codes.delete_one({"id": promo_id})
+        result = await db.promo_codes.delete_one({"id": promo_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Promo code not found")
         return {"message": "Promo code deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
