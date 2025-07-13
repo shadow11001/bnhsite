@@ -643,6 +643,7 @@ async def get_features():
     }
 
 # Update the existing /content PUT endpoint to handle legal content better
+@api_router.put("/content")
 async def update_content(content_update: ContentUpdate, current_user: str = Depends(get_current_user)):
     """Update website content - for admin use"""
     try:
