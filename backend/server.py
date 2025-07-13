@@ -335,10 +335,29 @@ async def get_admin_hosting_plans(current_user: str = Depends(get_current_user))
     try:
         plans = await db.hosting_plans.find().to_list(1000)
         # Convert ObjectIds to strings for JSON serialization
+        # Also map old field names to new field names for frontend compatibility
+        mapped_plans = []
         for plan in plans:
             if "_id" in plan:
                 del plan["_id"]
-        return plans
+            
+            # Map old field names to new field names for frontend compatibility
+            mapped_plan = {}
+            for key, value in plan.items():
+                if key == "plan_type":
+                    mapped_plan["type"] = value
+                elif key == "plan_name":
+                    mapped_plan["name"] = value
+                elif key == "base_price":
+                    mapped_plan["price"] = value
+                elif key == "popular":
+                    mapped_plan["is_popular"] = value
+                else:
+                    mapped_plan[key] = value
+            
+            mapped_plans.append(mapped_plan)
+        
+        return mapped_plans
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
