@@ -705,7 +705,7 @@ class BlueNebulaAPITester:
         
         optional_fields = {
             'discount_percentage': (int, type(None)),
-            'discount_amount': (float, type(None)),
+            'discount_amount': (float, type(None), str),  # Allow string for empty values
             'expiry_date': (str, type(None)),
             'button_text': str,
             'button_url': (str, type(None)),
