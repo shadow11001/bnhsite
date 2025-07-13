@@ -879,6 +879,32 @@ async def init_site_settings(db):
     result = await db.site_settings.insert_one(site_settings)
     print(f"✅ Inserted site settings")
 
+
+async def init_smtp_settings(db):
+    print("📧 Initializing SMTP settings...")
+    
+    # Check if SMTP settings already exist
+    existing = await db.smtp_settings.find_one({})
+    if existing:
+        print("⚠️  SMTP settings already exist. Skipping initialization.")
+        return
+    
+    smtp_settings = {
+        "id": str(uuid.uuid4()),
+        "host": "smtp.gmail.com",
+        "port": 587,
+        "username": "noreply@bluenebulahosting.com",
+        "password": "",  # Set via environment variable
+        "use_tls": True,
+        "use_ssl": False,
+        "from_email": "noreply@bluenebulahosting.com",
+        "from_name": "Blue Nebula Hosting",
+        "enabled": False  # Disabled by default until configured
+    }
+    
+    result = await db.smtp_settings.insert_one(smtp_settings)
+    print(f"✅ Inserted SMTP settings")
+
 async def init_promo_codes(db):
     print("🎁 Initializing sample promo codes...")
     
