@@ -60,8 +60,15 @@ async def init_database(migration_mode=False):
     finally:
         client.close()
 
-async def init_hosting_plans(db):
-    print("🖥️ Initializing hosting plans...")
+async def init_hosting_plans(db, migration_mode=False):
+    print("🔧 Setting up hosting plans...")
+    
+    if migration_mode:
+        # In migration mode, only update if no plans exist
+        existing_count = await db.hosting_plans.count_documents({})
+        if existing_count > 0:
+            print(f"📋 Found {existing_count} existing hosting plans - skipping initialization")
+            return
     
     # Check if plans already exist
     existing_count = await db.hosting_plans.count_documents({})
