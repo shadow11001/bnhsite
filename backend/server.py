@@ -395,8 +395,22 @@ async def get_hosting_plan(plan_id: str):
             del plan["_id"]
         if "markup_percentage" in plan:
             del plan["markup_percentage"]
-            
-        return plan
+        
+        # Map old field names to new field names for frontend compatibility
+        mapped_plan = {}
+        for key, value in plan.items():
+            if key == "plan_type":
+                mapped_plan["type"] = value
+            elif key == "plan_name":
+                mapped_plan["name"] = value
+            elif key == "base_price":
+                mapped_plan["price"] = value
+            elif key == "popular":
+                mapped_plan["is_popular"] = value
+            else:
+                mapped_plan[key] = value
+        
+        return mapped_plan
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
