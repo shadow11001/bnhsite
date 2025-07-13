@@ -866,10 +866,26 @@ class BlueNebulaAPITester:
         print("🚀 Starting Blue Nebula Hosting API Tests")
         print("=" * 50)
         
+        # Test critical routing issues first
+        print("\n🔧 Testing Critical Infrastructure Issues...")
+        self.test_api_prefix_routing_issue()
+        
         # Test API connectivity
         if not self.test_api_root():
             print("❌ API is not accessible, stopping tests")
             return False
+        
+        # Test hosting plans (highest priority) - focus on field mapping issues
+        print("\n📋 Testing Hosting Plans & Field Mapping Issues...")
+        plans_success, plans = self.test_hosting_plans_all()
+        if plans_success:
+            # Test the critical field mapping issue
+            self.test_field_name_mapping_issues(plans)
+            self.test_hosting_plans_filtered(plans)
+            self.test_specific_plan(plans)
+            self.test_plan_pricing_and_features(plans)
+            # Test that markup percentages are not exposed
+            self.test_markup_not_exposed(plans)
         
         # Test authentication system (highest priority)
         print("\n🔐 Testing Authentication System...")
@@ -877,16 +893,6 @@ class BlueNebulaAPITester:
         if auth_success:
             self.test_token_verification()
             self.test_protected_endpoints()
-        
-        # Test hosting plans (highest priority)
-        print("\n📋 Testing Hosting Plans...")
-        plans_success, plans = self.test_hosting_plans_all()
-        if plans_success:
-            self.test_hosting_plans_filtered(plans)
-            self.test_specific_plan(plans)
-            self.test_plan_pricing_and_features(plans)
-            # Test that markup percentages are not exposed
-            self.test_markup_not_exposed(plans)
         
         # Test promo code system (focus of current testing)
         print("\n🎟️ Testing Promo Code System...")
