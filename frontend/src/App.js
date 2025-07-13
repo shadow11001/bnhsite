@@ -70,7 +70,13 @@ const PromoCodeBanner = ({ location = "hero" }) => {
   useEffect(() => {
     const fetchPromoCodes = async () => {
       try {
-        const response = await axios.get(`${API}/promo-codes`);
+        const timestamp = new Date().getTime();
+        const response = await axios.get(`${API}/promo-codes?_t=${timestamp}`, {
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+          }
+        });
         const locationCodes = response.data.filter(code => 
           code.display_location === location && code.is_active
         );
