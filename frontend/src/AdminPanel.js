@@ -1611,9 +1611,10 @@ const AdminPanel = () => {
                             </div>
                             
                             <div className="text-gray-300 text-sm mb-4">
-                              {plan.cpu_cores && <div>CPU: {plan.cpu_cores} vCPU</div>}
-                              {plan.memory_gb && <div>RAM: {plan.memory_gb} GB</div>}
-                              {plan.disk_gb && <div>Disk: {plan.disk_gb} GB {plan.disk_type}</div>}
+                              {plan.cpu && <div>CPU: {plan.cpu}</div>}
+                              {plan.ram && <div>RAM: {plan.ram}</div>}
+                              {plan.disk_space && <div>Storage: {plan.disk_space}</div>}
+                              {plan.bandwidth && <div>Bandwidth: {plan.bandwidth}</div>}
                               {plan.markup_percentage > 0 && (
                                 <div className="text-yellow-400 text-xs mt-1">
                                   Markup: {plan.markup_percentage}%
