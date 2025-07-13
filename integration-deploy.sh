@@ -165,7 +165,7 @@ show_integration_instructions() {
 
 # Save credentials for reference
 save_credentials() {
-    cat > .blue-nebula-credentials << EOF
+    cat > .bnhsite-credentials << EOF
 # Blue Nebula Hosting - Integration Credentials
 # Generated on: $(date)
 
@@ -176,11 +176,16 @@ JWT Secret Key: ${JWT_SECRET}
 MONGO_ROOT_PASSWORD=${MONGO_PASSWORD}
 BLUE_NEBULA_JWT_SECRET=${JWT_SECRET}
 
+# Container Names:
+# - bnhsite-mongodb
+# - bnhsite-backend  
+# - bnhsite-frontend
+
 # IMPORTANT: Keep this file secure and do not commit to version control!
 EOF
     
-    print_success "Credentials saved to .blue-nebula-credentials"
-    print_warning "Keep the .blue-nebula-credentials file secure!"
+    print_success "Credentials saved to .bnhsite-credentials"
+    print_warning "Keep the .bnhsite-credentials file secure!"
 }
 
 # Create example integration docker-compose
