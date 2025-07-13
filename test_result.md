@@ -256,6 +256,21 @@ frontend:
         agent: "main"
         comment: "Created legal pages component with routes /terms and /privacy, updated footer links"
 
+  - task: "Make promo code floating banner sticky to follow scroll"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reported that floating promo banner is at the top but doesn't follow as user scrolls like the menu bar does"
+      - working: false
+        agent: "main"
+        comment: "Changed CSS positioning from 'fixed' to 'sticky' on line 119 to make banner follow scroll behavior. The banner should now stick to the top and remain visible as users scroll."
+
   - task: "Enhanced admin features for links, showcase, promo codes"
     implemented: false
     working: false
