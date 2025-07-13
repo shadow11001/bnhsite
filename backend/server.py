@@ -631,7 +631,7 @@ async def get_system_status():
 #         
 #         # SSD Shared Hosting Plans (correct names from user)
 #         ssd_shared_plans = [
-            {
+#             {
                 "plan_type": "ssd_shared",
                 "plan_name": "Opal",
                 "base_price": 1.0,
