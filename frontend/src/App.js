@@ -344,6 +344,39 @@ const Header = () => {
 
 // Hero Section Component
 const HeroSection = () => {
+  const [heroContent, setHeroContent] = useState(null);
+  
+  useEffect(() => {
+    const fetchHeroContent = async () => {
+      try {
+        const response = await axios.get(`${API}/content/hero`);
+        setHeroContent(response.data);
+      } catch (error) {
+        console.error('Error fetching hero content:', error);
+        // Fallback to default content if API fails
+        setHeroContent({
+          title: "Fast, Reliable, and Affordable",
+          subtitle: "Hosting Solutions—Starting at $1/mo",
+          description: "Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions with 24/7 support, 99.9% uptime guarantee, and professional managed services for shared hosting, VPS, and GameServers.",
+          button_text: "View Hosting Plans",
+          button_url: "#hosting"
+        });
+      }
+    };
+    
+    fetchHeroContent();
+  }, []);
+
+  if (!heroContent) {
+    return (
+      <section id="home" className="pt-20 pb-20 min-h-screen flex items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="text-white">Loading...</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="home" className="pt-20 pb-20 min-h-screen flex items-center">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -351,17 +384,17 @@ const HeroSection = () => {
         <PromoCodeBanner location="hero" />
         
         <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-          Fast, Reliable, and <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Affordable</span>
+          {heroContent.title || "Fast, Reliable, and Affordable"}
         </h1>
         <p className="text-xl md:text-2xl text-gray-300 mb-4">
-          Hosting Solutions—Starting at <span className="text-blue-400 font-semibold">$1/mo</span>
+          {heroContent.subtitle || "Hosting Solutions—Starting at $1/mo"}
         </p>
         <p className="text-lg text-gray-400 mb-8 max-w-3xl mx-auto">
-          Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions with 24/7 support, 99.9% uptime guarantee, and professional managed services for shared hosting, VPS, and GameServers.
+          {heroContent.description || "Blue Nebula Hosting provides fast, reliable, and affordable hosting solutions with 24/7 support, 99.9% uptime guarantee, and professional managed services for shared hosting, VPS, and GameServers."}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="#hosting" className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-colors font-semibold text-lg">
-            View Hosting Plans
+          <a href={heroContent.button_url || "#hosting"} className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-colors font-semibold text-lg">
+            {heroContent.button_text || "View Hosting Plans"}
           </a>
           <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="px-8 py-4 border-2 border-blue-400 text-blue-400 rounded-lg hover:bg-blue-400 hover:text-gray-900 transition-colors font-semibold text-lg">
             Client Portal
