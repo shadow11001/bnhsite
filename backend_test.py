@@ -474,6 +474,72 @@ class BlueNebulaAPITester:
             self.log_test("System Status (Uptime Kuma Integration)", False, str(e))
             return False
 
+    def test_field_name_mapping_issues(self, plans):
+        """Test for field name mismatches between backend API and frontend expectations"""
+        if not plans:
+            self.log_test("Field Name Mapping Issues", False, "No plans to test")
+            return False
+            
+        # Check what field names are actually returned by the API
+        sample_plan = plans[0] if plans else {}
+        actual_fields = set(sample_plan.keys())
+        
+        # Fields that backend currently returns (old names)
+        backend_fields = {'plan_type', 'plan_name', 'base_price', 'popular'}
+        
+        # Fields that frontend expects (new names)
+        frontend_expected_fields = {'type', 'name', 'price', 'is_popular'}
+        
+        # Check if backend is returning old field names
+        has_old_fields = backend_fields.issubset(actual_fields)
+        
+        # Check if backend is returning new field names
+        has_new_fields = frontend_expected_fields.issubset(actual_fields)
+        
+        # This is the core issue: backend returns old names, frontend expects new names
+        field_mapping_issue = has_old_fields and not has_new_fields
+        
+        if field_mapping_issue:
+            details = f"FIELD MAPPING ISSUE: Backend returns old field names {list(backend_fields & actual_fields)}, but frontend expects {list(frontend_expected_fields)}. This causes homepage loading issues and admin panel editing problems."
+            success = False
+        elif has_new_fields:
+            details = f"Field mapping correct: Backend returns expected field names {list(frontend_expected_fields & actual_fields)}"
+            success = True
+        else:
+            details = f"Unexpected field structure: {list(actual_fields)}"
+            success = False
+            
+        self.log_test("Field Name Mapping (Backend vs Frontend)", success, details)
+        return success
+
+    def test_api_prefix_routing_issue(self):
+        """Test for API prefix routing issues"""
+        try:
+            # Test if /api/ prefix works (what frontend expects)
+            api_response = requests.get(f"{self.base_url}/api/", timeout=10)
+            api_works = api_response.status_code == 200
+            
+            # Test if direct routes work (what backend actually serves)
+            direct_response = requests.get(f"{self.base_url}/", timeout=10)
+            direct_works = direct_response.status_code == 200
+            
+            if not api_works and direct_works:
+                details = "ROUTING ISSUE: Backend serves routes without /api prefix, but frontend expects /api prefix. This breaks frontend-backend communication."
+                success = False
+            elif api_works:
+                details = "API prefix routing working correctly"
+                success = True
+            else:
+                details = "Both API prefix and direct routes failing"
+                success = False
+                
+            self.log_test("API Prefix Routing (/api/ vs direct)", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("API Prefix Routing (/api/ vs direct)", False, str(e))
+            return False
+
     def test_markup_not_exposed(self, plans):
         """Test that markup percentages are not exposed in API responses"""
         if not plans:
