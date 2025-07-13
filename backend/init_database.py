@@ -14,8 +14,10 @@ import uuid
 MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://admin:WEvSMiUiYlASPYN4Pqb7zLO8E@bnhsite-mongodb:27017/blue_nebula_hosting?authSource=admin')
 DB_NAME = os.environ.get('DB_NAME', 'blue_nebula_hosting')
 
-async def init_database():
+async def init_database(migration_mode=False):
     print("🚀 Initializing Blue Nebula Hosting Database...")
+    if migration_mode:
+        print("📦 Running in MIGRATION mode - will update existing data safely")
     
     # Connect to MongoDB
     client = AsyncIOMotorClient(MONGO_URL)
@@ -27,25 +29,25 @@ async def init_database():
         print("✅ Connected to MongoDB successfully")
         
         # Initialize hosting plans
-        await init_hosting_plans(db)
+        await init_hosting_plans(db, migration_mode)
         
         # Initialize website content
-        await init_website_content(db)
+        await init_website_content(db, migration_mode)
         
         # Initialize navigation menu
-        await init_navigation_menu(db)
+        await init_navigation_menu(db, migration_mode)
         
         # Initialize company info
-        await init_company_info(db)
+        await init_company_info(db, migration_mode)
         
         # Initialize legal content
-        await init_legal_content(db)
+        await init_legal_content(db, migration_mode)
         
         # Initialize site settings
-        await init_site_settings(db)
+        await init_site_settings(db, migration_mode)
         
         # Initialize SMTP settings
-        await init_smtp_settings(db)
+        await init_smtp_settings(db, migration_mode)
         
         # Initialize some sample promo codes
         await init_promo_codes(db)
