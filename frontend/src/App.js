@@ -116,16 +116,17 @@ const PromoCodeBanner = ({ location = "hero" }) => {
     <div className="space-y-4">
       {promoCodes.map(promo => (
         <div key={promo.id} className={`
-          ${location === 'floating' ? 'fixed top-0 left-0 right-0 z-50' : ''}
+          ${location === 'floating' ? 'fixed top-0 left-0 right-0 z-[9999]' : ''}
           ${location === 'hero' ? 'mb-8' : ''}
           ${location === 'pricing' ? 'mb-6' : ''}
           bg-gradient-to-r from-green-600 to-blue-600 text-white p-4 rounded-lg shadow-lg relative
+          ${location === 'floating' ? 'rounded-none shadow-2xl' : ''}
         `}>
           {/* Dismiss button for floating banners */}
           {location === 'floating' && (
             <button
               onClick={dismissFloatingBanner}
-              className="absolute top-2 right-2 text-white/80 hover:text-white transition-colors"
+              className="absolute top-2 right-2 text-white/80 hover:text-white transition-colors z-10 bg-black/20 rounded-full p-1"
               aria-label="Dismiss"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
