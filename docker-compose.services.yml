@@ -83,9 +83,9 @@ services:
 
 # Volumes for Blue Nebula Hosting (add to your volumes section)
 volumes:
-  blue_nebula_mongodb_data:
+  bnhsite_mongodb_data:
     driver: local
-  blue_nebula_mongodb_config:
+  bnhsite_mongodb_config:
     driver: local
 
 # Networks for Blue Nebula Hosting (add to your networks section)
