@@ -625,7 +625,7 @@ async def get_system_status():
 # @api_router.post("/init-data")
 # async def initialize_data():
 #     """Initialize hosting plans data with exact names from pricing table"""
-    try:
+#     try:
         # Clear existing data
         await db.hosting_plans.delete_many({})
         
