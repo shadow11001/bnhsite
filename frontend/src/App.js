@@ -366,7 +366,22 @@ const HeroSection = () => {
 
 // Hosting Plans Component
 const HostingPlans = ({ plans, title, type, description }) => {
-  const filteredPlans = plans.filter(plan => plan.plan_type === type);
+  let filteredPlans = [];
+  
+  // Filter plans based on type and sub_type from database
+  if (type === 'ssd_shared') {
+    filteredPlans = plans.filter(plan => plan.type === 'shared' && plan.sub_type === 'ssd');
+  } else if (type === 'hdd_shared') {
+    filteredPlans = plans.filter(plan => plan.type === 'shared' && plan.sub_type === 'hdd');
+  } else if (type === 'standard_vps') {
+    filteredPlans = plans.filter(plan => plan.type === 'vps' && plan.sub_type === 'standard');
+  } else if (type === 'performance_vps') {
+    filteredPlans = plans.filter(plan => plan.type === 'vps' && plan.sub_type === 'performance');
+  } else if (type === 'standard_gameserver') {
+    filteredPlans = plans.filter(plan => plan.type === 'gameserver' && plan.sub_type === 'standard');
+  } else if (type === 'performance_gameserver') {
+    filteredPlans = plans.filter(plan => plan.type === 'gameserver' && plan.sub_type === 'performance');
+  }
   
   if (filteredPlans.length === 0) return null;
   
