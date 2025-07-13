@@ -7,8 +7,6 @@ your-domain.com {
         reverse_proxy localhost:3000 {
             header_up Host {host}
             header_up X-Real-IP {remote}
-            header_up X-Forwarded-For {remote}
-            header_up X-Forwarded-Proto {scheme}
         }
     }
     
@@ -17,8 +15,6 @@ your-domain.com {
         reverse_proxy localhost:8001 {
             header_up Host {host}
             header_up X-Real-IP {remote}
-            header_up X-Forwarded-For {remote}
-            header_up X-Forwarded-Proto {scheme}
         }
     }
     
@@ -61,15 +57,6 @@ your-domain.com {
         }
         format json
         level INFO
-    }
-    
-    # Rate limiting (optional)
-    rate_limit {
-        zone blue_nebula {
-            key {remote}
-            events 100
-            window 1m
-        }
     }
 }
 
