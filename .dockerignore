@@ -1,0 +1,7 @@
+# Add Docker-related files to gitignore
+.deployment-credentials
+*.log
+.env.local
+
+# Docker
+docker-compose.override.yml
