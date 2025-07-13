@@ -777,7 +777,14 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const plansResponse = await axios.get(`${API}/hosting-plans`);
+        // Add cache-busting to ensure fresh data
+        const timestamp = new Date().getTime();
+        const plansResponse = await axios.get(`${API}/hosting-plans?_t=${timestamp}`, {
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+          }
+        });
         setHostingPlans(plansResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error);
