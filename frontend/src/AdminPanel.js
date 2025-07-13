@@ -229,8 +229,8 @@ const AdminPanel = () => {
                 <input
                   type="number"
                   step="0.01"
-                  value={formData.base_price}
-                  onChange={(e) => setFormData({...formData, base_price: parseFloat(e.target.value)})}
+                  value={formData.price}
+                  onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
                   className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
                 />
               </div>
