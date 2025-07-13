@@ -48,7 +48,7 @@ async def debug_endpoints():
             })
     return {"available_routes": routes}
 
-# Content management endpoints - add directly to app for debugging
+# Content management endpoints - add to both app and api_router for compatibility
 @app.get("/admin/content/{section}")
 async def get_admin_content_direct(section: str, authorization: str = Header(None)):
     """Get website content by section for admin editing - direct endpoint"""
