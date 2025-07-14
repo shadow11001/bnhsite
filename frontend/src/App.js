@@ -602,19 +602,7 @@ const FeaturesSection = () => {
           </p>
         </div>
         
-        {/* Display database features if available */}
-        {featuresContent.features && featuresContent.features.length > 0 && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            {featuresContent.features.map((feature, index) => (
-              <div key={index} className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-blue-400 transition-all text-center">
-                <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold">✓</span>
-                </div>
-                <h3 className="text-white font-semibold mb-2">{feature}</h3>
-              </div>
-            ))}
-          </div>
-        )}
+
         
         {/* Default hosting type features */}
         <div className="grid md:grid-cols-3 gap-8">
