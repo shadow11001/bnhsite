@@ -602,8 +602,6 @@ const FeaturesSection = () => {
           </p>
         </div>
         
-
-        
         {/* Default hosting type features */}
         <div className="grid md:grid-cols-3 gap-8">
           {defaultFeatures.map((feature, index) => (
