@@ -395,7 +395,7 @@ const HeroSection = () => {
   useEffect(() => {
     const fetchHeroContent = async () => {
       try {
-        const response = await axios.get(`${API}/content/hero`);
+        const response = await axios.get(`${API}/api/content/hero`);
         setHeroContent(response.data);
       } catch (error) {
         console.error('Error fetching hero content:', error);
