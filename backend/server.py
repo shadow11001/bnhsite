@@ -785,10 +785,15 @@ async def save_admin_navigation(request: Request, current_user: str = Depends(ge
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.put("/admin/navigation")
-async def update_admin_navigation(request_data: list, current_user: str = Depends(get_current_user)):
+async def update_admin_navigation(request: Request, current_user: str = Depends(get_current_user)):
     """Update navigation menu items - admin only (alternative PUT method)"""
     try:
-        navigation_data = request_data
+        # Parse the JSON body manually
+        navigation_data = await request.json()
+        
+        # Ensure it's a list
+        if not isinstance(navigation_data, list):
+            raise HTTPException(status_code=400, detail="Navigation data must be a list")
         
         # Clear existing navigation items
         await db.navigation_items.delete_many({})
