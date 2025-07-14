@@ -747,17 +747,7 @@ async def get_content(section: str):
                 return {
                     "section": "features", 
                     "title": "Why Choose Blue Nebula Hosting?",
-                    "description": "We deliver enterprise-grade hosting solutions with the reliability and support your business deserves.",
-                    "features": [
-                        "99.9% Uptime Guarantee",
-                        "24/7 Expert Technical Support", 
-                        "Enterprise-Grade Security",
-                        "Lightning-Fast SSD Storage",
-                        "Free SSL Certificates",
-                        "Daily Automated Backups",
-                        "DDoS Protection",
-                        "Easy One-Click Installations"
-                    ]
+                    "description": "We deliver enterprise-grade hosting solutions with the reliability and support your business deserves."
                 }
             return {"section": section, "message": "No custom content found"}
         
