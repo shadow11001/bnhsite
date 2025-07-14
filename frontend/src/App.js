@@ -567,7 +567,7 @@ const FeaturesSection = () => {
     {
       title: "VPS Hosting", 
       description: "Scalable virtual private servers with full root access and managed support.",
-      image: "https://images.unsplash.com/photo-1594915440248-1e419eba6611?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDJ8MHwxfHNlYXJjaHwyfHxkYXRhY2VudGVyfGVufDB8fHx8MTc1MjI5NTgwMHww&ixlib=rb-4.1.0&q=85",
+      image: "/images/vps-hosting.jpg",
       features: ["Full Root Access", "Choice of OS", "DDoS Protection", "Scalable Resources"],
       link: "#vps"
     },
