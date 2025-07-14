@@ -10,7 +10,7 @@ import json
 from datetime import datetime
 
 class BlueNebulaAPITester:
-    def __init__(self, base_url="https://508b4e3a-d967-4018-b3b7-713a105937d0.preview.emergentagent.com"):
+    def __init__(self, base_url="https://ab64695e-405a-4d04-9240-a788ae132a60.preview.emergentagent.com"):
         self.base_url = base_url
         # Based on backend logs, the admin panel accesses backend via localhost
         # External access is not working due to ingress configuration
