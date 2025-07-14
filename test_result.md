@@ -211,7 +211,7 @@ frontend:
     file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "main"
@@ -219,6 +219,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "Removed markup percentage display from frontend. Users no longer see markup information."
+      - working: true
+        agent: "testing"
+        comment: "VERIFIED: Markup percentages are correctly not displayed on frontend. No markup_percentage fields visible in any hosting plan cards. This functionality is working as expected."
 
   - task: "Fix plan centering issues"
     implemented: true
