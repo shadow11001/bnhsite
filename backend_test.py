@@ -834,9 +834,9 @@ class BlueNebulaAPITester:
         popular_plans = []
         
         for plan in plans:
-            price = plan.get('base_price', 0)
-            plan_name = plan.get('plan_name', 'Unknown')
-            plan_type = plan.get('plan_type', 'Unknown')
+            price = plan.get('price', 0)  # Fixed: use 'price' instead of 'base_price'
+            plan_name = plan.get('name', 'Unknown')  # Fixed: use 'name' instead of 'plan_name'
+            plan_type = plan.get('type', 'Unknown')  # Fixed: use 'type' instead of 'plan_type'
             
             # Check pricing range (updated for wider range)
             if not (1 <= price <= 320):
