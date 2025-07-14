@@ -507,6 +507,20 @@ const HostingPlans = ({ plans, title, type, description }) => {
                   {plan.bandwidth && <div>Bandwidth: {plan.bandwidth}</div>}
                 </div>
               )}
+
+              {/* Shared Hosting Specific Specifications */}
+              {(plan.type === 'shared' || plan.type === 'ssd_shared' || plan.type === 'hdd_shared') && 
+               (plan.websites || plan.subdomains || plan.parked_domains || plan.addon_domains || plan.databases || plan.email_accounts) && (
+                <div className="text-sm text-gray-400 mb-4 space-y-1 border-t border-gray-600 pt-3">
+                  <div className="text-blue-400 font-medium mb-2">Hosting Limits:</div>
+                  {plan.websites && <div>Domains: {plan.websites}</div>}
+                  {plan.subdomains && <div>Subdomains: {plan.subdomains}</div>}
+                  {plan.addon_domains && <div>Addon Domains: {plan.addon_domains}</div>}
+                  {plan.parked_domains && <div>Parked Domains: {plan.parked_domains}</div>}
+                  {plan.databases && <div>Databases: {plan.databases}</div>}
+                  {plan.email_accounts && <div>Email Accounts: {plan.email_accounts}</div>}
+                </div>
+              )}
             </div>
             
             <ul className="space-y-2 mb-8 flex-grow">
