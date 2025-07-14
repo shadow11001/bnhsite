@@ -729,7 +729,7 @@ const AdminPanel = () => {
         try {
           console.log(`Loading ${section.key} content from admin API...`);
           
-          const response = await axios.get(`${API}/admin/content/${section.key}`, { 
+          const response = await axios.get(`${API}/api/admin/content/${section.key}`, { 
             headers: { 
               ...getAuthHeaders(),
               'Cache-Control': 'no-cache'
