@@ -969,7 +969,7 @@ const Home = () => {
       try {
         // Add cache-busting to ensure fresh data
         const timestamp = new Date().getTime();
-        const plansResponse = await axios.get(`${API}/hosting-plans?_t=${timestamp}`, {
+        const plansResponse = await axios.get(`${API}/api/hosting-plans?_t=${timestamp}`, {
           headers: {
             'Cache-Control': 'no-cache',
             'Pragma': 'no-cache'
