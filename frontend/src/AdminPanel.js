@@ -225,7 +225,7 @@ const AdminPanel = () => {
 
   const updatePlan = async (planId, updates) => {
     try {
-      await axios.put(`${API}/hosting-plans/${planId}`, updates, {
+      await axios.put(`${API}/api/hosting-plans/${planId}`, updates, {
         headers: {
           ...getAuthHeaders(),
           'Cache-Control': 'no-cache'
