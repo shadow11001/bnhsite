@@ -330,14 +330,6 @@ const Header = () => {
                 </a>
               ))}
               
-              {/* Keep static hosting section for mobile */}
-              <div className="space-y-2">
-                <div className="text-gray-400 text-sm font-semibold">Hosting</div>
-                <a href="#hosting" className="text-gray-300 hover:text-blue-400 transition-colors pl-4">Shared Hosting</a>
-                <a href="#vps" className="text-gray-300 hover:text-blue-400 transition-colors pl-4">VPS Hosting</a>
-                <a href="#gameservers" className="text-gray-300 hover:text-blue-400 transition-colors pl-4">GameServer Hosting</a>
-              </div>
-              
               <SystemStatus />
               <div className="flex flex-col space-y-2 mt-4">
                 <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-blue-400 border border-blue-400 rounded-lg hover:bg-blue-400 hover:text-gray-900 transition-colors text-center">
