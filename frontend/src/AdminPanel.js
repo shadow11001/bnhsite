@@ -251,7 +251,7 @@ const AdminPanel = () => {
       } catch (err) {
         if (err.response?.status === 404) {
           // Try POST method
-          response = await axios.post(`${API}/admin/company-info`, updates, { headers: getAuthHeaders() });
+          response = await axios.post(`${API}/api/admin/company-info`, updates, { headers: getAuthHeaders() });
         } else if (err.response?.status === 405) {
           // Try different endpoint
           response = await axios.put(`${API}/api/company`, updates, { headers: getAuthHeaders() });
