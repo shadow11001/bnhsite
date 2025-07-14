@@ -816,7 +816,7 @@ const AdminPanel = () => {
           if (err.response?.status === 405) {
             // Method not allowed, try PUT
             console.log(`Trying PUT ${API}/api/admin/content/${selectedSection}`);
-            const response = await axios.put(`${API}/admin/content/${selectedSection}`, currentSectionContent, { 
+            const response = await axios.put(`${API}/api/admin/content/${selectedSection}`, currentSectionContent, { 
               headers: {
                 ...getAuthHeaders(),
                 'Cache-Control': 'no-cache',
