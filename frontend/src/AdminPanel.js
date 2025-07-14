@@ -168,7 +168,7 @@ const AdminPanel = () => {
         const contentSections = ['hero', 'about', 'features'];
         const contentPromises = contentSections.map(async (section) => {
           try {
-            const response = await axios.get(`${API}/admin/website-content`, { headers: getAuthHeaders() });
+            const response = await axios.get(`${API}/api/admin/website-content`, { headers: getAuthHeaders() });
             return { section, data: response.data[section] || {} };
           } catch (err) {
             try {
