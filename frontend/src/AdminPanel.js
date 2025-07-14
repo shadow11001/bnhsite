@@ -1703,7 +1703,7 @@ const AdminPanel = () => {
     const loadSiteSettings = async () => {
       try {
         // Try admin endpoint
-        const response = await axios.get(`${API}/admin/site-settings`, { headers: getAuthHeaders() });
+        const response = await axios.get(`${API}/api/admin/site-settings`, { headers: getAuthHeaders() });
         setSettings(prev => ({ ...prev, ...response.data }));
       } catch (error) {
         console.error('Error loading site settings:', error);
