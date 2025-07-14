@@ -117,7 +117,7 @@ const AdminPanel = () => {
       
       // Fetch company info
       try {
-        const companyResponse = await axios.get(`${API}/company-info?_t=${timestamp}`, {
+        const companyResponse = await axios.get(`${API}/api/company-info?_t=${timestamp}`, {
           headers: cacheHeaders
         });
         console.log('Company info loaded:', companyResponse.data);
