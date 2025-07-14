@@ -48,8 +48,11 @@ async def debug_endpoints():
             })
     return {"available_routes": routes}
 
-# Content management endpoints - add to both app and api_router for compatibility
-@app.get("/admin/content/{section}")
+# Create a router without prefix (Caddy will handle the /api routing)
+api_router = APIRouter()
+
+# Content management endpoints - moved to api_router for consistency
+@api_router.get("/admin/content/{section}")
 async def get_admin_content_direct(section: str, authorization: str = Header(None)):
     """Get website content by section for admin editing - direct endpoint"""
     try:
@@ -88,7 +91,7 @@ async def get_admin_content_direct(section: str, authorization: str = Header(Non
         print(f"Error in get_admin_content_direct: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/admin/content/{section}")
+@api_router.post("/admin/content/{section}")
 async def save_admin_content_direct(section: str, content_data: dict, authorization: str = Header(None)):
     """Save website content by section - direct endpoint"""
     try:
