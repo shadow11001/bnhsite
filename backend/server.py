@@ -128,9 +128,6 @@ async def save_admin_content_direct(section: str, content_data: dict, authorizat
         print(f"Error in save_admin_content_direct: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# Create a router without prefix (Caddy will handle the /api routing)
-api_router = APIRouter()
-
 # Define Models
 class SiteSettings(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
