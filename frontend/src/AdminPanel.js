@@ -1384,7 +1384,7 @@ const AdminPanel = () => {
         console.error('Error loading admin promo codes:', error);
         try {
           // Fallback to public endpoint
-          const response = await axios.get(`${API}/promo-codes`);
+          const response = await axios.get(`${API}/api/promo-codes`);
           setPromoCodes(response.data);
           console.log('Public promo codes loaded as fallback:', response.data);
         } catch (fallbackError) {
