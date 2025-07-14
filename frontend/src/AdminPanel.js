@@ -1000,7 +1000,7 @@ const AdminPanel = () => {
         // Try different endpoints and methods
         let response;
         try {
-          response = await axios.post(`${API}/admin/navigation`, navItems, { headers: getAuthHeaders() });
+          response = await axios.post(`${API}/api/admin/navigation`, navItems, { headers: getAuthHeaders() });
         } catch (err) {
           if (err.response?.status === 404) {
             // Try PUT method
