@@ -1415,7 +1415,7 @@ const AdminPanel = () => {
     const deletePromoCode = async (id) => {
       if (confirm('Are you sure you want to delete this promo code?')) {
         try {
-          await axios.delete(`${API}/admin/promo-codes/${id}`, { headers: getAuthHeaders() });
+          await axios.delete(`${API}/api/admin/promo-codes/${id}`, { headers: getAuthHeaders() });
           await loadPromoCodes();
           alert('Promo code deleted successfully!');
         } catch (error) {
