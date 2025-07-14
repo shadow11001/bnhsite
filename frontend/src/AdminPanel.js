@@ -1235,7 +1235,7 @@ const AdminPanel = () => {
       setIsLoading(true);
       setTestResult('Testing...');
       try {
-        const response = await axios.post(`${API}/admin/smtp-test`, smtpData, { headers: getAuthHeaders() });
+        const response = await axios.post(`${API}/api/admin/smtp-test`, smtpData, { headers: getAuthHeaders() });
         setTestResult('✅ SMTP connection successful!');
       } catch (error) {
         console.error('Error testing SMTP connection:', error);
