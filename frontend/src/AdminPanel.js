@@ -172,7 +172,7 @@ const AdminPanel = () => {
             return { section, data: response.data[section] || {} };
           } catch (err) {
             try {
-              const response = await axios.get(`${API}/website-content/${section}`);
+              const response = await axios.get(`${API}/api/website-content/${section}`);
               return { section, data: response.data };
             } catch (err2) {
               console.error(`Error loading ${section} content:`, err2);
