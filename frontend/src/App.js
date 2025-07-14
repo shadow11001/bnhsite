@@ -181,7 +181,7 @@ const SystemStatus = () => {
     const checkStatus = async () => {
       try {
         // Call our backend endpoint that will fetch from Uptime Kuma
-        const response = await axios.get(`${API}/system-status`);
+        const response = await axios.get(`${API}/api/system-status`);
         setStatus(response.data);
       } catch (error) {
         console.error('Error fetching status:', error);
