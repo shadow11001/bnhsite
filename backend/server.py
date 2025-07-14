@@ -1036,12 +1036,6 @@ async def get_admin_content(section: str, current_user: str = Depends(get_curren
                 "button_text": "Learn More",
                 "button_url": "#"
             }
-            if section == "features":
-                default_content["features"] = [
-                    "99.9% Uptime Guarantee",
-                    "24/7 Expert Support",
-                    "Enterprise SSD Storage"
-                ]
             return default_content
         
         # Remove MongoDB _id field
