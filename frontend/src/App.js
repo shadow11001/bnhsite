@@ -12,7 +12,7 @@ const LegalPage = ({ type }) => {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const response = await axios.get(`${API}/content/${type}`);
+        const response = await axios.get(`${API}/api/content/${type}`);
         setContent(response.data);
       } catch (error) {
         console.error('Error fetching content:', error);
