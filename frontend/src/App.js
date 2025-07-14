@@ -684,7 +684,7 @@ const AboutSection = () => {
   useEffect(() => {
     const fetchAboutContent = async () => {
       try {
-        const response = await axios.get(`${API}/content/about`);
+        const response = await axios.get(`${API}/api/content/about`);
         setAboutContent(response.data);
       } catch (error) {
         console.error('Error fetching about content:', error);
