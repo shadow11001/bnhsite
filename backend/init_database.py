@@ -11,7 +11,7 @@ from datetime import datetime
 import uuid
 
 # MongoDB connection
-MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://admin:WEvSMiUiYlASPYN4Pqb7zLO8E@bnhsite-mongodb:27017/blue_nebula_hosting?authSource=admin')
+MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
 DB_NAME = os.environ.get('DB_NAME', 'blue_nebula_hosting')
 
 async def init_database(migration_mode=False):
