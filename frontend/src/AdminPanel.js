@@ -1399,7 +1399,7 @@ const AdminPanel = () => {
         if (editingPromo) {
           await axios.put(`${API}/api/admin/promo-codes/${editingPromo.id}`, promoData, { headers: getAuthHeaders() });
         } else {
-          await axios.post(`${API}/admin/promo-codes`, promoData, { headers: getAuthHeaders() });
+          await axios.post(`${API}/api/admin/promo-codes`, promoData, { headers: getAuthHeaders() });
         }
         await loadPromoCodes();
         setShowForm(false);
