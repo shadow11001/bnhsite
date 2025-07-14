@@ -9,7 +9,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 # MongoDB connection
 MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
-DB_NAME = os.environ.get('DB_NAME', 'blue_nebula_hosting')
+DB_NAME = os.environ.get('DB_NAME', 'test_database')
 
 async def update_shared_hosting_plans():
     print("🔄 Updating shared hosting plans with specific fields...")
