@@ -1259,6 +1259,16 @@ const AdminPanel = () => {
       <div className="bg-gray-800 rounded-lg p-6">
         <h3 className="text-xl font-bold text-white mb-6">Contact Form & SMTP Settings</h3>
         
+        <div className="bg-blue-900 border border-blue-700 rounded-lg p-4 mb-6">
+          <h4 className="text-blue-200 font-semibold mb-2">📧 SMTP Configuration Guide</h4>
+          <div className="text-blue-100 text-sm space-y-1">
+            <p>• <strong>Gmail:</strong> smtp.gmail.com, Port 587, Use App Password (not regular password)</p>
+            <p>• <strong>Outlook:</strong> smtp-mail.outlook.com, Port 587</p>
+            <p>• <strong>Yahoo:</strong> smtp.mail.yahoo.com, Port 587</p>
+            <p>• <strong>Custom:</strong> Contact your hosting provider for SMTP details</p>
+          </div>
+        </div>
+        
         <div className="grid lg:grid-cols-2 gap-6">
           <div>
             <h4 className="text-white font-semibold mb-4">SMTP Configuration</h4>
