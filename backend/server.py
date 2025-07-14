@@ -780,9 +780,11 @@ async def save_admin_navigation(request_data: list, current_user: str = Depends(
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.put("/admin/navigation")
-async def update_admin_navigation(navigation_data: list, current_user: str = Depends(get_current_user)):
+async def update_admin_navigation(request_data: list, current_user: str = Depends(get_current_user)):
     """Update navigation menu items - admin only (alternative PUT method)"""
     try:
+        navigation_data = request_data
+        
         # Clear existing navigation items
         await db.navigation_items.delete_many({})
         
