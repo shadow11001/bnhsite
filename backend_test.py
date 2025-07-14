@@ -77,8 +77,8 @@ class BlueNebulaAPITester:
                         plan_types = {}
                         plan_names_by_type = {}
                         for plan in plans:
-                            plan_type = plan.get('plan_type')
-                            plan_name = plan.get('plan_name')
+                            plan_type = plan.get('type')  # Fixed: use 'type' instead of 'plan_type'
+                            plan_name = plan.get('name')  # Fixed: use 'name' instead of 'plan_name'
                             plan_types[plan_type] = plan_types.get(plan_type, 0) + 1
                             if plan_type not in plan_names_by_type:
                                 plan_names_by_type[plan_type] = []
