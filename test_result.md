@@ -397,6 +397,21 @@ metadata:
   test_sequence: 0
   run_ui: false
 
+  - task: "Legal Pages admin save functionality"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/AdminPanel.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reported that Legal Pages in admin panel 'doesn't actually save anything' - silent failure when trying to save Terms of Service and Privacy Policy content"
+      - working: true
+        agent: "testing"
+        comment: "COMPREHENSIVE SUCCESS: Legal Pages functionality in admin panel is working perfectly! Successfully logged into admin panel with admin/admin123 credentials and navigated to Legal Pages section. Both Terms of Service and Privacy Policy content loaded correctly in admin interface. Successfully modified both Terms and Privacy content by adding '[Updated on 2025-01-14]' markers to test save functionality. Save button worked correctly for both legal documents, with API requests sent to PUT /api/content endpoint. Both /terms and /privacy pages immediately displayed the updated content with the test markers, confirming that save functionality is working correctly. Changes made in admin panel are immediately visible on public legal pages without any caching issues. The Legal Pages save functionality is now fully operational and working as expected."
+
   - task: "Display shared hosting specific fields on frontend"
     implemented: true
     working: false
