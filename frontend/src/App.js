@@ -230,6 +230,30 @@ const SystemStatus = () => {
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHostingDropdownOpen, setIsHostingDropdownOpen] = useState(false);
+  const [navigationItems, setNavigationItems] = useState([]);
+
+  useEffect(() => {
+    const fetchNavigation = async () => {
+      try {
+        const response = await axios.get(`${API}/navigation`);
+        if (response.data && Array.isArray(response.data)) {
+          // Sort by order field
+          const sortedItems = response.data.sort((a, b) => (a.order || 0) - (b.order || 0));
+          setNavigationItems(sortedItems);
+        }
+      } catch (error) {
+        console.error('Error fetching navigation:', error);
+        // Fallback to default navigation if API fails
+        setNavigationItems([
+          { id: '1', label: 'Home', href: '#home', order: 1, is_external: false },
+          { id: '2', label: 'About', href: '#about', order: 2, is_external: false },
+          { id: '3', label: 'Contact', href: '#contact', order: 3, is_external: false }
+        ]);
+      }
+    };
+    
+    fetchNavigation();
+  }, []);
 
   return (
     <header className="bg-gray-900/95 backdrop-blur-sm fixed w-full z-50 border-b border-blue-500/20">
@@ -256,8 +280,20 @@ const Header = () => {
           </div>
           
           <nav className="hidden md:flex space-x-8">
-            <a href="#home" className="text-gray-300 hover:text-blue-400 transition-colors">Home</a>
+            {/* Dynamic navigation items */}
+            {navigationItems.map((item) => (
+              <a 
+                key={item.id}
+                href={item.href}
+                className="text-gray-300 hover:text-blue-400 transition-colors"
+                target={item.is_external ? "_blank" : undefined}
+                rel={item.is_external ? "noopener noreferrer" : undefined}
+              >
+                {item.label}
+              </a>
+            ))}
             
+            {/* Keep static hosting dropdown for now */}
             <div className="relative group">
               <button 
                 className="text-gray-300 hover:text-blue-400 transition-colors flex items-center"
@@ -289,8 +325,6 @@ const Header = () => {
               )}
             </div>
             
-            <a href="#about" className="text-gray-300 hover:text-blue-400 transition-colors">About</a>
-            <a href="#contact" className="text-gray-300 hover:text-blue-400 transition-colors">Contact</a>
             <SystemStatus />
           </nav>
           
@@ -316,15 +350,27 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden pb-4">
             <nav className="flex flex-col space-y-4">
-              <a href="#home" className="text-gray-300 hover:text-blue-400 transition-colors">Home</a>
+              {/* Dynamic navigation items for mobile */}
+              {navigationItems.map((item) => (
+                <a 
+                  key={`mobile-${item.id}`}
+                  href={item.href}
+                  className="text-gray-300 hover:text-blue-400 transition-colors"
+                  target={item.is_external ? "_blank" : undefined}
+                  rel={item.is_external ? "noopener noreferrer" : undefined}
+                >
+                  {item.label}
+                </a>
+              ))}
+              
+              {/* Keep static hosting section for mobile */}
               <div className="space-y-2">
                 <div className="text-gray-400 text-sm font-semibold">Hosting</div>
                 <a href="#hosting" className="text-gray-300 hover:text-blue-400 transition-colors pl-4">Shared Hosting</a>
                 <a href="#vps" className="text-gray-300 hover:text-blue-400 transition-colors pl-4">VPS Hosting</a>
                 <a href="#gameservers" className="text-gray-300 hover:text-blue-400 transition-colors pl-4">GameServer Hosting</a>
               </div>
-              <a href="#about" className="text-gray-300 hover:text-blue-400 transition-colors">About</a>
-              <a href="#contact" className="text-gray-300 hover:text-blue-400 transition-colors">Contact</a>
+              
               <SystemStatus />
               <div className="flex flex-col space-y-2 mt-4">
                 <a href="https://billing.bluenebulahosting.com" target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-blue-400 border border-blue-400 rounded-lg hover:bg-blue-400 hover:text-gray-900 transition-colors text-center">
