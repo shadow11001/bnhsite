@@ -742,6 +742,25 @@ async def get_content(section: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# Public navigation endpoint (no authentication required)
+@api_router.get("/navigation")
+async def get_public_navigation():
+    """Get navigation menu items for public website"""
+    try:
+        nav_items = await db.navigation_items.find().sort("order", 1).to_list(100)
+        # Convert ObjectIds to strings and clean data
+        for item in nav_items:
+            if "_id" in item:
+                del item["_id"]
+        return nav_items
+    except Exception as e:
+        # Return default navigation if database fails
+        return [
+            {"id": "1", "label": "Home", "href": "#home", "order": 1, "is_external": False},
+            {"id": "2", "label": "About", "href": "#about", "order": 2, "is_external": False},
+            {"id": "3", "label": "Contact", "href": "#contact", "order": 3, "is_external": False}
+        ]
+
 # Navigation Management Endpoints
 @api_router.get("/admin/navigation")
 async def get_admin_navigation(current_user: str = Depends(get_current_user)):
