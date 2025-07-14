@@ -191,7 +191,7 @@ class BlueNebulaAPITester:
             if success:
                 plan = response.json()
                 success = plan.get('id') == plan_id
-                details = f"Plan: {plan.get('plan_name')} ({plan.get('plan_type')})"
+                details = f"Plan: {plan.get('name')} ({plan.get('type')})"  # Fixed: use 'name' and 'type'
             else:
                 details = f"HTTP {response.status_code}"
                 
