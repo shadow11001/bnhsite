@@ -265,7 +265,7 @@ frontend:
     file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "main"
@@ -273,6 +273,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "Created legal pages component with routes /terms and /privacy, updated footer links"
+      - working: true
+        agent: "testing"
+        comment: "VERIFIED: Terms of Service and Privacy Policy pages are implemented with proper routing at /terms and /privacy. Footer links are working correctly."
 
   - task: "Make promo code floating banner sticky to follow scroll"
     implemented: true
