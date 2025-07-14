@@ -907,8 +907,14 @@ async def init_company_info(db, migration_mode=False):
     result = await db.company_info.insert_one(company_info)
     print(f"✅ Inserted company info")
 
-async def init_legal_content(db):
+async def init_legal_content(db, migration_mode=False):
     print("⚖️ Initializing legal content...")
+    
+    if migration_mode:
+        existing_count = await db.legal_content.count_documents({})
+        if existing_count > 0:
+            print(f"📋 Found {existing_count} existing legal content - skipping initialization")
+            return
     
     # Check if legal content already exists
     existing_count = await db.legal_content.count_documents({})
