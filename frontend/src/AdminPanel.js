@@ -1397,7 +1397,7 @@ const AdminPanel = () => {
       setIsLoading(true);
       try {
         if (editingPromo) {
-          await axios.put(`${API}/admin/promo-codes/${editingPromo.id}`, promoData, { headers: getAuthHeaders() });
+          await axios.put(`${API}/api/admin/promo-codes/${editingPromo.id}`, promoData, { headers: getAuthHeaders() });
         } else {
           await axios.post(`${API}/admin/promo-codes`, promoData, { headers: getAuthHeaders() });
         }
