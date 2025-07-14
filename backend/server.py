@@ -700,7 +700,20 @@ async def update_content(content_update: ContentUpdate, current_user: str = Depe
 async def get_content(section: str):
     """Get website content by section"""
     try:
+        # First check website_content collection
         content = await db.website_content.find_one({"section": section})
+        
+        # For legal pages, also check legal_content collection if not found in website_content
+        if not content and section in ["terms", "privacy"]:
+            legal_content = await db.legal_content.find_one({"type": section})
+            if legal_content:
+                # Convert legal_content format to expected content format
+                content = {
+                    "section": section,
+                    "title": legal_content.get("title", "Legal Document"),
+                    "content": legal_content.get("content", "Content not available.")
+                }
+        
         if not content:
             # Return default content for legal pages
             if section == "terms":
