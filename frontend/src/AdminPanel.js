@@ -1377,7 +1377,7 @@ const AdminPanel = () => {
     const loadPromoCodes = async () => {
       try {
         // Try admin endpoint first
-        const response = await axios.get(`${API}/admin/promo-codes`, { headers: getAuthHeaders() });
+        const response = await axios.get(`${API}/api/admin/promo-codes`, { headers: getAuthHeaders() });
         setPromoCodes(response.data);
         console.log('Admin promo codes loaded:', response.data);
       } catch (error) {
