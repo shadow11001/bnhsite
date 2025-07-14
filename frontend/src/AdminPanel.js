@@ -1710,7 +1710,7 @@ const AdminPanel = () => {
         if (error.response?.status === 404) {
           // Try alternative endpoint
           try {
-            const response = await axios.get(`${API}/settings`, { headers: getAuthHeaders() });
+            const response = await axios.get(`${API}/api/settings`, { headers: getAuthHeaders() });
             setSettings(prev => ({ ...prev, ...response.data }));
           } catch (altError) {
             console.error('Error loading alt site settings:', altError);
