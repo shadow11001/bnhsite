@@ -537,17 +537,7 @@ const FeaturesSection = () => {
         // Fallback to default content if API fails
         setFeaturesContent({
           title: "Why Choose Blue Nebula?",
-          description: "Professional hosting solutions with enterprise-grade infrastructure and 24/7 expert support.",
-          features: [
-            "99.9% Uptime Guarantee",
-            "24/7 Expert Technical Support", 
-            "Enterprise-Grade Security",
-            "Lightning-Fast SSD Storage",
-            "Free SSL Certificates",
-            "Daily Automated Backups",
-            "DDoS Protection",
-            "Easy One-Click Installations"
-          ]
+          description: "Professional hosting solutions with enterprise-grade infrastructure and 24/7 expert support."
         });
       }
     };
