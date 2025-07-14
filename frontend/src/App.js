@@ -229,7 +229,6 @@ const SystemStatus = () => {
 // Header Component
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isHostingDropdownOpen, setIsHostingDropdownOpen] = useState(false);
   const [navigationItems, setNavigationItems] = useState([]);
 
   useEffect(() => {
