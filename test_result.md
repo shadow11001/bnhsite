@@ -439,8 +439,10 @@ metadata:
 test_plan:
   current_focus:
     - "Display shared hosting specific fields on frontend"
+    - "SMTP functionality testing in admin panel"
   stuck_tasks: 
     - "Display shared hosting specific fields on frontend"
+    - "SMTP functionality testing in admin panel"
   test_all: false
   test_priority: "high_first"
 
