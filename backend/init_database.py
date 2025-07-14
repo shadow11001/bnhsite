@@ -942,8 +942,14 @@ async def init_legal_content(db, migration_mode=False):
     result = await db.legal_content.insert_many(legal_content)
     print(f"✅ Inserted {len(result.inserted_ids)} legal content items")
 
-async def init_site_settings(db):
+async def init_site_settings(db, migration_mode=False):
     print("⚙️ Initializing site settings...")
+    
+    if migration_mode:
+        existing_count = await db.site_settings.count_documents({})
+        if existing_count > 0:
+            print(f"📋 Found {existing_count} existing site settings - skipping initialization")
+            return
     
     # Check if site settings already exist
     existing = await db.site_settings.find_one({})
