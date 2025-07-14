@@ -32,7 +32,7 @@ const AdminPanel = () => {
     }
 
     try {
-      const response = await axios.get(`${API}/verify-token`, {
+      const response = await axios.get(`${API}/api/verify-token`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
