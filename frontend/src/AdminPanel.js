@@ -1725,7 +1725,7 @@ const AdminPanel = () => {
         // Try admin endpoint
         let response;
         try {
-          response = await axios.put(`${API}/admin/site-settings`, settings, { headers: getAuthHeaders() });
+          response = await axios.put(`${API}/api/admin/site-settings`, settings, { headers: getAuthHeaders() });
         } catch (err) {
           if (err.response?.status === 404) {
             // Try alternative endpoint
