@@ -557,7 +557,7 @@ const FeaturesSection = () => {
   useEffect(() => {
     const fetchFeaturesContent = async () => {
       try {
-        const response = await axios.get(`${API}/content/features`);
+        const response = await axios.get(`${API}/api/content/features`);
         setFeaturesContent(response.data);
       } catch (error) {
         console.error('Error fetching features content:', error);
