@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = BACKEND_URL; // BACKEND_URL should be https://bluenebulahosting.com/api
+const API = BACKEND_URL; // BACKEND_URL should be the base URL (e.g., https://bluenebulahosting.com)
 
 const AdminPanel = () => {
   const [hostingPlans, setHostingPlans] = useState([]);
