@@ -292,38 +292,6 @@ const Header = () => {
               </a>
             ))}
             
-            {/* Keep static hosting dropdown for now */}
-            <div className="relative group">
-              <button 
-                className="text-gray-300 hover:text-blue-400 transition-colors flex items-center"
-                onMouseEnter={() => setIsHostingDropdownOpen(true)}
-                onMouseLeave={() => setIsHostingDropdownOpen(false)}
-              >
-                Hosting
-                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              
-              {isHostingDropdownOpen && (
-                <div 
-                  className="absolute top-full left-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg border border-gray-700 py-2 z-50"
-                  onMouseEnter={() => setIsHostingDropdownOpen(true)}
-                  onMouseLeave={() => setIsHostingDropdownOpen(false)}
-                >
-                  <a href="#hosting" className="block px-4 py-2 text-gray-300 hover:text-blue-400 hover:bg-gray-700 transition-colors">
-                    Shared Hosting
-                  </a>
-                  <a href="#vps" className="block px-4 py-2 text-gray-300 hover:text-blue-400 hover:bg-gray-700 transition-colors">
-                    VPS Hosting
-                  </a>
-                  <a href="#gameservers" className="block px-4 py-2 text-gray-300 hover:text-blue-400 hover:bg-gray-700 transition-colors">
-                    GameServer Hosting
-                  </a>
-                </div>
-              )}
-            </div>
-            
             <SystemStatus />
           </nav>
           
