@@ -762,8 +762,14 @@ async def init_hosting_plans(db, migration_mode=False):
     result = await db.hosting_plans.insert_many(hosting_plans)
     print(f"✅ Inserted {len(result.inserted_ids)} hosting plans")
 
-async def init_website_content(db):
+async def init_website_content(db, migration_mode=False):
     print("🌐 Initializing website content...")
+    
+    if migration_mode:
+        existing_count = await db.website_content.count_documents({})
+        if existing_count > 0:
+            print(f"📋 Found {existing_count} existing website content items - skipping initialization")
+            return
     
     # Check if content already exists
     existing_count = await db.website_content.count_documents({})
