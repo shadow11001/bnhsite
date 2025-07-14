@@ -1133,8 +1133,8 @@ async def get_system_status():
 
 # Hardcoded hosting plans removed - using database initialization script instead
 
-# Include the router in the main app
-app.include_router(api_router)
+# Include the router in the main app with /api prefix to match Kubernetes ingress rules
+app.include_router(api_router, prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,
