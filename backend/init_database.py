@@ -50,7 +50,7 @@ async def init_database(migration_mode=False):
         await init_smtp_settings(db, migration_mode)
         
         # Initialize some sample promo codes
-        await init_promo_codes(db)
+        await init_promo_codes(db, migration_mode)
         
         print("🎉 Database initialization completed successfully!")
         
