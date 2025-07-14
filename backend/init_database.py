@@ -872,8 +872,14 @@ async def init_navigation_menu(db, migration_mode=False):
     result = await db.navigation_menu.insert_many(navigation_items)
     print(f"✅ Inserted {len(result.inserted_ids)} navigation items")
 
-async def init_company_info(db):
+async def init_company_info(db, migration_mode=False):
     print("🏢 Initializing company info...")
+    
+    if migration_mode:
+        existing_count = await db.company_info.count_documents({})
+        if existing_count > 0:
+            print(f"📋 Found {existing_count} existing company info - skipping initialization")
+            return
     
     # Check if company info already exists
     existing = await db.company_info.find_one({})
