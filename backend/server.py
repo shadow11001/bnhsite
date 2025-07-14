@@ -152,6 +152,13 @@ class HostingPlan(BaseModel):
     features: List[str] = []
     popular: bool = False
     markup_percentage: int = 0
+    # Shared hosting specific fields
+    websites: Optional[str] = None  # e.g., "1", "5", "Unlimited"
+    subdomains: Optional[str] = None  # e.g., "10", "Unlimited" 
+    parked_domains: Optional[str] = None  # e.g., "5", "Unlimited"
+    addon_domains: Optional[str] = None  # e.g., "0", "5", "Unlimited"
+    databases: Optional[str] = None  # e.g., "1", "10", "Unlimited"
+    email_accounts: Optional[str] = None  # e.g., "5", "Unlimited"
 
 class PublicHostingPlan(BaseModel):
     """Public-facing hosting plan model without internal markup information"""
