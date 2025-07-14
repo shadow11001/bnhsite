@@ -128,7 +128,7 @@ const AdminPanel = () => {
       
       // Fetch navigation (with fallback to default)
       try {
-        const navigationResponse = await axios.get(`${API}/navigation`, { headers: getAuthHeaders() });
+        const navigationResponse = await axios.get(`${API}/api/navigation`, { headers: getAuthHeaders() });
         console.log('Navigation loaded:', navigationResponse.data);
         setNavigationItems(navigationResponse.data);
       } catch (error) {
