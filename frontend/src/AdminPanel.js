@@ -390,6 +390,16 @@ const AdminPanel = () => {
                     />
                   </div>
                   <div>
+                    <label className="block text-gray-300 mb-2">Addon Domains</label>
+                    <input
+                      type="text"
+                      value={formData.addon_domains || ''}
+                      onChange={(e) => setFormData({...formData, addon_domains: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                      placeholder="e.g., 0, 5, Unlimited"
+                    />
+                  </div>
+                  <div>
                     <label className="block text-gray-300 mb-2">Databases</label>
                     <input
                       type="text"
