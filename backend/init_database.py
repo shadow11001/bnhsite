@@ -808,14 +808,6 @@ async def init_website_content(db, migration_mode=False):
             "description": "We deliver exceptional hosting services with industry-leading performance, reliability, and support. Our infrastructure is designed to scale with your business needs.",
             "button_text": "View Plans",
             "button_url": "#hosting",
-            "features": [
-                "99.9% Uptime Guarantee",
-                "24/7 Expert Support", 
-                "5000+ Happy Customers",
-                "Enterprise SSD Storage",
-                "Free SSL Certificates",
-                "Daily Backups Included"
-            ],
             "created_at": datetime.utcnow(),
             "updated_at": datetime.utcnow()
         }
