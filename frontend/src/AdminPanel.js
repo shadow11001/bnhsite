@@ -1220,7 +1220,7 @@ const AdminPanel = () => {
     const saveSMTPSettings = async () => {
       setIsLoading(true);
       try {
-        await axios.put(`${API}/admin/smtp-settings`, smtpData, { headers: getAuthHeaders() });
+        await axios.put(`${API}/api/admin/smtp-settings`, smtpData, { headers: getAuthHeaders() });
         alert('SMTP settings updated successfully!');
         setSmtpSettings(smtpData);
       } catch (error) {
