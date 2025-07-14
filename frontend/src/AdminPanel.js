@@ -616,7 +616,7 @@ const AdminPanel = () => {
       setIsLoggingIn(true);
       
       try {
-        const response = await axios.post(`${API}/login`, localLoginData);
+        const response = await axios.post(`${API}/api/login`, localLoginData);
         const { access_token } = response.data;
         
         localStorage.setItem('admin_token', access_token);
