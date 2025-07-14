@@ -1732,7 +1732,7 @@ const AdminPanel = () => {
             response = await axios.put(`${API}/api/settings`, settings, { headers: getAuthHeaders() });
           } else if (err.response?.status === 405) {
             // Try POST method
-            response = await axios.post(`${API}/admin/site-settings`, settings, { headers: getAuthHeaders() });
+            response = await axios.post(`${API}/api/admin/site-settings`, settings, { headers: getAuthHeaders() });
           } else {
             throw err;
           }
