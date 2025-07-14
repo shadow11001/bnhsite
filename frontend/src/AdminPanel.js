@@ -1344,16 +1344,28 @@ const AdminPanel = () => {
               </div>
               
               <div className="bg-gray-700 rounded p-4">
-                <h5 className="text-white font-medium mb-2">Test Connection</h5>
+                <h5 className="text-white font-medium mb-2">Test Connection (Optional)</h5>
+                <p className="text-gray-400 text-sm mb-3">
+                  Test your SMTP settings to verify they work correctly. This is optional - you can save settings without testing.
+                </p>
                 <button
                   onClick={testSMTPConnection}
-                  disabled={isLoading}
+                  disabled={isLoading || !smtpData.smtp_host || !smtpData.smtp_username || !smtpData.smtp_password}
                   className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors disabled:opacity-50 mb-2"
                 >
-                  Test SMTP
+                  {isLoading ? 'Testing...' : 'Test SMTP Connection'}
                 </button>
+                {(!smtpData.smtp_host || !smtpData.smtp_username || !smtpData.smtp_password) && (
+                  <p className="text-yellow-400 text-xs mt-1">
+                    Please fill in Host, Username, and Password before testing
+                  </p>
+                )}
                 {testResult && (
-                  <div className="text-sm text-gray-300 mt-2">{testResult}</div>
+                  <div className={`text-sm mt-2 p-2 rounded ${
+                    testResult.includes('✅') ? 'bg-green-800 text-green-200' : 'bg-red-800 text-red-200'
+                  }`}>
+                    {testResult}
+                  </div>
                 )}
               </div>
             </div>
