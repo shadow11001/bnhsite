@@ -153,7 +153,7 @@ class BlueNebulaAPITester:
                     
                     if success:
                         # Verify all plans are of the requested type
-                        correct_type = all(plan.get('plan_type') == plan_type for plan in filtered_plans)
+                        correct_type = all(plan.get('type') == plan_type for plan in filtered_plans)  # Fixed: use 'type'
                         expected_count = expected_counts[plan_type]
                         actual_count = len(filtered_plans)
                         
