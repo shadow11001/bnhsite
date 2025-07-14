@@ -174,6 +174,13 @@ class PublicHostingPlan(BaseModel):
     supported_games: Optional[List[str]] = None
     features: List[str] = []
     popular: bool = False
+    # Shared hosting specific fields
+    websites: Optional[str] = None
+    subdomains: Optional[str] = None 
+    parked_domains: Optional[str] = None
+    addon_domains: Optional[str] = None
+    databases: Optional[str] = None
+    email_accounts: Optional[str] = None
 
 class CompanyInfo(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
