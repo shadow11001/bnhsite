@@ -493,7 +493,7 @@ const AdminPanel = () => {
     const updateCompanyInfo = async () => {
       setIsLoading(true);
       try {
-        await axios.put(`${API}/company-info`, companyData, { headers: getAuthHeaders() });
+        await axios.put(`${API}/api/company-info`, companyData, { headers: getAuthHeaders() });
         alert('Company information updated successfully!');
       } catch (error) {
         alert('Error updating company info: ' + error.message);
