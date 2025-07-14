@@ -917,26 +917,63 @@ async def test_smtp_connection(smtp_data: dict, current_user: str = Depends(get_
     try:
         import smtplib
         from email.mime.text import MIMEText
+        import socket
         
         # Extract SMTP settings
-        host = smtp_data.get("smtp_host", "")
+        host = smtp_data.get("smtp_host", "").strip()
         port = smtp_data.get("smtp_port", 587)
-        username = smtp_data.get("smtp_username", "")
-        password = smtp_data.get("smtp_password", "")
+        username = smtp_data.get("smtp_username", "").strip()
+        password = smtp_data.get("smtp_password", "").strip()
         use_tls = smtp_data.get("smtp_use_tls", True)
         
-        if not all([host, username, password]):
-            raise HTTPException(status_code=400, detail="Missing required SMTP settings")
+        # Validate required fields
+        if not host:
+            raise HTTPException(status_code=400, detail="SMTP host is required")
+        if not username:
+            raise HTTPException(status_code=400, detail="SMTP username is required")
+        if not password:
+            raise HTTPException(status_code=400, detail="SMTP password is required")
         
-        # Test connection
-        with smtplib.SMTP(host, port) as server:
-            if use_tls:
-                server.starttls()
-            server.login(username, password)
+        # Validate port
+        try:
+            port = int(port)
+            if port <= 0 or port > 65535:
+                raise ValueError()
+        except (ValueError, TypeError):
+            raise HTTPException(status_code=400, detail="Invalid SMTP port")
         
-        return {"message": "SMTP connection successful"}
+        # Test connection with detailed error handling
+        try:
+            with smtplib.SMTP(host, port, timeout=10) as server:
+                if use_tls:
+                    try:
+                        server.starttls()
+                    except Exception as e:
+                        raise HTTPException(status_code=400, detail=f"TLS connection failed: {str(e)}")
+                
+                try:
+                    server.login(username, password)
+                except smtplib.SMTPAuthenticationError as e:
+                    raise HTTPException(status_code=400, detail=f"Authentication failed: Invalid username or password")
+                except smtplib.SMTPException as e:
+                    raise HTTPException(status_code=400, detail=f"SMTP authentication error: {str(e)}")
+                    
+        except socket.gaierror as e:
+            raise HTTPException(status_code=400, detail=f"Cannot connect to SMTP server: Host '{host}' not found")
+        except socket.timeout as e:
+            raise HTTPException(status_code=400, detail=f"Connection timeout: SMTP server '{host}:{port}' is not responding")
+        except ConnectionRefusedError as e:
+            raise HTTPException(status_code=400, detail=f"Connection refused: SMTP server '{host}:{port}' refused connection")
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Connection failed: {str(e)}")
+        
+        return {"message": "SMTP connection and authentication successful"}
+        
+    except HTTPException:
+        # Re-raise HTTP exceptions as-is
+        raise
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"SMTP connection failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Unexpected error during SMTP test: {str(e)}")
 
 # Company Info Admin Endpoint (to match frontend expectations)
 @api_router.get("/admin/company-info")
