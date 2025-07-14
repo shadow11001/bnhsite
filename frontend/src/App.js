@@ -71,7 +71,7 @@ const PromoCodeBanner = ({ location = "hero" }) => {
     const fetchPromoCodes = async () => {
       try {
         const timestamp = new Date().getTime();
-        const response = await axios.get(`${API}/promo-codes?_t=${timestamp}`, {
+        const response = await axios.get(`${API}/api/promo-codes?_t=${timestamp}`, {
           headers: {
             'Cache-Control': 'no-cache',
             'Pragma': 'no-cache'
