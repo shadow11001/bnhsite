@@ -574,7 +574,7 @@ const FeaturesSection = () => {
     {
       title: "GameServer Hosting",
       description: "High-performance game servers with Pterodactyl panel for easy management.",
-      image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwxfHxnYW1pbmd8ZW58MHx8fHwxNzUyMjgwMTA1fDA&ixlib=rb-4.1.0&q=85",
+      image: "/images/gameserver-hosting.jpg",
       features: ["Instant Setup", "Pterodactyl Panel", "Multiple Games", "DDoS Protection"],
       link: "#gameservers"
     }
