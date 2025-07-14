@@ -791,7 +791,7 @@ const AdminPanel = () => {
       try {
         // Try the admin POST endpoint first (preferred)
         try {
-          console.log(`Trying POST ${API}/admin/content/${selectedSection}`);
+          console.log(`Trying POST ${API}/api/admin/content/${selectedSection}`);
           const response = await axios.post(`${API}/admin/content/${selectedSection}`, currentSectionContent, { 
             headers: {
               ...getAuthHeaders(),
