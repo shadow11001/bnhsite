@@ -795,7 +795,7 @@ const ContactSection = () => {
     setIsSubmitting(true);
     
     try {
-      await axios.post(`${API}/contact`, formData);
+      await axios.post(`${API}/api/contact`, formData);
       alert('Message sent successfully! We\'ll get back to you soon.');
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
