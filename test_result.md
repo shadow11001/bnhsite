@@ -409,6 +409,14 @@ metadata:
         agent: "testing"
         comment: "CRITICAL ISSUE IDENTIFIED: Shared hosting plans (Opal, Topaz, Diamond, Quartz, Granite, Marble) are not displaying on the frontend despite API returning correct data with hosting-specific fields (domains, subdomains, addon_domains, parked_domains, databases, email_accounts). ROOT CAUSE: Filtering logic mismatch in HostingPlans component (lines 459-471). API returns plans with type='ssd_shared' but frontend filters for type='shared' && sub_type='ssd'. This prevents all shared hosting plans from being rendered. The hosting limits section code (lines 511-524) is correctly implemented but never executes due to filtering issue. API data shows Topaz plan has correct values: 5 domains, 25 subdomains, 5 addon domains, 10 databases, unlimited email accounts."
 
+test_plan:
+  current_focus:
+    - "Display shared hosting specific fields on frontend"
+  stuck_tasks: 
+    - "Display shared hosting specific fields on frontend"
+  test_all: false
+  test_priority: "high_first"
+
 agent_communication:
   - agent: "main"
     message: "Starting implementation of admin security and hosting plan fixes. Will tackle high priority items first: plan names, authentication, and removing markup display."
