@@ -106,7 +106,7 @@ const AdminPanel = () => {
       
       // Fetch admin hosting plans
       try {
-        const adminPlansResponse = await axios.get(`${API}/admin/hosting-plans?_t=${timestamp}`, { 
+        const adminPlansResponse = await axios.get(`${API}/api/admin/hosting-plans?_t=${timestamp}`, { 
           headers: { ...getAuthHeaders(), ...cacheHeaders }
         });
         console.log('Hosting plans loaded:', adminPlansResponse.data.length, 'plans');
