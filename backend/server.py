@@ -733,6 +733,11 @@ async def get_content(section: str):
                     ]
                 }
             return {"section": section, "message": "No custom content found"}
+        
+        # Remove MongoDB _id field for JSON serialization
+        if "_id" in content:
+            del content["_id"]
+        
         return content
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
