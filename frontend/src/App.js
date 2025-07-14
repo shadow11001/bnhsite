@@ -235,7 +235,7 @@ const Header = () => {
   useEffect(() => {
     const fetchNavigation = async () => {
       try {
-        const response = await axios.get(`${API}/navigation`);
+        const response = await axios.get(`${API}/api/navigation`);
         if (response.data && Array.isArray(response.data)) {
           // Sort by order field
           const sortedItems = response.data.sort((a, b) => (a.order || 0) - (b.order || 0));
