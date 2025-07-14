@@ -76,7 +76,7 @@ async def update_shared_hosting_plans():
     for plan_name, fields in shared_hosting_updates.items():
         try:
             result = await db.hosting_plans.update_one(
-                {"name": plan_name},
+                {"plan_name": plan_name},
                 {"$set": fields}
             )
             if result.modified_count > 0:
