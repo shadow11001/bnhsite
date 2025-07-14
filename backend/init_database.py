@@ -1008,8 +1008,14 @@ async def init_smtp_settings(db, migration_mode=False):
     result = await db.smtp_settings.insert_one(smtp_settings)
     print(f"✅ Inserted SMTP settings")
 
-async def init_promo_codes(db):
-    print("🎁 Initializing sample promo codes...")
+async def init_promo_codes(db, migration_mode=False):
+    print("🎁 Setting up sample promo codes...")
+    
+    if migration_mode:
+        existing_count = await db.promo_codes.count_documents({})
+        if existing_count > 0:
+            print(f"📋 Found {existing_count} existing promo codes - skipping initialization")
+            return
     
     # Check if promo codes already exist
     existing_count = await db.promo_codes.count_documents({})
