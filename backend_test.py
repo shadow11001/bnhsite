@@ -844,7 +844,7 @@ class BlueNebulaAPITester:
                 self.errors.append(f"Plan {plan_name} price ${price} outside range $1-$320")
             
             # Track popular plans
-            if plan.get('popular'):
+            if plan.get('is_popular'):  # Fixed: use 'is_popular' instead of 'popular'
                 popular_plans.append(plan_name)
         
         # Verify expected popular plans (updated for new plan names)
