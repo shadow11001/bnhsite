@@ -618,12 +618,9 @@ async def get_features():
     """Get hosting features and benefits"""
     return {
         "shared_hosting_features": [
-            "Free Domain for 1st Year",
-            "Unlimited Bandwidth",
+            "cPanel Control Panel",
             "Free SSL Certificate",
             "Daily Backups",
-            "99.9% Uptime Guarantee",
-            "24/7 Support",
             "One-Click WordPress Install",
             "HestiaCP Control Panel"
         ],
