@@ -560,7 +560,7 @@ const FeaturesSection = () => {
     {
       title: "Shared Hosting",
       description: "Perfect for websites and blogs with HestiaCP control panel and one-click installations.",
-      image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwyfHxzZXJ2ZXJ8ZW58MHx8fHwxNzUyMjk1Nzg3fDA&ixlib=rb-4.1.0&q=85",
+      image: "/images/shared-hosting.jpg",
       features: ["Free SSL Certificate", "Daily Backups", "99.9% Uptime", "24/7 Support"],
       link: "#hosting"
     },
