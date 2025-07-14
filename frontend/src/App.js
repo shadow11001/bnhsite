@@ -729,7 +729,7 @@ const AboutSection = () => {
           
           <div className="relative">
             <img 
-              src="https://images.pexels.com/photos/1181354/pexels-photo-1181354.jpeg" 
+              src="/images/about-infrastructure.jpg" 
               alt="Server Infrastructure"
               className="rounded-xl"
             />
