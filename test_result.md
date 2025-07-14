@@ -424,6 +424,18 @@ metadata:
         agent: "testing"
         comment: "CRITICAL ISSUE IDENTIFIED: Shared hosting plans (Opal, Topaz, Diamond, Quartz, Granite, Marble) are not displaying on the frontend despite API returning correct data with hosting-specific fields (domains, subdomains, addon_domains, parked_domains, databases, email_accounts). ROOT CAUSE: Filtering logic mismatch in HostingPlans component (lines 459-471). API returns plans with type='ssd_shared' but frontend filters for type='shared' && sub_type='ssd'. This prevents all shared hosting plans from being rendered. The hosting limits section code (lines 511-524) is correctly implemented but never executes due to filtering issue. API data shows Topaz plan has correct values: 5 domains, 25 subdomains, 5 addon domains, 10 databases, unlimited email accounts."
 
+  - task: "SMTP functionality testing in admin panel"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/AdminPanel.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "SMTP FUNCTIONALITY TESTING BLOCKED: Cannot test SMTP functionality due to critical admin panel access issue. The /admin route redirects to homepage instead of showing admin panel login form. Multiple attempts to access admin panel failed due to production deployment/routing issue. SMTP code review shows: ✅ Backend SMTP endpoints properly implemented (/api/admin/smtp-settings GET/PUT, /api/admin/smtp-test POST) with detailed error handling. ✅ Frontend SMTP form includes Configuration Guide, validation, save/test separation, and user-friendly error messages. ✅ Code implements all requested features: save without testing, test with invalid credentials, UI improvements, save vs test separation. CANNOT TEST until admin panel access is restored."
+
 test_plan:
   current_focus:
     - "Display shared hosting specific fields on frontend"
