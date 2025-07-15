@@ -912,8 +912,11 @@ const Footer = () => {
 const Home = () => {
   const [hostingPlans, setHostingPlans] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);  // Add this line
 
   useEffect(() => {
+    const [error, setError] = useState(null); //New
+
     const fetchData = async () => {
       try {
         // Add cache-busting to ensure fresh data
@@ -925,8 +928,10 @@ const Home = () => {
           }
         });
         setHostingPlans(plansResponse.data);
+        setError(null); //New
       } catch (error) {
         console.error('Error fetching data:', error);
+        setError('Failed to load hosting plans'); //New
       } finally {
         setLoading(false);
       }
@@ -1024,6 +1029,12 @@ const Home = () => {
                 Professional hosting solutions tailored to your needs
               </p>
             </div>
+
+            {error && (
+              <div className="text-red-500 text-center mt-4">
+                 {error}
+              </div>
+            )}
             
             {/* Pricing Promo Banner */}
             <PromoCodeBanner location="pricing" />
