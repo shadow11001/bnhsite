@@ -492,6 +492,13 @@ async def get_hosting_plans(plan_type: Optional[str] = None):
                     mapped_plan["is_popular"] = value
                 else:
                     mapped_plan[key] = value
+
+            # Ensure both 'type' and 'sub_type' are present for frontend filtering
+            # If your db uses 'type' and 'sub_type', make sure to copy them to the mapped_plan
+            if "type" in plan:
+                mapped_plan["type"] = plan["type"]
+            if "sub_type" in plan:
+                mapped_plan["sub_type"] = plan["sub_type"]
             
             public_plans.append(mapped_plan)
         
