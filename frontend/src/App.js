@@ -760,11 +760,37 @@ const ContactSection = () => {
     }
   };
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   return (
     <section id="contact" className="py-20 bg-gray-900/50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ... existing content ... */}
-        
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-white mb-4">Get in Touch</h2>
+          <p className="text-lg text-gray-300 mb-6">
+            Have questions? Our expert support team is here to help 24/7.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4 text-sm">
+            <a 
+              href="https://billing.bluenebulahosting.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              Submit Support Ticket
+            </a>
+            <span className="text-gray-500">•</span>
+            <a 
+              href="mailto:support@bluenebulahosting.com" 
+              className="text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              support@bluenebulahosting.com
+            </a>
+          </div>
+        </div>
+
         {error && (
           <div className="bg-red-900/50 border border-red-500 text-red-200 px-4 py-3 rounded mb-6">
             {error}
@@ -776,17 +802,82 @@ const ContactSection = () => {
             Thank you for your message! We'll get back to you soon.
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* ... existing form fields ... */}
-          
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
-          >
-            {isSubmitting ? 'Sending...' : 'Send Message'}
-          </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="name" className="block text-gray-300 mb-2">
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none"
+                placeholder="Your name"
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="block text-gray-300 mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none"
+                placeholder="your@email.com"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="subject" className="block text-gray-300 mb-2">
+              Subject
+            </label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              value={formData.subject}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none"
+              placeholder="How can we help?"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="message" className="block text-gray-300 mb-2">
+              Message
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              required
+              rows="5"
+              className="w-full px-4 py-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none resize-none"
+              placeholder="Your message..."
+            ></textarea>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
+            >
+              {isSubmitting ? 'Sending...' : 'Send Message'}
+            </button>
+          </div>
         </form>
       </div>
     </section>
