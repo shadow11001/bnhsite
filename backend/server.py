@@ -614,10 +614,56 @@ async def update_company_info(company_update: dict, current_user: str = Depends(
 async def submit_contact(contact: ContactInfo):
     """Submit contact form"""
     try:
-        contact_dict = contact.dict()
-        await db.contact_submissions.insert_one(contact_dict)
-        return contact
+        # Add timestamp to contact info
+        contact_data = contact.dict()
+        contact_data["timestamp"] = datetime.utcnow()
+        
+        # Store contact submission in database
+        await db.contact_submissions.insert_one(contact_data)
+        
+        # Send notification email to admin
+        admin_html = f"""
+        <h2>New Contact Form Submission</h2>
+        <p><strong>From:</strong> {contact.name} ({contact.email})</p>
+        <p><strong>Subject:</strong> {contact.subject}</p>
+        <p><strong>Message:</strong></p>
+        <pre>{contact.message}</pre>
+        """
+        
+        # Get admin email from company info
+        company_info = await db.company_info.find_one()
+        admin_email = company_info.get("contact_email") if company_info else None
+        
+        if admin_email:
+            await send_email(
+                subject=f"New Contact Form: {contact.subject}",
+                message=f"New message from {contact.name} ({contact.email}):\n\n{contact.message}",
+                to_email=admin_email,
+                html_content=admin_html
+            )
+            
+            # Send confirmation email to user
+            user_html = f"""
+            <h2>Thank you for contacting Blue Nebula Hosting</h2>
+            <p>Dear {contact.name},</p>
+            <p>We have received your message and will get back to you as soon as possible.</p>
+            <p>Your message details:</p>
+            <p><strong>Subject:</strong> {contact.subject}</p>
+            <p><strong>Message:</strong></p>
+            <pre>{contact.message}</pre>
+            <p>Best regards,<br>Blue Nebula Hosting Team</p>
+            """
+            
+            await send_email(
+                subject="We've received your message - Blue Nebula Hosting",
+                message=f"Thank you for contacting us. We have received your message and will get back to you soon.",
+                to_email=contact.email,
+                html_content=user_html
+            )
+            
+        return contact_data
     except Exception as e:
+        print(f"Error processing contact form: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/features")
@@ -984,6 +1030,52 @@ async def test_smtp_connection(smtp_data: dict, current_user: str = Depends(get_
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error during SMTP test: {str(e)}")
+
+# Send Email Function
+async def send_email(subject: str, message: str, to_email: str, html_content: Optional[str] = None):
+    """Send email using configured SMTP settings"""
+    try:
+        # Get SMTP settings
+        smtp_settings = await db.smtp_settings.find_one()
+        if not smtp_settings:
+            raise HTTPException(status_code=500, detail="SMTP not configured")
+            
+        host = smtp_settings.get("host")
+        port = smtp_settings.get("port", 587)
+        username = smtp_settings.get("username")
+        password = smtp_settings.get("password")
+        use_tls = smtp_settings.get("use_tls", True)
+        from_email = smtp_settings.get("from_email")
+        from_name = smtp_settings.get("from_name", "Blue Nebula Hosting")
+        
+        if not all([host, port, username, password, from_email]):
+            raise HTTPException(status_code=500, detail="SMTP configuration incomplete")
+        
+        # Create the email
+        from email.mime.multipart import MIMEMultipart
+        from email.mime.text import MIMEText
+        
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = subject
+        msg['From'] = f"{from_name} <{from_email}>"
+        msg['To'] = to_email
+        
+        # Add plain text and HTML versions
+        msg.attach(MIMEText(message, 'plain'))
+        if html_content:
+            msg.attach(MIMEText(html_content, 'html'))
+        
+        # Send the email
+        with smtplib.SMTP(host, port, timeout=10) as server:
+            if use_tls:
+                server.starttls()
+            server.login(username, password)
+            server.send_message(msg)
+            
+        return True
+    except Exception as e:
+        print(f"Error sending email: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to send email: {str(e)}")
 
 # Company Info Admin Endpoint (to match frontend expectations)
 @api_router.get("/admin/company-info")
