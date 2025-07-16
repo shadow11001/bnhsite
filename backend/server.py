@@ -286,8 +286,8 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     return username
 
 # Default admin credentials (change these!)
-DEFAULT_ADMIN_USERNAME = "admin"
-DEFAULT_ADMIN_PASSWORD = hash_password("admin123")  # Change this!
+DEFAULT_ADMIN_USERNAME = "morphon"
+DEFAULT_ADMIN_PASSWORD = hash_password("freemind596")  # Change this!
 
 # Uptime Kuma Configuration
 UPTIME_KUMA_API_KEY = "uk1_USvIQkci-6cYMA5VcOksKY7B1TzT7ul2zrvFOniq"
@@ -861,6 +861,16 @@ async def get_admin_smtp_settings(current_user: str = Depends(get_current_user))
                 "from_email": "",
                 "from_name": "Blue Nebula Hosting"
             }
+
+        mapped_settings = {
+            "smtp_host": smtp_settings.get("host", ""),
+            "smtp_port": smtp_settings.get("port", 587),
+            "smtp_username": smtp_settings.get("username", ""),
+            "smtp_password": smtp_settings.get("password", ""),
+            "smtp_use_tls": smtp_settings.get("use_tls", True),
+            "from_email": smtp_settings.get("from_email", ""),
+            "from_name": smtp_settings.get("from_name", "Blue Nebula Hosting")
+        }
         
         # Remove MongoDB _id field
         if "_id" in smtp_settings:
@@ -874,18 +884,27 @@ async def get_admin_smtp_settings(current_user: str = Depends(get_current_user))
 async def update_admin_smtp_settings(smtp_data: dict, current_user: str = Depends(get_current_user)):
     """Update SMTP settings - admin only"""
     try:
-        # Add ID and timestamp
-        smtp_data["updated_at"] = datetime.utcnow()
+        # Map frontend field names to database field names
+        db_settings = {
+            "host": smtp_data.get("smtp_host", ""),
+            "port": smtp_data.get("smtp_port", 587),
+            "username": smtp_data.get("smtp_username", ""),
+            "password": smtp_data.get("smtp_password", ""),
+            "use_tls": smtp_data.get("smtp_use_tls", True),
+            "from_email": smtp_data.get("from_email", ""),
+            "from_name": smtp_data.get("from_name", "Blue Nebula Hosting"),
+            "updated_at": datetime.utcnow()
+        }
         
         # Remove any _id field to avoid conflicts
-        if "_id" in smtp_data:
-            del smtp_data["_id"]
+        if "_id" in db_settings:
+            del db_settings["_id"]
         
         # Update or insert (upsert)
         result = await db.smtp_settings.update_one(
             {},
             {
-                "$set": smtp_data,
+                "$set": db_settings,
                 "$setOnInsert": {
                     "id": str(uuid.uuid4()),
                     "created_at": datetime.utcnow()
@@ -906,7 +925,7 @@ async def test_smtp_connection(smtp_data: dict, current_user: str = Depends(get_
         from email.mime.text import MIMEText
         import socket
         
-        # Extract SMTP settings
+        # Extract SMTP settings with new field names
         host = smtp_data.get("smtp_host", "").strip()
         port = smtp_data.get("smtp_port", 587)
         username = smtp_data.get("smtp_username", "").strip()
@@ -932,16 +951,21 @@ async def test_smtp_connection(smtp_data: dict, current_user: str = Depends(get_
         # Test connection with detailed error handling
         try:
             with smtplib.SMTP(host, port, timeout=10) as server:
+                # Say hello to the server
+                server.ehlo()
+                
+                # Start TLS if required
                 if use_tls:
                     try:
                         server.starttls()
+                        server.ehlo()  # Some servers need this again after TLS
                     except Exception as e:
                         raise HTTPException(status_code=400, detail=f"TLS connection failed: {str(e)}")
                 
                 try:
                     server.login(username, password)
                 except smtplib.SMTPAuthenticationError as e:
-                    raise HTTPException(status_code=400, detail=f"Authentication failed: Invalid username or password")
+                    raise HTTPException(status_code=400, detail="Authentication failed: Invalid username or password")
                 except smtplib.SMTPException as e:
                     raise HTTPException(status_code=400, detail=f"SMTP authentication error: {str(e)}")
                     
@@ -957,7 +981,6 @@ async def test_smtp_connection(smtp_data: dict, current_user: str = Depends(get_
         return {"message": "SMTP connection and authentication successful"}
         
     except HTTPException:
-        # Re-raise HTTP exceptions as-is
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error during SMTP test: {str(e)}")
