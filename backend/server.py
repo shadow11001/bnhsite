@@ -245,6 +245,116 @@ class PromoCode(BaseModel):
     button_url: Optional[str] = None  # If provided, button links to URL instead of copying code
     created_date: datetime = Field(default_factory=datetime.utcnow)
 
+class HostingCategory(BaseModel):
+    """Model for hosting plan categories"""
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str  # e.g., "Shared Hosting", "VPS Hosting", "WordPress Hosting"
+    slug: str  # e.g., "shared", "vps", "wordpress"
+    description: str
+    icon: Optional[str] = None  # Icon name or URL
+    display_order: int = 1
+    is_active: bool = True
+    # Category-specific field definitions
+    required_fields: List[str] = []  # e.g., ["cpu_cores", "memory_gb", "disk_gb"]
+    optional_fields: List[str] = []  # e.g., ["supported_games", "wordpress_features"]
+    # WordPress-specific settings
+    supports_wordpress: bool = False
+    wordpress_preinstalled: bool = False
+    wordpress_managed_updates: bool = False
+    wordpress_staging: bool = False
+    wordpress_backups: bool = False
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: Optional[datetime] = None
+
+class WordPressSettings(BaseModel):
+    """WordPress-specific settings for hosting plans"""
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    plan_id: str  # Reference to hosting plan
+    preinstalled: bool = False
+    version: Optional[str] = None  # e.g., "6.4"
+    managed_updates: bool = False
+    automatic_security_updates: bool = False
+    staging_environment: bool = False
+    daily_backups: bool = False
+    ssl_certificate: bool = True
+    cdn_included: bool = False
+    wordpress_multisite: bool = False
+    max_sites: Optional[int] = None  # For multisite
+    themes_included: List[str] = []
+    plugins_included: List[str] = []
+    support_level: str = "basic"  # "basic", "advanced", "premium"
+    migration_service: bool = False
+    performance_optimization: bool = False
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: Optional[datetime] = None
+
+# Updated HostingPlan model to support categories
+class EnhancedHostingPlan(BaseModel):
+    """Enhanced hosting plan with category support"""
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    category_id: Optional[str] = None  # Reference to HostingCategory
+    legacy_plan_type: Optional[str] = None  # Keep for backward compatibility
+    price: float
+    description: Optional[str] = None
+    
+    # Core resources
+    cpu_cores: Optional[int] = None
+    cpu_description: Optional[str] = None  # e.g., "2.4 GHz Intel Xeon"
+    memory_gb: Optional[int] = None
+    memory_description: Optional[str] = None  # e.g., "8 GB DDR4 RAM"
+    disk_gb: Optional[int] = None
+    disk_type: str = "SSD"  # "SSD", "NVMe", "HDD"
+    disk_description: Optional[str] = None
+    bandwidth: Optional[str] = None  # e.g., "Unlimited", "10 TB"
+    
+    # Shared hosting specific
+    max_websites: Optional[int] = None
+    max_subdomains: Optional[int] = None
+    max_parked_domains: Optional[int] = None
+    max_addon_domains: Optional[int] = None
+    max_databases: Optional[int] = None
+    max_email_accounts: Optional[int] = None
+    
+    # VPS specific
+    dedicated_ip: bool = False
+    root_access: bool = False
+    virtualization_type: Optional[str] = None  # "KVM", "OpenVZ", etc.
+    
+    # Game server specific
+    supported_games: Optional[List[str]] = None
+    max_slots: Optional[int] = None
+    mod_support: bool = False
+    
+    # WordPress specific (direct fields for backward compatibility)
+    wordpress_optimized: bool = False
+    wordpress_preinstalled: bool = False
+    wordpress_managed: bool = False
+    
+    # General features and settings
+    features: List[str] = []
+    addon_services: List[str] = []
+    control_panel: Optional[str] = None  # "cPanel", "Plesk", "Custom"
+    backup_frequency: Optional[str] = None  # "Daily", "Weekly", "Monthly"
+    uptime_guarantee: Optional[str] = None  # "99.9%", "99.99%"
+    support_level: str = "standard"  # "basic", "standard", "premium", "enterprise"
+    
+    # Pricing and availability
+    setup_fee: float = 0.0
+    billing_cycles: List[str] = ["monthly", "annually"]  # Available billing options
+    discount_annual: Optional[int] = None  # Percentage discount for annual billing
+    popular: bool = False
+    featured: bool = False
+    available: bool = True
+    
+    # Internal settings
+    markup_percentage: float = 0.0
+    cost_price: Optional[float] = None  # Internal cost for margin calculation
+    
+    # Metadata
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: Optional[datetime] = None
+
 # Authentication functions
 def hash_password(password: str) -> str:
     """Hash password using SHA256"""
@@ -1290,6 +1400,263 @@ async def get_system_status():
             "status": "unknown",
             "text": "Status Unknown"
         }
+
+# Category Management Endpoints
+@api_router.get("/admin/categories")
+async def get_categories(current_user: str = Depends(get_current_user)):
+    """Get all hosting categories"""
+    try:
+        categories = []
+        cursor = db.hosting_categories.find({}).sort("display_order", 1)
+        async for category in cursor:
+            if "_id" in category:
+                del category["_id"]
+            categories.append(category)
+        return categories
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/categories")
+async def create_category(category_data: dict, current_user: str = Depends(get_current_user)):
+    """Create new hosting category"""
+    try:
+        # Validate required fields
+        required_fields = ["name", "slug", "description"]
+        for field in required_fields:
+            if field not in category_data:
+                raise HTTPException(status_code=400, detail=f"Missing required field: {field}")
+        
+        # Check if slug already exists
+        existing = await db.hosting_categories.find_one({"slug": category_data["slug"]})
+        if existing:
+            raise HTTPException(status_code=400, detail="Category with this slug already exists")
+        
+        # Add metadata
+        category_data["id"] = str(uuid.uuid4())
+        category_data["created_at"] = datetime.utcnow()
+        category_data["is_active"] = category_data.get("is_active", True)
+        category_data["display_order"] = category_data.get("display_order", 1)
+        
+        # Insert into database
+        result = await db.hosting_categories.insert_one(category_data)
+        if not result.inserted_id:
+            raise HTTPException(status_code=400, detail="Failed to create category")
+        
+        return {"message": "Category created successfully", "id": category_data["id"]}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/admin/categories/{category_id}")
+async def update_category(category_id: str, category_data: dict, current_user: str = Depends(get_current_user)):
+    """Update hosting category"""
+    try:
+        # Check if category exists
+        existing = await db.hosting_categories.find_one({"id": category_id})
+        if not existing:
+            raise HTTPException(status_code=404, detail="Category not found")
+        
+        # If slug is being changed, check for conflicts
+        if "slug" in category_data and category_data["slug"] != existing.get("slug"):
+            slug_exists = await db.hosting_categories.find_one({
+                "slug": category_data["slug"],
+                "id": {"$ne": category_id}
+            })
+            if slug_exists:
+                raise HTTPException(status_code=400, detail="Category with this slug already exists")
+        
+        # Add update timestamp
+        category_data["updated_at"] = datetime.utcnow()
+        
+        # Update category
+        result = await db.hosting_categories.update_one(
+            {"id": category_id},
+            {"$set": category_data}
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=400, detail="Failed to update category")
+        
+        return {"message": "Category updated successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/admin/categories/{category_id}")
+async def delete_category(category_id: str, current_user: str = Depends(get_current_user)):
+    """Delete hosting category"""
+    try:
+        # Check if category exists
+        existing = await db.hosting_categories.find_one({"id": category_id})
+        if not existing:
+            raise HTTPException(status_code=404, detail="Category not found")
+        
+        # Check if category is being used by any plans
+        plan_count = await db.enhanced_hosting_plans.count_documents({"category_id": category_id})
+        if plan_count > 0:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Cannot delete category. {plan_count} hosting plan(s) are using this category."
+            )
+        
+        # Delete category
+        result = await db.hosting_categories.delete_one({"id": category_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=400, detail="Failed to delete category")
+        
+        return {"message": "Category deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Enhanced Plan Management Endpoints
+@api_router.get("/admin/plans")
+async def get_enhanced_plans(category_id: Optional[str] = None, current_user: str = Depends(get_current_user)):
+    """Get enhanced hosting plans with category support"""
+    try:
+        query = {}
+        if category_id:
+            query["category_id"] = category_id
+        
+        plans = []
+        cursor = db.enhanced_hosting_plans.find(query).sort("name", 1)
+        async for plan in cursor:
+            if "_id" in plan:
+                del plan["_id"]
+            plans.append(plan)
+        
+        return plans
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/plans")
+async def create_enhanced_plan(plan_data: dict, current_user: str = Depends(get_current_user)):
+    """Create new enhanced hosting plan"""
+    try:
+        # Validate required fields
+        required_fields = ["name", "price"]
+        for field in required_fields:
+            if field not in plan_data:
+                raise HTTPException(status_code=400, detail=f"Missing required field: {field}")
+        
+        # Validate category if provided
+        if "category_id" in plan_data and plan_data["category_id"]:
+            category = await db.hosting_categories.find_one({"id": plan_data["category_id"]})
+            if not category:
+                raise HTTPException(status_code=400, detail="Invalid category_id")
+        
+        # Add metadata
+        plan_data["id"] = str(uuid.uuid4())
+        plan_data["created_at"] = datetime.utcnow()
+        plan_data["available"] = plan_data.get("available", True)
+        
+        # Insert into database
+        result = await db.enhanced_hosting_plans.insert_one(plan_data)
+        if not result.inserted_id:
+            raise HTTPException(status_code=400, detail="Failed to create plan")
+        
+        return {"message": "Plan created successfully", "id": plan_data["id"]}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/admin/plans/{plan_id}")
+async def update_enhanced_plan(plan_id: str, plan_data: dict, current_user: str = Depends(get_current_user)):
+    """Update enhanced hosting plan"""
+    try:
+        # Check if plan exists
+        existing = await db.enhanced_hosting_plans.find_one({"id": plan_id})
+        if not existing:
+            raise HTTPException(status_code=404, detail="Plan not found")
+        
+        # Validate category if provided
+        if "category_id" in plan_data and plan_data["category_id"]:
+            category = await db.hosting_categories.find_one({"id": plan_data["category_id"]})
+            if not category:
+                raise HTTPException(status_code=400, detail="Invalid category_id")
+        
+        # Add update timestamp
+        plan_data["updated_at"] = datetime.utcnow()
+        
+        # Update plan
+        result = await db.enhanced_hosting_plans.update_one(
+            {"id": plan_id},
+            {"$set": plan_data}
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=400, detail="Failed to update plan")
+        
+        return {"message": "Plan updated successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# WordPress Settings Endpoints
+@api_router.get("/admin/wordpress-settings/{plan_id}")
+async def get_wordpress_settings(plan_id: str, current_user: str = Depends(get_current_user)):
+    """Get WordPress settings for a plan"""
+    try:
+        settings = await db.wordpress_settings.find_one({"plan_id": plan_id})
+        if not settings:
+            # Return default WordPress settings
+            return {
+                "plan_id": plan_id,
+                "preinstalled": False,
+                "managed_updates": False,
+                "staging_environment": False,
+                "daily_backups": False,
+                "ssl_certificate": True,
+                "support_level": "basic"
+            }
+        
+        if "_id" in settings:
+            del settings["_id"]
+        return settings
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/wordpress-settings")
+async def create_or_update_wordpress_settings(settings_data: dict, current_user: str = Depends(get_current_user)):
+    """Create or update WordPress settings for a plan"""
+    try:
+        plan_id = settings_data.get("plan_id")
+        if not plan_id:
+            raise HTTPException(status_code=400, detail="plan_id is required")
+        
+        # Check if plan exists
+        plan = await db.enhanced_hosting_plans.find_one({"id": plan_id})
+        if not plan:
+            raise HTTPException(status_code=404, detail="Plan not found")
+        
+        # Check if settings already exist
+        existing = await db.wordpress_settings.find_one({"plan_id": plan_id})
+        
+        if existing:
+            # Update existing settings
+            settings_data["updated_at"] = datetime.utcnow()
+            result = await db.wordpress_settings.update_one(
+                {"plan_id": plan_id},
+                {"$set": settings_data}
+            )
+            message = "WordPress settings updated successfully"
+        else:
+            # Create new settings
+            settings_data["id"] = str(uuid.uuid4())
+            settings_data["created_at"] = datetime.utcnow()
+            result = await db.wordpress_settings.insert_one(settings_data)
+            message = "WordPress settings created successfully"
+        
+        return {"message": message}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # Hardcoded hosting plans removed - using database initialization script instead
 
