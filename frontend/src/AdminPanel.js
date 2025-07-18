@@ -27,9 +27,39 @@ const AdminPanel = () => {
     checkAuthentication();
   }, []);
 
+  // Network connectivity test
+  const testNetworkConnectivity = async () => {
+    try {
+      console.log('Testing network connectivity to:', `${API}/api/debug`);
+      const response = await axios.get(`${API}/api/debug`, { timeout: 5000 });
+      console.log('Network test successful:', response.data);
+      return true;
+    } catch (error) {
+      console.error('Network test failed:', error);
+      if (error.code === 'ECONNABORTED') {
+        console.error('Request timed out - server may be unreachable');
+      } else if (error.response) {
+        console.error('Server responded with error:', error.response.status, error.response.data);
+      } else if (error.request) {
+        console.error('No response from server - check network connection and server status');
+      } else {
+        console.error('Request setup error:', error.message);
+      }
+      return false;
+    }
+  };
+
   const checkAuthentication = async () => {
     const token = localStorage.getItem('admin_token');
     if (!token) {
+      setAuthLoading(false);
+      return;
+    }
+
+    // First test network connectivity
+    const networkOk = await testNetworkConnectivity();
+    if (!networkOk) {
+      console.error('Network connectivity test failed - authentication check skipped');
       setAuthLoading(false);
       return;
     }
@@ -46,6 +76,7 @@ const AdminPanel = () => {
         localStorage.removeItem('admin_token');
       }
     } catch (error) {
+      console.error('Authentication check failed:', error);
       localStorage.removeItem('admin_token');
     } finally {
       setAuthLoading(false);
@@ -258,6 +289,10 @@ const AdminPanel = () => {
 
   const createPlan = async (planData) => {
     try {
+      console.log('Creating plan with data:', planData);
+      console.log('API URL:', `${API}/api/admin/hosting-plans`);
+      console.log('Auth headers:', getAuthHeaders());
+      
       const response = await axios.post(`${API}/api/admin/hosting-plans`, planData, {
         headers: {
           ...getAuthHeaders(),
@@ -272,10 +307,23 @@ const AdminPanel = () => {
       }
     } catch (error) {
       console.error('Error creating plan:', error);
+      console.error('Error response:', error.response);
+      console.error('Error request:', error.request);
+      console.error('Error config:', error.config);
+      
+      let errorMessage = 'Unknown error';
+      if (error.response) {
+        errorMessage = `${error.response.status}: ${error.response.data?.detail || error.response.statusText}`;
+      } else if (error.request) {
+        errorMessage = 'Network error: Could not reach the server';
+      } else {
+        errorMessage = error.message;
+      }
+      
       if (error.response?.status === 401) {
         handleLogout();
       } else {
-        alert('Error creating plan: ' + (error.response?.data?.detail || error.message));
+        alert('Error creating plan: ' + errorMessage);
       }
     }
   };
@@ -316,6 +364,10 @@ const AdminPanel = () => {
 
     const createCategory = async (categoryData) => {
       try {
+        console.log('Creating category with data:', categoryData);
+        console.log('API URL:', `${API}/api/admin/hosting-categories`);
+        console.log('Auth headers:', getAuthHeaders());
+        
         const response = await axios.post(`${API}/api/admin/hosting-categories`, categoryData, {
           headers: getAuthHeaders()
         });
@@ -327,7 +379,20 @@ const AdminPanel = () => {
         }
       } catch (error) {
         console.error('Error creating category:', error);
-        alert('Error creating category: ' + (error.response?.data?.detail || error.message));
+        console.error('Error response:', error.response);
+        console.error('Error request:', error.request);
+        console.error('Error config:', error.config);
+        
+        let errorMessage = 'Unknown error';
+        if (error.response) {
+          errorMessage = `${error.response.status}: ${error.response.data?.detail || error.response.statusText}`;
+        } else if (error.request) {
+          errorMessage = 'Network error: Could not reach the server';
+        } else {
+          errorMessage = error.message;
+        }
+        
+        alert('Error creating category: ' + errorMessage);
       }
     };
 
