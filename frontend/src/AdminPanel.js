@@ -276,9 +276,43 @@ const AdminPanel = () => {
 
   const PlanEditor = ({ plan, onUpdate }) => {
     const [formData, setFormData] = useState(plan);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+
+    // Load category data when plan category changes
+    useEffect(() => {
+      if (formData.category_id && categories.length > 0) {
+        const category = categories.find(c => c.id === formData.category_id);
+        setSelectedCategory(category);
+      }
+    }, [formData.category_id, categories]);
 
     const handleSubmit = (e) => {
       e.preventDefault();
+      
+      // Validation based on category requirements
+      const errors = [];
+      
+      if (!formData.name) errors.push("Plan name is required");
+      if (!formData.price || formData.price <= 0) errors.push("Valid price is required");
+      if (!formData.category_id) errors.push("Please select a category");
+      
+      // Category-specific validation
+      if (selectedCategory) {
+        if (selectedCategory.supports_wordpress) {
+          if (!formData.wordpress_sites) errors.push("WordPress sites limit is required for WordPress plans");
+        }
+      }
+      
+      // Resource validation
+      if (!formData.cpu) errors.push("CPU specification is required");
+      if (!formData.ram) errors.push("RAM specification is required");
+      if (!formData.disk_space) errors.push("Disk space specification is required");
+      
+      if (errors.length > 0) {
+        alert("Please fix the following errors:\n\n" + errors.join("\n"));
+        return;
+      }
+      
       onUpdate(plan.id, formData);
       setSelectedPlan(null);
     };
@@ -289,6 +323,41 @@ const AdminPanel = () => {
           <h3 className="text-xl font-bold text-white mb-4">Edit Plan: {plan.name}</h3>
           
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Category Selection */}
+            <div className="bg-gray-700 p-4 rounded-lg">
+              <h4 className="text-lg font-semibold text-white mb-4">Plan Category</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-300 mb-2">Category</label>
+                  <select
+                    value={formData.category_id || ''}
+                    onChange={(e) => setFormData({...formData, category_id: e.target.value})}
+                    className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                  >
+                    <option value="">Select Category</option>
+                    {categories.filter(cat => cat.is_active).map(category => (
+                      <option key={category.id} value={category.id}>
+                        {category.icon} {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {selectedCategory && (
+                  <div className="bg-gray-600 p-3 rounded">
+                    <p className="text-gray-300 text-sm">
+                      <strong>{selectedCategory.name}</strong>
+                    </p>
+                    <p className="text-gray-400 text-xs">{selectedCategory.description}</p>
+                    {selectedCategory.supports_wordpress && (
+                      <span className="inline-block mt-1 bg-blue-600 text-white px-2 py-1 rounded text-xs">
+                        WordPress Enabled
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-gray-300 mb-2">Plan Name</label>
@@ -313,36 +382,39 @@ const AdminPanel = () => {
             
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-300 mb-2">CPU</label>
+                <label className="block text-gray-300 mb-2">CPU *</label>
                 <input
                   type="text"
                   value={formData.cpu || ''}
                   onChange={(e) => setFormData({...formData, cpu: e.target.value})}
                   className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
-                  placeholder="e.g., 1 vCPU"
+                  placeholder="e.g., 1 vCPU, 2 cores"
+                  required
                 />
               </div>
               <div>
-                <label className="block text-gray-300 mb-2">RAM</label>
+                <label className="block text-gray-300 mb-2">RAM *</label>
                 <input
                   type="text"
                   value={formData.ram || ''}
                   onChange={(e) => setFormData({...formData, ram: e.target.value})}
                   className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
-                  placeholder="e.g., 1 GB RAM"
+                  placeholder="e.g., 1 GB, 512 MB"
+                  required
                 />
               </div>
             </div>
             
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-300 mb-2">Disk Space</label>
+                <label className="block text-gray-300 mb-2">Disk Space *</label>
                 <input
                   type="text"
                   value={formData.disk_space || ''}
                   onChange={(e) => setFormData({...formData, disk_space: e.target.value})}
                   className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
-                  placeholder="e.g., 10 GB SSD"
+                  placeholder="e.g., 10 GB SSD, 20 GB NVMe"
+                  required
                 />
               </div>
               <div>
@@ -352,10 +424,145 @@ const AdminPanel = () => {
                   value={formData.bandwidth || ''}
                   onChange={(e) => setFormData({...formData, bandwidth: e.target.value})}
                   className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
-                  placeholder="e.g., Unlimited"
+                  placeholder="e.g., Unlimited, 1 TB"
                 />
               </div>
             </div>
+            
+            {/* Resource Limits */}
+            <div className="bg-gray-700 p-4 rounded-lg">
+              <h4 className="text-lg font-semibold text-white mb-4">Resource Limits</h4>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-gray-300 mb-2">Max Processes</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.max_processes || ''}
+                    onChange={(e) => setFormData({...formData, max_processes: parseInt(e.target.value) || ''})}
+                    className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                    placeholder="100"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-300 mb-2">Max Memory (MB)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.max_memory_mb || ''}
+                    onChange={(e) => setFormData({...formData, max_memory_mb: parseInt(e.target.value) || ''})}
+                    className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                    placeholder="512"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-300 mb-2">Max CPU %</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={formData.max_cpu_percent || ''}
+                    onChange={(e) => setFormData({...formData, max_cpu_percent: parseInt(e.target.value) || ''})}
+                    className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                    placeholder="80"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            {/* WordPress Specific Settings */}
+            {selectedCategory && selectedCategory.supports_wordpress && (
+              <div className="bg-blue-900 p-4 rounded-lg border border-blue-700">
+                <h4 className="text-lg font-semibold text-blue-200 mb-4">WordPress Settings</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-blue-200 mb-2">WordPress Sites</label>
+                    <input
+                      type="text"
+                      value={formData.wordpress_sites || ''}
+                      onChange={(e) => setFormData({...formData, wordpress_sites: e.target.value})}
+                      className="w-full px-3 py-2 bg-blue-800 text-white rounded border border-blue-600"
+                      placeholder="e.g., 1, 5, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-blue-200 mb-2">WordPress Version</label>
+                    <select
+                      value={formData.wordpress_version || 'latest'}
+                      onChange={(e) => setFormData({...formData, wordpress_version: e.target.value})}
+                      className="w-full px-3 py-2 bg-blue-800 text-white rounded border border-blue-600"
+                    >
+                      <option value="latest">Latest</option>
+                      <option value="6.4">WordPress 6.4</option>
+                      <option value="6.3">WordPress 6.3</option>
+                      <option value="custom">Custom</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-blue-200 mb-2">Auto-Updates</label>
+                    <select
+                      value={formData.wordpress_auto_updates || 'enabled'}
+                      onChange={(e) => setFormData({...formData, wordpress_auto_updates: e.target.value})}
+                      className="w-full px-3 py-2 bg-blue-800 text-white rounded border border-blue-600"
+                    >
+                      <option value="enabled">Enabled</option>
+                      <option value="disabled">Disabled</option>
+                      <option value="major_only">Major Versions Only</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-blue-200 mb-2">Staging Environment</label>
+                    <select
+                      value={formData.wordpress_staging || 'included'}
+                      onChange={(e) => setFormData({...formData, wordpress_staging: e.target.value})}
+                      className="w-full px-3 py-2 bg-blue-800 text-white rounded border border-blue-600"
+                    >
+                      <option value="included">Included</option>
+                      <option value="not_included">Not Included</option>
+                      <option value="premium">Premium Feature</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={formData.wordpress_managed || false}
+                      onChange={(e) => setFormData({...formData, wordpress_managed: e.target.checked})}
+                      className="mr-2"
+                    />
+                    <label className="text-blue-200">Managed WordPress</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={formData.wordpress_cache || false}
+                      onChange={(e) => setFormData({...formData, wordpress_cache: e.target.checked})}
+                      className="mr-2"
+                    />
+                    <label className="text-blue-200">WordPress Cache</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={formData.wordpress_security || false}
+                      onChange={(e) => setFormData({...formData, wordpress_security: e.target.checked})}
+                      className="mr-2"
+                    />
+                    <label className="text-blue-200">Enhanced Security</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={formData.wordpress_backup || false}
+                      onChange={(e) => setFormData({...formData, wordpress_backup: e.target.checked})}
+                      className="mr-2"
+                    />
+                    <label className="text-blue-200">Auto Backups</label>
+                  </div>
+                </div>
+              </div>
+            )}
             
             {/* Shared Hosting Specific Fields */}
             {(formData.type === 'shared') && (
@@ -2280,26 +2487,149 @@ const AdminPanel = () => {
               </div>
             ) : (
               <div className="grid gap-6">
-                {[
-                  {key: 'ssd_shared', label: 'SSD Shared', filter: (p) => p.type === 'shared' && p.sub_type === 'ssd'},
-                  {key: 'hdd_shared', label: 'HDD Shared', filter: (p) => p.type === 'shared' && p.sub_type === 'hdd'},
-                  {key: 'standard_vps', label: 'Standard VPS', filter: (p) => p.type === 'vps' && p.sub_type === 'standard'},
-                  {key: 'performance_vps', label: 'Performance VPS', filter: (p) => p.type === 'vps' && p.sub_type === 'performance'},
-                  {key: 'standard_gameserver', label: 'Standard GameServer', filter: (p) => p.type === 'gameserver' && p.sub_type === 'standard'},
-                  {key: 'performance_gameserver', label: 'Performance GameServer', filter: (p) => p.type === 'gameserver' && p.sub_type === 'performance'}
-                ].map(planCategory => {
-                  const typePlans = hostingPlans.filter(planCategory.filter);
-                  if (typePlans.length === 0) return null;
+                {/* Group plans by categories dynamically */}
+                {categories.length > 0 ? (
+                  categories.filter(category => category.is_active).map(category => {
+                    const categoryPlans = hostingPlans.filter(plan => plan.category_id === category.id);
+                    if (categoryPlans.length === 0) return null;
+                    
+                    return (
+                      <div key={category.id} className="bg-gray-800 rounded-lg p-6">
+                        <div className="flex items-center gap-3 mb-4">
+                          {category.icon && <span className="text-2xl">{category.icon}</span>}
+                          <div>
+                            <h3 className="text-xl font-bold text-white">
+                              {category.name} ({categoryPlans.length} plans)
+                            </h3>
+                            <p className="text-gray-400 text-sm">{category.description}</p>
+                          </div>
+                          {category.supports_wordpress && (
+                            <span className="bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                              WordPress Ready
+                            </span>
+                          )}
+                        </div>
+                        
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {categoryPlans.map(plan => (
+                            <div key={plan.id} className="bg-gray-700 rounded-lg p-4">
+                              <div className="flex justify-between items-start mb-2">
+                                <h4 className="font-bold text-white">{plan.name}</h4>
+                                {plan.is_popular && (
+                                  <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs">Popular</span>
+                                )}
+                              </div>
+                              
+                              <div className="text-blue-400 font-bold text-lg mb-2">
+                                ${plan.price}/mo
+                              </div>
+                              
+                              <div className="text-gray-300 text-sm mb-4">
+                                {plan.cpu && <div>CPU: {plan.cpu}</div>}
+                                {plan.ram && <div>RAM: {plan.ram}</div>}
+                                {plan.disk_space && <div>Storage: {plan.disk_space}</div>}
+                                {plan.bandwidth && <div>Bandwidth: {plan.bandwidth}</div>}
+                                {plan.markup_percentage > 0 && (
+                                  <div className="text-yellow-400 text-xs mt-1">
+                                    Markup: {plan.markup_percentage}%
+                                  </div>
+                                )}
+                                {/* WordPress specific info */}
+                                {category.supports_wordpress && plan.wordpress_sites && (
+                                  <div className="text-blue-300 text-xs mt-1">
+                                    WordPress Sites: {plan.wordpress_sites}
+                                  </div>
+                                )}
+                              </div>
+                              
+                              <button
+                                onClick={() => setSelectedPlan(plan)}
+                                className="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                              >
+                                Edit Plan
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  /* Fallback to legacy grouping if no categories */
+                  [
+                    {key: 'ssd_shared', label: 'SSD Shared', filter: (p) => p.type === 'shared' && p.sub_type === 'ssd'},
+                    {key: 'hdd_shared', label: 'HDD Shared', filter: (p) => p.type === 'shared' && p.sub_type === 'hdd'},
+                    {key: 'standard_vps', label: 'Standard VPS', filter: (p) => p.type === 'vps' && p.sub_type === 'standard'},
+                    {key: 'performance_vps', label: 'Performance VPS', filter: (p) => p.type === 'vps' && p.sub_type === 'performance'},
+                    {key: 'standard_gameserver', label: 'Standard GameServer', filter: (p) => p.type === 'gameserver' && p.sub_type === 'standard'},
+                    {key: 'performance_gameserver', label: 'Performance GameServer', filter: (p) => p.type === 'gameserver' && p.sub_type === 'performance'}
+                  ].map(planCategory => {
+                    const typePlans = hostingPlans.filter(planCategory.filter);
+                    if (typePlans.length === 0) return null;
+                    
+                    return (
+                      <div key={planCategory.key} className="bg-gray-800 rounded-lg p-6">
+                        <h3 className="text-xl font-bold text-white mb-4">
+                          {planCategory.label} ({typePlans.length} plans)
+                        </h3>
+                        
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {typePlans.map(plan => (
+                            <div key={plan.id} className="bg-gray-700 rounded-lg p-4">
+                              <div className="flex justify-between items-start mb-2">
+                                <h4 className="font-bold text-white">{plan.name}</h4>
+                                {plan.is_popular && (
+                                  <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs">Popular</span>
+                                )}
+                              </div>
+                              
+                              <div className="text-blue-400 font-bold text-lg mb-2">
+                                ${plan.price}/mo
+                              </div>
+                              
+                              <div className="text-gray-300 text-sm mb-4">
+                                {plan.cpu && <div>CPU: {plan.cpu}</div>}
+                                {plan.ram && <div>RAM: {plan.ram}</div>}
+                                {plan.disk_space && <div>Storage: {plan.disk_space}</div>}
+                                {plan.bandwidth && <div>Bandwidth: {plan.bandwidth}</div>}
+                                {plan.markup_percentage > 0 && (
+                                  <div className="text-yellow-400 text-xs mt-1">
+                                    Markup: {plan.markup_percentage}%
+                                  </div>
+                                )}
+                              </div>
+                              
+                              <button
+                                onClick={() => setSelectedPlan(plan)}
+                                className="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                              >
+                                Edit Plan
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+                
+                {/* Plans without categories */}
+                {(() => {
+                  const uncategorizedPlans = hostingPlans.filter(plan => !plan.category_id);
+                  if (uncategorizedPlans.length === 0) return null;
                   
                   return (
-                    <div key={planCategory.key} className="bg-gray-800 rounded-lg p-6">
+                    <div className="bg-gray-800 rounded-lg p-6 border-l-4 border-yellow-500">
                       <h3 className="text-xl font-bold text-white mb-4">
-                        {planCategory.label} ({typePlans.length} plans)
+                        ⚠️ Uncategorized Plans ({uncategorizedPlans.length} plans)
                       </h3>
+                      <p className="text-yellow-400 text-sm mb-4">
+                        These plans don't have a category assigned. Please assign them to a category for better organization.
+                      </p>
                       
                       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {typePlans.map(plan => (
-                          <div key={plan.id} className="bg-gray-700 rounded-lg p-4">
+                        {uncategorizedPlans.map(plan => (
+                          <div key={plan.id} className="bg-gray-700 rounded-lg p-4 border border-yellow-600">
                             <div className="flex justify-between items-start mb-2">
                               <h4 className="font-bold text-white">{plan.name}</h4>
                               {plan.is_popular && (
@@ -2325,16 +2655,16 @@ const AdminPanel = () => {
                             
                             <button
                               onClick={() => setSelectedPlan(plan)}
-                              className="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                              className="w-full px-3 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700"
                             >
-                              Edit Plan
+                              Edit & Categorize
                             </button>
                           </div>
                         ))}
                       </div>
                     </div>
                   );
-                })}
+                })()}
               </div>
             )}
           </div>
