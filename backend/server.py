@@ -133,7 +133,8 @@ class SiteSettings(BaseModel):
 
 class HostingPlan(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    plan_type: str  # "ssd_shared", "hdd_shared", "standard_vps", "performance_vps", "standard_gameserver", "performance_gameserver"
+    plan_type: str  # Now supports dynamic types including: "ssd_shared", "hdd_shared", "shared_byop", "managed_wordpress", etc.
+    category_key: Optional[str] = None  # Reference to HostingCategory.key for new categorization
     plan_name: str
     base_price: float
     cpu_cores: Optional[int] = None
@@ -152,11 +153,17 @@ class HostingPlan(BaseModel):
     addon_domains: Optional[str] = None  # e.g., "0", "5", "Unlimited"
     databases: Optional[str] = None  # e.g., "1", "10", "Unlimited"
     email_accounts: Optional[str] = None  # e.g., "5", "Unlimited"
+    # New fields for Build Your Own Plan and managed services
+    is_customizable: bool = False  # For BYOP plans
+    docker_image: Optional[str] = None  # For containerized plans
+    managed_wordpress: bool = False  # For WordPress managed hosting
+    auto_scaling: bool = False  # For managed services
 
 class PublicHostingPlan(BaseModel):
     """Public-facing hosting plan model without internal markup information"""
     id: str
     plan_type: str
+    category_key: Optional[str] = None
     plan_name: str
     base_price: float
     cpu_cores: Optional[int] = None
@@ -174,6 +181,11 @@ class PublicHostingPlan(BaseModel):
     addon_domains: Optional[str] = None
     databases: Optional[str] = None
     email_accounts: Optional[str] = None
+    # New public fields
+    is_customizable: bool = False
+    docker_image: Optional[str] = None
+    managed_wordpress: bool = False
+    auto_scaling: bool = False
 
 class CompanyInfo(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -244,6 +256,22 @@ class PromoCode(BaseModel):
     button_text: str = "Copy Code"
     button_url: Optional[str] = None  # If provided, button links to URL instead of copying code
     created_date: datetime = Field(default_factory=datetime.utcnow)
+
+class HostingCategory(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    key: str  # e.g., "ssd_shared", "shared_byop", "managed_wordpress"
+    display_name: str  # e.g., "SSD Shared Hosting", "Build Your Own Plan"
+    description: Optional[str] = None
+    section_title: Optional[str] = None  # Title for the section display
+    section_description: Optional[str] = None  # Description for the section
+    type: str  # "shared", "vps", "gameserver", "custom"
+    sub_type: Optional[str] = None  # "ssd", "hdd", "standard", "performance", "byop", "managed"
+    is_active: bool = True
+    display_order: int = 0
+    supports_custom_features: bool = False  # For Build Your Own Plan type features
+    supports_containers: bool = False  # For Docker/container features
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 # Authentication functions
 def hash_password(password: str) -> str:
@@ -563,6 +591,89 @@ async def update_hosting_plan(plan_id: str, plan_update: dict, current_user: str
         if result.matched_count == 0:
             raise HTTPException(status_code=404, detail="Plan not found")
         return {"message": "Plan updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Hosting Category Management Endpoints
+
+@api_router.get("/admin/hosting-categories")
+async def get_admin_hosting_categories(current_user: str = Depends(get_current_user)):
+    """Get all hosting categories - admin only"""
+    try:
+        categories = await db.hosting_categories.find().to_list(1000)
+        # Convert ObjectIds to strings for JSON serialization
+        for category in categories:
+            if "_id" in category:
+                del category["_id"]
+        return categories
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/hosting-categories")
+async def get_hosting_categories():
+    """Get all active hosting categories - public endpoint"""
+    try:
+        categories = await db.hosting_categories.find({"is_active": True}).sort("display_order", 1).to_list(1000)
+        # Convert ObjectIds to strings and remove internal fields
+        public_categories = []
+        for category in categories:
+            if "_id" in category:
+                del category["_id"]
+            public_categories.append(category)
+        return public_categories
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/hosting-categories")
+async def create_hosting_category(category_data: HostingCategory, current_user: str = Depends(get_current_user)):
+    """Create a new hosting category - admin only"""
+    try:
+        # Check if category key already exists
+        existing = await db.hosting_categories.find_one({"key": category_data.key})
+        if existing:
+            raise HTTPException(status_code=400, detail="Category key already exists")
+        
+        category_dict = category_data.dict()
+        category_dict["created_at"] = datetime.utcnow()
+        category_dict["updated_at"] = datetime.utcnow()
+        
+        result = await db.hosting_categories.insert_one(category_dict)
+        if not result.inserted_id:
+            raise HTTPException(status_code=400, detail="Failed to create category")
+        
+        return {"message": "Category created successfully", "id": category_data.id}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/admin/hosting-categories/{category_id}")
+async def update_hosting_category(category_id: str, category_update: dict, current_user: str = Depends(get_current_user)):
+    """Update hosting category - admin only"""
+    try:
+        category_update["updated_at"] = datetime.utcnow()
+        
+        result = await db.hosting_categories.update_one(
+            {"id": category_id}, 
+            {"$set": category_update}
+        )
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Category not found")
+        return {"message": "Category updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/admin/hosting-categories/{category_id}")
+async def delete_hosting_category(category_id: str, current_user: str = Depends(get_current_user)):
+    """Delete hosting category - admin only"""
+    try:
+        # Check if category has associated plans
+        plans_count = await db.hosting_plans.count_documents({"category_key": category_id})
+        if plans_count > 0:
+            raise HTTPException(status_code=400, detail="Cannot delete category with associated plans")
+        
+        result = await db.hosting_categories.delete_one({"id": category_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Category not found")
+        return {"message": "Category deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
