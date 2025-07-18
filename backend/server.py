@@ -245,6 +245,114 @@ class PromoCode(BaseModel):
     button_url: Optional[str] = None  # If provided, button links to URL instead of copying code
     created_date: datetime = Field(default_factory=datetime.utcnow)
 
+# New models for dynamic plan management
+class CategoryCreate(BaseModel):
+    name: str
+    type: str
+    description: str
+    features: List[str]
+    resource_specs: dict  # Defines what resource fields are available
+
+class PlanCreate(BaseModel):
+    category: str
+    name: str
+    description: str
+    price: float
+    resources: dict  # Dynamic based on category resource_specs
+    features: List[str]
+    billing_cycle: str
+
+class HostingCategory(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    type: str  # "shared", "vps", "gameserver", "dedicated", "container"
+    description: str
+    features: List[str]
+    resource_specs: dict  # Defines what resource fields are available
+    validation_rules: Optional[dict] = None  # Category-specific validation rules
+    template_settings: Optional[dict] = None  # Default settings for plans in this category
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class DynamicPlan(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    category_id: str
+    category_type: str
+    name: str
+    description: str
+    price: float
+    resources: dict  # Dynamic resource allocation based on category
+    features: List[str]
+    billing_cycle: str
+    markup_percentage: int = 0
+    is_popular: bool = False
+    is_active: bool = True
+    order_url: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+# Validation and helper functions for dynamic plans
+def validate_resource_specs(resources: dict, category_specs: dict) -> bool:
+    """Validate that provided resources match the category's resource specifications"""
+    required_fields = category_specs.get("required_fields", [])
+    optional_fields = category_specs.get("optional_fields", [])
+    all_allowed_fields = required_fields + optional_fields
+    
+    # Check that all required fields are present
+    for field in required_fields:
+        if field not in resources:
+            return False
+    
+    # Check that no invalid fields are present
+    for field in resources:
+        if field not in all_allowed_fields:
+            return False
+    
+    return True
+
+def validate_plan_data(plan_data: dict, category: dict) -> List[str]:
+    """Validate plan data against category rules and return list of errors"""
+    errors = []
+    
+    # Validate resource specifications
+    if not validate_resource_specs(plan_data.get("resources", {}), category.get("resource_specs", {})):
+        errors.append("Resources do not match category specifications")
+    
+    # Apply category-specific validation rules
+    validation_rules = category.get("validation_rules", {})
+    
+    # Validate price constraints
+    if "price_min" in validation_rules and plan_data.get("price", 0) < validation_rules["price_min"]:
+        errors.append(f"Price must be at least ${validation_rules['price_min']}")
+    
+    if "price_max" in validation_rules and plan_data.get("price", 0) > validation_rules["price_max"]:
+        errors.append(f"Price must not exceed ${validation_rules['price_max']}")
+    
+    # Validate billing cycle
+    allowed_cycles = validation_rules.get("allowed_billing_cycles", ["monthly", "quarterly", "yearly"])
+    if plan_data.get("billing_cycle") not in allowed_cycles:
+        errors.append(f"Billing cycle must be one of: {', '.join(allowed_cycles)}")
+    
+    return errors
+
+async def check_duplicate_plan(db, name: str, category_id: str, exclude_id: Optional[str] = None) -> bool:
+    """Check if a plan with the same name already exists in the category"""
+    query = {"name": name, "category_id": category_id}
+    if exclude_id:
+        query["id"] = {"$ne": exclude_id}
+    
+    existing = await db.dynamic_plans.find_one(query)
+    return existing is not None
+
+async def check_duplicate_category(db, name: str, exclude_id: Optional[str] = None) -> bool:
+    """Check if a category with the same name already exists"""
+    query = {"name": name}
+    if exclude_id:
+        query["id"] = {"$ne": exclude_id}
+    
+    existing = await db.hosting_categories.find_one(query)
+    return existing is not None
+
 # Authentication functions
 def hash_password(password: str) -> str:
     """Hash password using SHA256"""
@@ -460,19 +568,33 @@ async def get_admin_hosting_plans(current_user: str = Depends(get_current_user))
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/hosting-plans", response_model=List[dict])
-async def get_hosting_plans(plan_type: Optional[str] = None):
-    """Get all hosting plans or filter by type"""
+async def get_hosting_plans(plan_type: Optional[str] = None, category: Optional[str] = None):
+    """Get all hosting plans or filter by type/category"""
     try:
-        query = {}
+        # Build query for legacy plans
+        legacy_query = {}
         if plan_type:
-            query["plan_type"] = plan_type  # Fixed: database field is 'plan_type' not 'type'
+            legacy_query["plan_type"] = plan_type
         
-        plans = await db.hosting_plans.find(query).to_list(1000)
+        # Build query for dynamic plans
+        dynamic_query = {}
+        if plan_type:
+            dynamic_query["category_type"] = plan_type
+        if category:
+            dynamic_query["category_id"] = category
+        
+        # Get legacy plans
+        legacy_plans = await db.hosting_plans.find(legacy_query).to_list(1000)
+        
+        # Get dynamic plans (only active ones for public API)
+        dynamic_query["is_active"] = True
+        dynamic_plans = await db.dynamic_plans.find(dynamic_query).to_list(1000)
         
         # Convert ObjectIds to strings and return clean data without markup_percentage
-        # Also map old field names to new field names expected by frontend
         public_plans = []
-        for plan in plans:
+        
+        # Process legacy plans
+        for plan in legacy_plans:
             if "_id" in plan:
                 del plan["_id"]
             # Remove markup_percentage for public API
@@ -494,11 +616,40 @@ async def get_hosting_plans(plan_type: Optional[str] = None):
                     mapped_plan[key] = value
 
             # Ensure both 'type' and 'sub_type' are present for frontend filtering
-            # If your db uses 'type' and 'sub_type', make sure to copy them to the mapped_plan
             if "type" in plan:
                 mapped_plan["type"] = plan["type"]
             if "sub_type" in plan:
                 mapped_plan["sub_type"] = plan["sub_type"]
+            
+            mapped_plan["plan_source"] = "legacy"
+            public_plans.append(mapped_plan)
+        
+        # Process dynamic plans
+        for plan in dynamic_plans:
+            if "_id" in plan:
+                del plan["_id"]
+            # Remove markup_percentage for public API
+            if "markup_percentage" in plan:
+                del plan["markup_percentage"]
+            
+            # Map dynamic plan fields to expected frontend format
+            mapped_plan = {
+                "id": plan["id"],
+                "name": plan["name"], 
+                "type": plan["category_type"],
+                "price": plan["price"],
+                "description": plan["description"],
+                "features": plan["features"],
+                "is_popular": plan.get("is_popular", False),
+                "billing_cycle": plan["billing_cycle"],
+                "plan_source": "dynamic",
+                "category_id": plan["category_id"],
+                "order_url": plan.get("order_url")
+            }
+            
+            # Add resource fields dynamically
+            for key, value in plan["resources"].items():
+                mapped_plan[key] = value
             
             public_plans.append(mapped_plan)
         
@@ -1222,6 +1373,249 @@ async def update_admin_content(section: str, content_data: dict, current_user: s
         )
         
         return {"message": f"Content for {section} updated successfully", "section": section}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Dynamic Plan and Category Management Endpoints
+
+@api_router.get("/admin/categories")
+async def get_categories(current_user: str = Depends(get_current_user)):
+    """Get all hosting plan categories - admin only"""
+    try:
+        categories = await db.hosting_categories.find().to_list(100)
+        # Convert ObjectIds to strings for JSON serialization
+        for category in categories:
+            if "_id" in category:
+                del category["_id"]
+        return categories
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/categories")
+async def create_category(category_data: CategoryCreate, current_user: str = Depends(get_current_user)):
+    """Create new hosting plan category - admin only"""
+    try:
+        # Check for duplicate category name
+        if await check_duplicate_category(db, category_data.name):
+            raise HTTPException(status_code=400, detail="Category with this name already exists")
+        
+        # Create category document
+        category_doc = HostingCategory(
+            name=category_data.name,
+            type=category_data.type,
+            description=category_data.description,
+            features=category_data.features,
+            resource_specs=category_data.resource_specs
+        ).dict()
+        
+        # Remove any _id field to avoid conflicts
+        if "_id" in category_doc:
+            del category_doc["_id"]
+        
+        result = await db.hosting_categories.insert_one(category_doc)
+        if not result.inserted_id:
+            raise HTTPException(status_code=400, detail="Failed to create category")
+        
+        return {"message": "Category created successfully", "id": category_doc["id"]}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/admin/categories/{category_id}")
+async def update_category(category_id: str, category_data: dict, current_user: str = Depends(get_current_user)):
+    """Update hosting plan category - admin only"""
+    try:
+        # Check if category exists
+        existing = await db.hosting_categories.find_one({"id": category_id})
+        if not existing:
+            raise HTTPException(status_code=404, detail="Category not found")
+        
+        # Check for duplicate name (excluding current category)
+        if "name" in category_data:
+            if await check_duplicate_category(db, category_data["name"], category_id):
+                raise HTTPException(status_code=400, detail="Category with this name already exists")
+        
+        # Add timestamp
+        category_data["updated_at"] = datetime.utcnow()
+        
+        # Remove any _id field to avoid conflicts
+        if "_id" in category_data:
+            del category_data["_id"]
+        
+        result = await db.hosting_categories.update_one(
+            {"id": category_id},
+            {"$set": category_data}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Category not found")
+        
+        return {"message": "Category updated successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/admin/categories/{category_id}")
+async def delete_category(category_id: str, current_user: str = Depends(get_current_user)):
+    """Delete hosting plan category - admin only"""
+    try:
+        # Check if category has associated plans
+        plans_count = await db.dynamic_plans.count_documents({"category_id": category_id})
+        if plans_count > 0:
+            raise HTTPException(status_code=400, detail=f"Cannot delete category with {plans_count} associated plans")
+        
+        result = await db.hosting_categories.delete_one({"id": category_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Category not found")
+        
+        return {"message": "Category deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/admin/plans")
+async def get_admin_plans(
+    category: Optional[str] = None, 
+    current_user: str = Depends(get_current_user)
+):
+    """Get all hosting plans with optional category filter - admin only"""
+    try:
+        query = {}
+        if category:
+            query["category_id"] = category
+        
+        # Get both legacy and dynamic plans
+        legacy_plans = await db.hosting_plans.find().to_list(1000)
+        dynamic_plans = await db.dynamic_plans.find(query).to_list(1000)
+        
+        # Convert ObjectIds to strings and prepare response
+        all_plans = []
+        
+        # Process legacy plans
+        for plan in legacy_plans:
+            if "_id" in plan:
+                del plan["_id"]
+            plan["plan_source"] = "legacy"
+            all_plans.append(plan)
+        
+        # Process dynamic plans
+        for plan in dynamic_plans:
+            if "_id" in plan:
+                del plan["_id"]
+            plan["plan_source"] = "dynamic"
+            all_plans.append(plan)
+        
+        return all_plans
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/plans")
+async def create_plan(plan_data: PlanCreate, current_user: str = Depends(get_current_user)):
+    """Create new hosting plan - admin only"""
+    try:
+        # Get category to validate against
+        category = await db.hosting_categories.find_one({"id": plan_data.category})
+        if not category:
+            raise HTTPException(status_code=400, detail="Category not found")
+        
+        # Validate plan data against category rules
+        validation_errors = validate_plan_data(plan_data.dict(), category)
+        if validation_errors:
+            raise HTTPException(status_code=400, detail="; ".join(validation_errors))
+        
+        # Check for duplicate plan name in category
+        if await check_duplicate_plan(db, plan_data.name, plan_data.category):
+            raise HTTPException(status_code=400, detail="Plan with this name already exists in the category")
+        
+        # Create plan document
+        plan_doc = DynamicPlan(
+            category_id=plan_data.category,
+            category_type=category["type"],
+            name=plan_data.name,
+            description=plan_data.description,
+            price=plan_data.price,
+            resources=plan_data.resources,
+            features=plan_data.features,
+            billing_cycle=plan_data.billing_cycle
+        ).dict()
+        
+        # Remove any _id field to avoid conflicts
+        if "_id" in plan_doc:
+            del plan_doc["_id"]
+        
+        result = await db.dynamic_plans.insert_one(plan_doc)
+        if not result.inserted_id:
+            raise HTTPException(status_code=400, detail="Failed to create plan")
+        
+        return {"message": "Plan created successfully", "id": plan_doc["id"]}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/admin/plans/{plan_id}")
+async def update_plan(plan_id: str, plan_data: dict, current_user: str = Depends(get_current_user)):
+    """Update hosting plan - admin only"""
+    try:
+        # Check if plan exists
+        existing = await db.dynamic_plans.find_one({"id": plan_id})
+        if not existing:
+            raise HTTPException(status_code=404, detail="Plan not found")
+        
+        # If category is being changed, validate against new category
+        category_id = plan_data.get("category_id", existing["category_id"])
+        category = await db.hosting_categories.find_one({"id": category_id})
+        if not category:
+            raise HTTPException(status_code=400, detail="Category not found")
+        
+        # Validate plan data against category rules
+        merged_data = {**existing, **plan_data}
+        validation_errors = validate_plan_data(merged_data, category)
+        if validation_errors:
+            raise HTTPException(status_code=400, detail="; ".join(validation_errors))
+        
+        # Check for duplicate name (excluding current plan)
+        if "name" in plan_data:
+            if await check_duplicate_plan(db, plan_data["name"], category_id, plan_id):
+                raise HTTPException(status_code=400, detail="Plan with this name already exists in the category")
+        
+        # Add timestamp and category type
+        plan_data["updated_at"] = datetime.utcnow()
+        if "category_id" in plan_data:
+            plan_data["category_type"] = category["type"]
+        
+        # Remove any _id field to avoid conflicts
+        if "_id" in plan_data:
+            del plan_data["_id"]
+        
+        result = await db.dynamic_plans.update_one(
+            {"id": plan_id},
+            {"$set": plan_data}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Plan not found")
+        
+        return {"message": "Plan updated successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/admin/plans/{plan_id}")
+async def delete_plan(plan_id: str, current_user: str = Depends(get_current_user)):
+    """Delete hosting plan - admin only"""
+    try:
+        result = await db.dynamic_plans.delete_one({"id": plan_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Plan not found")
+        
+        return {"message": "Plan deleted successfully"}
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
