@@ -594,6 +594,34 @@ async def update_hosting_plan(plan_id: str, plan_update: dict, current_user: str
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.post("/admin/hosting-plans")
+async def create_hosting_plan(plan_data: HostingPlan, current_user: str = Depends(get_current_user)):
+    """Create a new hosting plan - admin only"""
+    try:
+        # Check if plan with same name already exists
+        existing = await db.hosting_plans.find_one({"plan_name": plan_data.plan_name})
+        if existing:
+            raise HTTPException(status_code=400, detail="Plan with this name already exists")
+        
+        # Convert plan data to dict and add timestamps
+        plan_dict = plan_data.dict()
+        plan_dict["created_at"] = datetime.utcnow()
+        plan_dict["updated_at"] = datetime.utcnow()
+        
+        # Validate category_key if provided
+        if plan_data.category_key:
+            category = await db.hosting_categories.find_one({"key": plan_data.category_key})
+            if not category:
+                raise HTTPException(status_code=400, detail="Invalid category key")
+        
+        result = await db.hosting_plans.insert_one(plan_dict)
+        if not result.inserted_id:
+            raise HTTPException(status_code=400, detail="Failed to create plan")
+        
+        return {"message": "Plan created successfully", "id": plan_data.id}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Hosting Category Management Endpoints
 
 @api_router.get("/admin/hosting-categories")

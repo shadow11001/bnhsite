@@ -10,6 +10,7 @@ const AdminPanel = () => {
   const [companyInfo, setCompanyInfo] = useState({});
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [showCreatePlan, setShowCreatePlan] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('plans');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -255,6 +256,23 @@ const AdminPanel = () => {
     }
   };
 
+  const createPlan = async (planData) => {
+    try {
+      const response = await axios.post(`${API}/api/admin/hosting-plans`, planData, {
+        headers: getAuthHeaders()
+      });
+      
+      if (response.status === 200) {
+        alert('Plan created successfully!');
+        setShowCreatePlan(false);
+        await fetchData(); // Refresh data
+      }
+    } catch (error) {
+      console.error('Error creating plan:', error);
+      alert('Error creating plan: ' + (error.response?.data?.detail || error.message));
+    }
+  };
+
   const updateCompanyInfo = async (updates) => {
     try {
       // Try different endpoints and methods
@@ -408,6 +426,333 @@ const AdminPanel = () => {
             onCancel={() => setEditingCategory(null)}
           />
         )}
+      </div>
+    );
+  };
+
+  // Plan Creator Component
+  const PlanCreator = ({ onSave, onCancel }) => {
+    const [formData, setFormData] = useState({
+      plan_name: '',
+      plan_type: '',
+      category_key: '',
+      base_price: 0,
+      cpu_cores: null,
+      memory_gb: null,
+      disk_gb: null,
+      disk_type: 'SSD',
+      bandwidth: '',
+      websites: '',
+      email_accounts: '',
+      subdomains: '',
+      addon_domains: '',
+      databases: '',
+      features: [],
+      popular: false,
+      markup_percentage: 0,
+      supported_games: [],
+      docker_image: '',
+      managed_wordpress: false
+    });
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      
+      // Validation
+      if (!formData.plan_name || !formData.category_key || formData.base_price <= 0) {
+        alert('Please fill in all required fields (Plan Name, Category, and Price)');
+        return;
+      }
+      
+      onSave(formData);
+    };
+
+    const addFeature = () => {
+      const feature = prompt('Enter new feature:');
+      if (feature) {
+        setFormData({
+          ...formData,
+          features: [...formData.features, feature]
+        });
+      }
+    };
+
+    const removeFeature = (index) => {
+      setFormData({
+        ...formData,
+        features: formData.features.filter((_, i) => i !== index)
+      });
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="bg-gray-800 rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-bold text-white">Create New Plan</h3>
+            <button
+              onClick={onCancel}
+              className="text-gray-400 hover:text-white"
+            >
+              ✕
+            </button>
+          </div>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Basic Info */}
+              <div>
+                <label className="block text-gray-300 mb-2">Plan Name *</label>
+                <input
+                  type="text"
+                  value={formData.plan_name}
+                  onChange={(e) => setFormData({...formData, plan_name: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., Basic SSD Plan"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Category *</label>
+                <select
+                  value={formData.category_key}
+                  onChange={(e) => setFormData({...formData, category_key: e.target.value, plan_type: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  required
+                >
+                  <option value="">Select a category</option>
+                  {hostingCategories.map(category => (
+                    <option key={category.key} value={category.key}>
+                      {category.display_name} ({category.key})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Base Price *</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={formData.base_price}
+                  onChange={(e) => setFormData({...formData, base_price: parseFloat(e.target.value)})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="0.00"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Markup Percentage</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={formData.markup_percentage}
+                  onChange={(e) => setFormData({...formData, markup_percentage: parseInt(e.target.value)})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="0"
+                />
+              </div>
+              
+              {/* Resource Specs */}
+              <div>
+                <label className="block text-gray-300 mb-2">CPU Cores</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={formData.cpu_cores || ''}
+                  onChange={(e) => setFormData({...formData, cpu_cores: e.target.value ? parseInt(e.target.value) : null})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 2"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Memory (GB)</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={formData.memory_gb || ''}
+                  onChange={(e) => setFormData({...formData, memory_gb: e.target.value ? parseInt(e.target.value) : null})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 4"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Disk Space (GB)</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={formData.disk_gb || ''}
+                  onChange={(e) => setFormData({...formData, disk_gb: e.target.value ? parseInt(e.target.value) : null})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 50"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Disk Type</label>
+                <select
+                  value={formData.disk_type}
+                  onChange={(e) => setFormData({...formData, disk_type: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                >
+                  <option value="SSD">SSD</option>
+                  <option value="HDD">HDD</option>
+                  <option value="NVMe">NVMe</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Bandwidth</label>
+                <input
+                  type="text"
+                  value={formData.bandwidth}
+                  onChange={(e) => setFormData({...formData, bandwidth: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 1TB, Unlimited"
+                />
+              </div>
+              
+              {/* Shared Hosting Specific */}
+              <div>
+                <label className="block text-gray-300 mb-2">Websites</label>
+                <input
+                  type="text"
+                  value={formData.websites}
+                  onChange={(e) => setFormData({...formData, websites: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 1, 5, Unlimited"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Email Accounts</label>
+                <input
+                  type="text"
+                  value={formData.email_accounts}
+                  onChange={(e) => setFormData({...formData, email_accounts: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 10, 100, Unlimited"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Subdomains</label>
+                <input
+                  type="text"
+                  value={formData.subdomains}
+                  onChange={(e) => setFormData({...formData, subdomains: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 10, Unlimited"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Addon Domains</label>
+                <input
+                  type="text"
+                  value={formData.addon_domains}
+                  onChange={(e) => setFormData({...formData, addon_domains: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 0, 5, Unlimited"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Databases</label>
+                <input
+                  type="text"
+                  value={formData.databases}
+                  onChange={(e) => setFormData({...formData, databases: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 1, 10, Unlimited"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Docker Image</label>
+                <input
+                  type="text"
+                  value={formData.docker_image}
+                  onChange={(e) => setFormData({...formData, docker_image: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., nginx:latest"
+                />
+              </div>
+            </div>
+            
+            {/* Features */}
+            <div>
+              <label className="block text-gray-300 mb-2">Features</label>
+              <div className="space-y-2">
+                {formData.features.map((feature, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <span className="flex-1 px-3 py-2 bg-gray-700 text-white rounded border border-gray-600">
+                      {feature}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeFeature(index)}
+                      className="px-2 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={addFeature}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Add Feature
+                </button>
+              </div>
+            </div>
+            
+            {/* Checkboxes */}
+            <div className="flex space-x-6">
+              <label className="flex items-center text-gray-300">
+                <input
+                  type="checkbox"
+                  checked={formData.popular}
+                  onChange={(e) => setFormData({...formData, popular: e.target.checked})}
+                  className="mr-2"
+                />
+                Popular Plan
+              </label>
+              
+              <label className="flex items-center text-gray-300">
+                <input
+                  type="checkbox"
+                  checked={formData.managed_wordpress}
+                  onChange={(e) => setFormData({...formData, managed_wordpress: e.target.checked})}
+                  className="mr-2"
+                />
+                Managed WordPress
+              </label>
+            </div>
+            
+            <div className="flex justify-end space-x-4 pt-4">
+              <button
+                type="button"
+                onClick={onCancel}
+                className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Create Plan
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     );
   };
@@ -2379,7 +2724,15 @@ const AdminPanel = () => {
         
         {activeTab === 'plans' && (
           <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Manage Hosting Plans</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-white">Manage Hosting Plans</h2>
+              <button
+                onClick={() => setShowCreatePlan(true)}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Create New Plan
+              </button>
+            </div>
             
             {/* Debug info */}
             <div className="bg-gray-700 rounded p-2 mb-4 text-xs text-gray-300">
@@ -2468,6 +2821,13 @@ const AdminPanel = () => {
         
         {selectedPlan && (
           <PlanEditor plan={selectedPlan} onUpdate={updatePlan} />
+        )}
+        
+        {showCreatePlan && (
+          <PlanCreator 
+            onSave={createPlan}
+            onCancel={() => setShowCreatePlan(false)}
+          />
         )}
       </div>
     </div>
