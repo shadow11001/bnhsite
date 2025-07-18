@@ -299,14 +299,16 @@ const AdminPanel = () => {
       // Category-specific validation
       if (selectedCategory) {
         if (selectedCategory.supports_wordpress) {
-          if (!formData.wordpress_sites) errors.push("WordPress sites limit is required for WordPress plans");
+          if (!formData.max_sites && formData.wordpress_multisite) {
+            errors.push("Max sites is required for WordPress multisite plans");
+          }
         }
       }
       
       // Resource validation
-      if (!formData.cpu) errors.push("CPU specification is required");
-      if (!formData.ram) errors.push("RAM specification is required");
-      if (!formData.disk_space) errors.push("Disk space specification is required");
+      if (!formData.cpu && !formData.cpu_cores) errors.push("CPU specification is required");
+      if (!formData.ram && !formData.memory_gb) errors.push("RAM specification is required");
+      if (!formData.disk_space && !formData.disk_gb) errors.push("Disk space specification is required");
       
       if (errors.length > 0) {
         alert("Please fix the following errors:\n\n" + errors.join("\n"));
@@ -431,41 +433,69 @@ const AdminPanel = () => {
             
             {/* Resource Limits */}
             <div className="bg-gray-700 p-4 rounded-lg">
-              <h4 className="text-lg font-semibold text-white mb-4">Resource Limits</h4>
+              <h4 className="text-lg font-semibold text-white mb-4">Resource Specifications</h4>
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-gray-300 mb-2">Max Processes</label>
+                  <label className="block text-gray-300 mb-2">CPU Cores</label>
                   <input
                     type="number"
                     min="0"
-                    value={formData.max_processes || ''}
-                    onChange={(e) => setFormData({...formData, max_processes: parseInt(e.target.value) || ''})}
+                    value={formData.cpu_cores || ''}
+                    onChange={(e) => setFormData({...formData, cpu_cores: parseInt(e.target.value) || ''})}
                     className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
-                    placeholder="100"
+                    placeholder="1"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-300 mb-2">Max Memory (MB)</label>
+                  <label className="block text-gray-300 mb-2">Memory (GB)</label>
                   <input
                     type="number"
                     min="0"
-                    value={formData.max_memory_mb || ''}
-                    onChange={(e) => setFormData({...formData, max_memory_mb: parseInt(e.target.value) || ''})}
+                    step="0.5"
+                    value={formData.memory_gb || ''}
+                    onChange={(e) => setFormData({...formData, memory_gb: parseFloat(e.target.value) || ''})}
                     className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
-                    placeholder="512"
+                    placeholder="1"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-300 mb-2">Max CPU %</label>
+                  <label className="block text-gray-300 mb-2">Disk (GB)</label>
                   <input
                     type="number"
                     min="0"
-                    max="100"
-                    value={formData.max_cpu_percent || ''}
-                    onChange={(e) => setFormData({...formData, max_cpu_percent: parseInt(e.target.value) || ''})}
+                    value={formData.disk_gb || ''}
+                    onChange={(e) => setFormData({...formData, disk_gb: parseInt(e.target.value) || ''})}
                     className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
-                    placeholder="80"
+                    placeholder="10"
                   />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-gray-300 mb-2">Disk Type</label>
+                  <select
+                    value={formData.disk_type || 'SSD'}
+                    onChange={(e) => setFormData({...formData, disk_type: e.target.value})}
+                    className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                  >
+                    <option value="SSD">SSD</option>
+                    <option value="NVMe">NVMe SSD</option>
+                    <option value="HDD">HDD</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-gray-300 mb-2">Backup Frequency</label>
+                  <select
+                    value={formData.backup_frequency || 'Daily'}
+                    onChange={(e) => setFormData({...formData, backup_frequency: e.target.value})}
+                    className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                  >
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                    <option value="None">None</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -476,11 +506,11 @@ const AdminPanel = () => {
                 <h4 className="text-lg font-semibold text-blue-200 mb-4">WordPress Settings</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-blue-200 mb-2">WordPress Sites</label>
+                    <label className="block text-blue-200 mb-2">Max WordPress Sites</label>
                     <input
                       type="text"
-                      value={formData.wordpress_sites || ''}
-                      onChange={(e) => setFormData({...formData, wordpress_sites: e.target.value})}
+                      value={formData.max_sites || ''}
+                      onChange={(e) => setFormData({...formData, max_sites: e.target.value})}
                       className="w-full px-3 py-2 bg-blue-800 text-white rounded border border-blue-600"
                       placeholder="e.g., 1, 5, Unlimited"
                     />
@@ -488,8 +518,8 @@ const AdminPanel = () => {
                   <div>
                     <label className="block text-blue-200 mb-2">WordPress Version</label>
                     <select
-                      value={formData.wordpress_version || 'latest'}
-                      onChange={(e) => setFormData({...formData, wordpress_version: e.target.value})}
+                      value={formData.version || 'latest'}
+                      onChange={(e) => setFormData({...formData, version: e.target.value})}
                       className="w-full px-3 py-2 bg-blue-800 text-white rounded border border-blue-600"
                     >
                       <option value="latest">Latest</option>
@@ -499,31 +529,40 @@ const AdminPanel = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-blue-200 mb-2">Auto-Updates</label>
+                    <label className="block text-blue-200 mb-2">Support Level</label>
                     <select
-                      value={formData.wordpress_auto_updates || 'enabled'}
-                      onChange={(e) => setFormData({...formData, wordpress_auto_updates: e.target.value})}
+                      value={formData.support_level || 'basic'}
+                      onChange={(e) => setFormData({...formData, support_level: e.target.value})}
                       className="w-full px-3 py-2 bg-blue-800 text-white rounded border border-blue-600"
                     >
-                      <option value="enabled">Enabled</option>
-                      <option value="disabled">Disabled</option>
-                      <option value="major_only">Major Versions Only</option>
+                      <option value="basic">Basic</option>
+                      <option value="advanced">Advanced</option>
+                      <option value="premium">Premium</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-blue-200 mb-2">Staging Environment</label>
+                    <label className="block text-blue-200 mb-2">Control Panel</label>
                     <select
-                      value={formData.wordpress_staging || 'included'}
-                      onChange={(e) => setFormData({...formData, wordpress_staging: e.target.value})}
+                      value={formData.control_panel || 'cPanel'}
+                      onChange={(e) => setFormData({...formData, control_panel: e.target.value})}
                       className="w-full px-3 py-2 bg-blue-800 text-white rounded border border-blue-600"
                     >
-                      <option value="included">Included</option>
-                      <option value="not_included">Not Included</option>
-                      <option value="premium">Premium Feature</option>
+                      <option value="cPanel">cPanel</option>
+                      <option value="Plesk">Plesk</option>
+                      <option value="Custom">Custom Dashboard</option>
                     </select>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-4">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={formData.wordpress_preinstalled || false}
+                      onChange={(e) => setFormData({...formData, wordpress_preinstalled: e.target.checked})}
+                      className="mr-2"
+                    />
+                    <label className="text-blue-200">WordPress Pre-installed</label>
+                  </div>
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -536,29 +575,38 @@ const AdminPanel = () => {
                   <div className="flex items-center">
                     <input
                       type="checkbox"
-                      checked={formData.wordpress_cache || false}
-                      onChange={(e) => setFormData({...formData, wordpress_cache: e.target.checked})}
+                      checked={formData.wordpress_managed_updates || false}
+                      onChange={(e) => setFormData({...formData, wordpress_managed_updates: e.target.checked})}
                       className="mr-2"
                     />
-                    <label className="text-blue-200">WordPress Cache</label>
+                    <label className="text-blue-200">Managed Updates</label>
                   </div>
                   <div className="flex items-center">
                     <input
                       type="checkbox"
-                      checked={formData.wordpress_security || false}
-                      onChange={(e) => setFormData({...formData, wordpress_security: e.target.checked})}
+                      checked={formData.wordpress_staging || false}
+                      onChange={(e) => setFormData({...formData, wordpress_staging: e.target.checked})}
                       className="mr-2"
                     />
-                    <label className="text-blue-200">Enhanced Security</label>
+                    <label className="text-blue-200">Staging Environment</label>
                   </div>
                   <div className="flex items-center">
                     <input
                       type="checkbox"
-                      checked={formData.wordpress_backup || false}
-                      onChange={(e) => setFormData({...formData, wordpress_backup: e.target.checked})}
+                      checked={formData.wordpress_backups || false}
+                      onChange={(e) => setFormData({...formData, wordpress_backups: e.target.checked})}
                       className="mr-2"
                     />
-                    <label className="text-blue-200">Auto Backups</label>
+                    <label className="text-blue-200">WordPress Backups</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={formData.wordpress_multisite || false}
+                      onChange={(e) => setFormData({...formData, wordpress_multisite: e.target.checked})}
+                      className="mr-2"
+                    />
+                    <label className="text-blue-200">Multisite Support</label>
                   </div>
                 </div>
               </div>
@@ -2535,9 +2583,14 @@ const AdminPanel = () => {
                                   </div>
                                 )}
                                 {/* WordPress specific info */}
-                                {category.supports_wordpress && plan.wordpress_sites && (
+                                {category.supports_wordpress && plan.max_sites && (
                                   <div className="text-blue-300 text-xs mt-1">
-                                    WordPress Sites: {plan.wordpress_sites}
+                                    WordPress Sites: {plan.max_sites}
+                                  </div>
+                                )}
+                                {category.supports_wordpress && plan.wordpress_managed && (
+                                  <div className="text-blue-300 text-xs">
+                                    Managed WordPress
                                   </div>
                                 )}
                               </div>
