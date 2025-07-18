@@ -19,11 +19,8 @@ const AdminPanel = () => {
   const [smtpSettings, setSmtpSettings] = useState({});
   const [legalContent, setLegalContent] = useState({});
   
-  // Category and enhanced plan management states
+  // Category management states
   const [categories, setCategories] = useState([]);
-  const [enhancedPlans, setEnhancedPlans] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedEnhancedPlan, setSelectedEnhancedPlan] = useState(null);
 
   // Check authentication on component mount
   useEffect(() => {
@@ -493,625 +490,6 @@ const AdminPanel = () => {
         </div>
       </div>
     );
-  };
-
-  // Enhanced Plan Editor with Category Support
-  const EnhancedPlanEditor = ({ plan, onUpdate, onClose }) => {
-    const [formData, setFormData] = useState(plan || {});
-    const [wordpressSettings, setWordpressSettings] = useState({});
-    const [loadingWordpress, setLoadingWordpress] = useState(false);
-    const [activeSection, setActiveSection] = useState('basic');
-
-    useEffect(() => {
-      if (plan && plan.id) {
-        loadWordpressSettings();
-      }
-    }, [plan]);
-
-    const loadWordpressSettings = async () => {
-      if (!plan?.id) return;
-      
-      setLoadingWordpress(true);
-      try {
-        const response = await axios.get(`${API}/api/admin/wordpress-settings/${plan.id}`, { headers: getAuthHeaders() });
-        setWordpressSettings(response.data);
-      } catch (error) {
-        console.error('Error loading WordPress settings:', error);
-        // Set default settings
-        setWordpressSettings({
-          plan_id: plan.id,
-          preinstalled: false,
-          managed_updates: false,
-          staging_environment: false,
-          daily_backups: false,
-          ssl_certificate: true,
-          support_level: 'basic'
-        });
-      } finally {
-        setLoadingWordpress(false);
-      }
-    };
-
-    const saveWordpressSettings = async () => {
-      if (!plan?.id) return;
-      
-      try {
-        await axios.post(`${API}/api/admin/wordpress-settings`, {
-          ...wordpressSettings,
-          plan_id: plan.id
-        }, { headers: getAuthHeaders() });
-        alert('WordPress settings saved successfully!');
-      } catch (error) {
-        console.error('Error saving WordPress settings:', error);
-        alert('Error saving WordPress settings: ' + (error.response?.data?.detail || error.message));
-      }
-    };
-
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      
-      try {
-        // Save plan details
-        await onUpdate(plan.id, formData);
-        
-        // Save WordPress settings if plan supports WordPress
-        if (formData.wordpress_optimized || (categories.find(c => c.id === formData.category_id)?.supports_wordpress)) {
-          await saveWordpressSettings();
-        }
-        
-        onClose();
-      } catch (error) {
-        console.error('Error saving plan:', error);
-      }
-    };
-
-    const selectedCategory = categories.find(c => c.id === formData.category_id);
-    const requiredFields = selectedCategory?.required_fields || [];
-    const optionalFields = selectedCategory?.optional_fields || [];
-    const supportsWordpress = selectedCategory?.supports_wordpress || formData.wordpress_optimized;
-
-    const sections = [
-      { key: 'basic', label: 'Basic Info', icon: '📝' },
-      { key: 'resources', label: 'Resources', icon: '⚡' },
-      { key: 'features', label: 'Features', icon: '✨' },
-      { key: 'pricing', label: 'Pricing', icon: '💰' }
-    ];
-
-    if (supportsWordpress) {
-      sections.push({ key: 'wordpress', label: 'WordPress', icon: '🌐' });
-    }
-
-    return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <div className="bg-gray-800 rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden flex">
-          {/* Sidebar */}
-          <div className="w-64 bg-gray-900 p-4">
-            <h3 className="text-xl font-bold text-white mb-4">
-              {plan?.id ? 'Edit Plan' : 'Create Plan'}
-            </h3>
-            
-            <div className="space-y-2">
-              {sections.map(section => (
-                <button
-                  key={section.key}
-                  onClick={() => setActiveSection(section.key)}
-                  className={`w-full text-left p-3 rounded flex items-center gap-3 transition-colors ${
-                    activeSection === section.key
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-300 hover:bg-gray-700'
-                  }`}
-                >
-                  <span>{section.icon}</span>
-                  <span>{section.label}</span>
-                </button>
-              ))}
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-gray-700">
-              <button
-                onClick={onClose}
-                className="w-full px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-
-          {/* Main Content */}
-          <div className="flex-1 p-6 overflow-y-auto">
-            <form onSubmit={handleSubmit}>
-              {activeSection === 'basic' && (
-                <div className="space-y-4">
-                  <h4 className="text-lg font-semibold text-white mb-4">Basic Information</h4>
-                  
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-gray-300 mb-2">Plan Name *</label>
-                      <input
-                        type="text"
-                        value={formData.name || ''}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                        required
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-gray-300 mb-2">Category</label>
-                      <select
-                        value={formData.category_id || ''}
-                        onChange={(e) => setFormData({...formData, category_id: e.target.value || null})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                      >
-                        <option value="">Select Category</option>
-                        {categories.filter(c => c.is_active).map(category => (
-                          <option key={category.id} value={category.id}>
-                            {category.icon} {category.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-300 mb-2">Description</label>
-                    <textarea
-                      value={formData.description || ''}
-                      onChange={(e) => setFormData({...formData, description: e.target.value})}
-                      className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                      rows={3}
-                      placeholder="Brief description of this hosting plan..."
-                    />
-                  </div>
-
-                  {selectedCategory && (
-                    <div className="bg-blue-900/20 border border-blue-600 rounded-lg p-4">
-                      <h5 className="text-blue-300 font-semibold mb-2">Category: {selectedCategory.name}</h5>
-                      <p className="text-blue-200 text-sm mb-3">{selectedCategory.description}</p>
-                      
-                      {requiredFields.length > 0 && (
-                        <div className="mb-2">
-                          <span className="text-yellow-400 text-sm font-medium">Required fields: </span>
-                          <span className="text-yellow-300 text-sm">{requiredFields.join(', ')}</span>
-                        </div>
-                      )}
-                      
-                      {selectedCategory.supports_wordpress && (
-                        <div className="text-green-400 text-sm">
-                          ✅ WordPress support enabled for this category
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {activeSection === 'resources' && (
-                <div className="space-y-4">
-                  <h4 className="text-lg font-semibold text-white mb-4">Server Resources</h4>
-                  
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-gray-300 mb-2">
-                        CPU Cores {requiredFields.includes('cpu_cores') && <span className="text-yellow-400">*</span>}
-                      </label>
-                      <input
-                        type="number"
-                        value={formData.cpu_cores || ''}
-                        onChange={(e) => setFormData({...formData, cpu_cores: parseInt(e.target.value) || null})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                        required={requiredFields.includes('cpu_cores')}
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-gray-300 mb-2">CPU Description</label>
-                      <input
-                        type="text"
-                        value={formData.cpu_description || ''}
-                        onChange={(e) => setFormData({...formData, cpu_description: e.target.value})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                        placeholder="e.g., 2.4 GHz Intel Xeon"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-gray-300 mb-2">
-                        Memory (GB) {requiredFields.includes('memory_gb') && <span className="text-yellow-400">*</span>}
-                      </label>
-                      <input
-                        type="number"
-                        value={formData.memory_gb || ''}
-                        onChange={(e) => setFormData({...formData, memory_gb: parseInt(e.target.value) || null})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                        required={requiredFields.includes('memory_gb')}
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-gray-300 mb-2">Memory Description</label>
-                      <input
-                        type="text"
-                        value={formData.memory_description || ''}
-                        onChange={(e) => setFormData({...formData, memory_description: e.target.value})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                        placeholder="e.g., 8 GB DDR4 RAM"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-gray-300 mb-2">
-                        Disk (GB) {requiredFields.includes('disk_gb') && <span className="text-yellow-400">*</span>}
-                      </label>
-                      <input
-                        type="number"
-                        value={formData.disk_gb || ''}
-                        onChange={(e) => setFormData({...formData, disk_gb: parseInt(e.target.value) || null})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                        required={requiredFields.includes('disk_gb')}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-gray-300 mb-2">Disk Type</label>
-                      <select
-                        value={formData.disk_type || 'SSD'}
-                        onChange={(e) => setFormData({...formData, disk_type: e.target.value})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                      >
-                        <option value="SSD">SSD</option>
-                        <option value="NVMe">NVMe SSD</option>
-                        <option value="HDD">HDD</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-gray-300 mb-2">Bandwidth</label>
-                      <input
-                        type="text"
-                        value={formData.bandwidth || ''}
-                        onChange={(e) => setFormData({...formData, bandwidth: e.target.value})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                        placeholder="e.g., Unlimited, 10 TB"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Shared Hosting Specific Fields */}
-                  {(selectedCategory?.slug === 'shared' || formData.legacy_plan_type?.includes('shared')) && (
-                    <div className="bg-purple-900/20 border border-purple-600 rounded-lg p-4">
-                      <h5 className="text-purple-300 font-semibold mb-3">Shared Hosting Limits</h5>
-                      <div className="grid md:grid-cols-3 gap-4">
-                        <div>
-                          <label className="block text-gray-300 mb-2">Max Websites</label>
-                          <input
-                            type="number"
-                            value={formData.max_websites || ''}
-                            onChange={(e) => setFormData({...formData, max_websites: parseInt(e.target.value) || null})}
-                            className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-gray-300 mb-2">Max Databases</label>
-                          <input
-                            type="number"
-                            value={formData.max_databases || ''}
-                            onChange={(e) => setFormData({...formData, max_databases: parseInt(e.target.value) || null})}
-                            className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-gray-300 mb-2">Max Email Accounts</label>
-                          <input
-                            type="number"
-                            value={formData.max_email_accounts || ''}
-                            onChange={(e) => setFormData({...formData, max_email_accounts: parseInt(e.target.value) || null})}
-                            className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {activeSection === 'features' && (
-                <div className="space-y-4">
-                  <h4 className="text-lg font-semibold text-white mb-4">Features & Services</h4>
-                  
-                  <div>
-                    <label className="block text-gray-300 mb-2">Features (one per line)</label>
-                    <textarea
-                      rows={6}
-                      value={Array.isArray(formData.features) ? formData.features.join('\n') : ''}
-                      onChange={(e) => setFormData({...formData, features: e.target.value.split('\n').filter(f => f.trim())})}
-                      className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                      placeholder="Enter one feature per line..."
-                    />
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-gray-300 mb-2">Control Panel</label>
-                      <select
-                        value={formData.control_panel || ''}
-                        onChange={(e) => setFormData({...formData, control_panel: e.target.value})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                      >
-                        <option value="">Select Control Panel</option>
-                        <option value="cPanel">cPanel</option>
-                        <option value="Plesk">Plesk</option>
-                        <option value="DirectAdmin">DirectAdmin</option>
-                        <option value="Custom">Custom Panel</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-gray-300 mb-2">Support Level</label>
-                      <select
-                        value={formData.support_level || 'standard'}
-                        onChange={(e) => setFormData({...formData, support_level: e.target.value})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                      >
-                        <option value="basic">Basic Support</option>
-                        <option value="standard">Standard Support</option>
-                        <option value="premium">Premium Support</option>
-                        <option value="enterprise">Enterprise Support</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={formData.popular || false}
-                        onChange={(e) => setFormData({...formData, popular: e.target.checked})}
-                        className="mr-2"
-                      />
-                      <label className="text-gray-300">Popular Plan</label>
-                    </div>
-
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={formData.featured || false}
-                        onChange={(e) => setFormData({...formData, featured: e.target.checked})}
-                        className="mr-2"
-                      />
-                      <label className="text-gray-300">Featured Plan</label>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeSection === 'pricing' && (
-                <div className="space-y-4">
-                  <h4 className="text-lg font-semibold text-white mb-4">Pricing & Billing</h4>
-                  
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-gray-300 mb-2">Price ($/month) *</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={formData.price || ''}
-                        onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value) || 0})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-gray-300 mb-2">Setup Fee ($)</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={formData.setup_fee || 0}
-                        onChange={(e) => setFormData({...formData, setup_fee: parseFloat(e.target.value) || 0})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-gray-300 mb-2">Annual Discount (%)</label>
-                      <input
-                        type="number"
-                        min="0"
-                        max="50"
-                        value={formData.discount_annual || ''}
-                        onChange={(e) => setFormData({...formData, discount_annual: parseInt(e.target.value) || null})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-gray-300 mb-2">Markup Percentage (%)</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={formData.markup_percentage || 0}
-                        onChange={(e) => setFormData({...formData, markup_percentage: parseFloat(e.target.value) || 0})}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                      />
-                      <p className="text-xs text-gray-400 mt-1">Internal markup for pricing strategy</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeSection === 'wordpress' && supportsWordpress && (
-                <div className="space-y-4">
-                  <h4 className="text-lg font-semibold text-white mb-4">WordPress Settings</h4>
-                  
-                  {loadingWordpress ? (
-                    <div className="text-center py-8 text-gray-400">Loading WordPress settings...</div>
-                  ) : (
-                    <>
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <div className="space-y-4">
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={wordpressSettings.preinstalled || false}
-                              onChange={(e) => setWordpressSettings({...wordpressSettings, preinstalled: e.target.checked})}
-                              className="mr-2"
-                            />
-                            <label className="text-gray-300">WordPress Pre-installed</label>
-                          </div>
-
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={wordpressSettings.managed_updates || false}
-                              onChange={(e) => setWordpressSettings({...wordpressSettings, managed_updates: e.target.checked})}
-                              className="mr-2"
-                            />
-                            <label className="text-gray-300">Managed Updates</label>
-                          </div>
-
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={wordpressSettings.staging_environment || false}
-                              onChange={(e) => setWordpressSettings({...wordpressSettings, staging_environment: e.target.checked})}
-                              className="mr-2"
-                            />
-                            <label className="text-gray-300">Staging Environment</label>
-                          </div>
-
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={wordpressSettings.daily_backups || false}
-                              onChange={(e) => setWordpressSettings({...wordpressSettings, daily_backups: e.target.checked})}
-                              className="mr-2"
-                            />
-                            <label className="text-gray-300">Daily Backups</label>
-                          </div>
-                        </div>
-
-                        <div className="space-y-4">
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={wordpressSettings.ssl_certificate || false}
-                              onChange={(e) => setWordpressSettings({...wordpressSettings, ssl_certificate: e.target.checked})}
-                              className="mr-2"
-                            />
-                            <label className="text-gray-300">SSL Certificate</label>
-                          </div>
-
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={wordpressSettings.cdn_included || false}
-                              onChange={(e) => setWordpressSettings({...wordpressSettings, cdn_included: e.target.checked})}
-                              className="mr-2"
-                            />
-                            <label className="text-gray-300">CDN Included</label>
-                          </div>
-
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={wordpressSettings.migration_service || false}
-                              onChange={(e) => setWordpressSettings({...wordpressSettings, migration_service: e.target.checked})}
-                              className="mr-2"
-                            />
-                            <label className="text-gray-300">Migration Service</label>
-                          </div>
-
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={wordpressSettings.performance_optimization || false}
-                              onChange={(e) => setWordpressSettings({...wordpressSettings, performance_optimization: e.target.checked})}
-                              className="mr-2"
-                            />
-                            <label className="text-gray-300">Performance Optimization</label>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-gray-300 mb-2">WordPress Version</label>
-                          <input
-                            type="text"
-                            value={wordpressSettings.version || ''}
-                            onChange={(e) => setWordpressSettings({...wordpressSettings, version: e.target.value})}
-                            className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                            placeholder="e.g., 6.4"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-gray-300 mb-2">Support Level</label>
-                          <select
-                            value={wordpressSettings.support_level || 'basic'}
-                            onChange={(e) => setWordpressSettings({...wordpressSettings, support_level: e.target.value})}
-                            className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                          >
-                            <option value="basic">Basic WordPress Support</option>
-                            <option value="advanced">Advanced WordPress Support</option>
-                            <option value="premium">Premium WordPress Support</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-gray-300 mb-2">Included Themes (one per line)</label>
-                        <textarea
-                          rows={3}
-                          value={Array.isArray(wordpressSettings.themes_included) ? wordpressSettings.themes_included.join('\n') : ''}
-                          onChange={(e) => setWordpressSettings({
-                            ...wordpressSettings, 
-                            themes_included: e.target.value.split('\n').filter(t => t.trim())
-                          })}
-                          className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                          placeholder="Enter theme names..."
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-gray-300 mb-2">Included Plugins (one per line)</label>
-                        <textarea
-                          rows={3}
-                          value={Array.isArray(wordpressSettings.plugins_included) ? wordpressSettings.plugins_included.join('\n') : ''}
-                          onChange={(e) => setWordpressSettings({
-                            ...wordpressSettings, 
-                            plugins_included: e.target.value.split('\n').filter(p => p.trim())
-                          })}
-                          className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-400 focus:outline-none"
-                          placeholder="Enter plugin names..."
-                        />
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-
-              <div className="flex gap-4 pt-4 border-t border-gray-700">
-                <button
-                  type="submit"
-                  className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-                >
-                  {plan?.id ? 'Update Plan' : 'Create Plan'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    );
-  };
   };
 
   const CompanyEditor = () => {
@@ -2353,27 +1731,28 @@ const AdminPanel = () => {
       icon: '',
       display_order: 1,
       is_active: true,
-      supports_wordpress: false,
-      wordpress_preinstalled: false,
-      wordpress_managed_updates: false,
-      wordpress_staging: false,
-      wordpress_backups: false,
-      required_fields: [],
-      optional_fields: []
+      supports_wordpress: false
     });
     const [isLoading, setIsLoading] = useState(false);
+    const [loadingCategories, setLoadingCategories] = useState(false);
 
     useEffect(() => {
       fetchCategories();
     }, []);
 
     const fetchCategories = async () => {
+      if (loadingCategories) return; // Prevent multiple calls
+      
+      setLoadingCategories(true);
       try {
         const response = await axios.get(`${API}/api/admin/categories`, { headers: getAuthHeaders() });
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
-        alert('Error loading categories: ' + (error.response?.data?.detail || error.message));
+        // Don't show alert to prevent infinite loops
+        setCategories([]); // Set empty array on error
+      } finally {
+        setLoadingCategories(false);
       }
     };
 
@@ -2385,13 +1764,7 @@ const AdminPanel = () => {
         icon: '',
         display_order: 1,
         is_active: true,
-        supports_wordpress: false,
-        wordpress_preinstalled: false,
-        wordpress_managed_updates: false,
-        wordpress_staging: false,
-        wordpress_backups: false,
-        required_fields: [],
-        optional_fields: []
+        supports_wordpress: false
       });
       setEditingCategory(null);
       setShowForm(false);
@@ -2445,12 +1818,6 @@ const AdminPanel = () => {
         alert('Error deleting category: ' + (error.response?.data?.detail || error.message));
       }
     };
-
-    const availableFields = [
-      'cpu_cores', 'memory_gb', 'disk_gb', 'bandwidth', 'max_websites', 'max_subdomains',
-      'max_databases', 'max_email_accounts', 'supported_games', 'max_slots', 'dedicated_ip',
-      'root_access', 'control_panel', 'backup_frequency', 'uptime_guarantee'
-    ];
 
     return (
       <div className="bg-gray-800 rounded-lg p-6">
@@ -2544,133 +1911,14 @@ const AdminPanel = () => {
                 </div>
               </div>
 
-              <div className="bg-gray-600 rounded-lg p-4">
-                <h5 className="text-white font-semibold mb-3">WordPress Settings</h5>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={formData.supports_wordpress}
-                        onChange={(e) => setFormData({...formData, supports_wordpress: e.target.checked})}
-                        className="mr-2"
-                      />
-                      <label className="text-gray-300">Supports WordPress</label>
-                    </div>
-
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={formData.wordpress_preinstalled}
-                        onChange={(e) => setFormData({...formData, wordpress_preinstalled: e.target.checked})}
-                        className="mr-2"
-                        disabled={!formData.supports_wordpress}
-                      />
-                      <label className="text-gray-300">WordPress Pre-installed</label>
-                    </div>
-
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={formData.wordpress_managed_updates}
-                        onChange={(e) => setFormData({...formData, wordpress_managed_updates: e.target.checked})}
-                        className="mr-2"
-                        disabled={!formData.supports_wordpress}
-                      />
-                      <label className="text-gray-300">Managed Updates</label>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={formData.wordpress_staging}
-                        onChange={(e) => setFormData({...formData, wordpress_staging: e.target.checked})}
-                        className="mr-2"
-                        disabled={!formData.supports_wordpress}
-                      />
-                      <label className="text-gray-300">Staging Environment</label>
-                    </div>
-
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={formData.wordpress_backups}
-                        onChange={(e) => setFormData({...formData, wordpress_backups: e.target.checked})}
-                        className="mr-2"
-                        disabled={!formData.supports_wordpress}
-                      />
-                      <label className="text-gray-300">WordPress Backups</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gray-600 rounded-lg p-4">
-                <h5 className="text-white font-semibold mb-3">Field Configuration</h5>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-gray-300 mb-2">Required Fields</label>
-                    <div className="space-y-1 max-h-32 overflow-y-auto">
-                      {availableFields.map(field => (
-                        <div key={field} className="flex items-center">
-                          <input
-                            type="checkbox"
-                            checked={formData.required_fields.includes(field)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setFormData({
-                                  ...formData,
-                                  required_fields: [...formData.required_fields, field],
-                                  optional_fields: formData.optional_fields.filter(f => f !== field)
-                                });
-                              } else {
-                                setFormData({
-                                  ...formData,
-                                  required_fields: formData.required_fields.filter(f => f !== field)
-                                });
-                              }
-                            }}
-                            className="mr-2"
-                          />
-                          <label className="text-gray-300 text-sm">{field}</label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-300 mb-2">Optional Fields</label>
-                    <div className="space-y-1 max-h-32 overflow-y-auto">
-                      {availableFields.map(field => (
-                        <div key={field} className="flex items-center">
-                          <input
-                            type="checkbox"
-                            checked={formData.optional_fields.includes(field)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setFormData({
-                                  ...formData,
-                                  optional_fields: [...formData.optional_fields, field],
-                                  required_fields: formData.required_fields.filter(f => f !== field)
-                                });
-                              } else {
-                                setFormData({
-                                  ...formData,
-                                  optional_fields: formData.optional_fields.filter(f => f !== field)
-                                });
-                              }
-                            }}
-                            className="mr-2"
-                            disabled={formData.required_fields.includes(field)}
-                          />
-                          <label className="text-gray-300 text-sm">{field}</label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.supports_wordpress}
+                  onChange={(e) => setFormData({...formData, supports_wordpress: e.target.checked})}
+                  className="mr-2"
+                />
+                <label className="text-gray-300">Supports WordPress</label>
               </div>
 
               <div className="flex gap-4">
@@ -2697,7 +1945,7 @@ const AdminPanel = () => {
         <div className="space-y-4">
           {categories.map(category => (
             <div key={category.id} className="bg-gray-700 rounded-lg p-4">
-              <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+              <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     {category.icon && (
@@ -2712,34 +1960,21 @@ const AdminPanel = () => {
                     }`}>
                       {category.is_active ? 'Active' : 'Inactive'}
                     </span>
+                    {category.supports_wordpress && (
+                      <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs">
+                        WordPress
+                      </span>
+                    )}
                   </div>
 
-                  <p className="text-gray-300 mb-3">{category.description}</p>
-
-                  <div className="flex flex-wrap gap-4 text-sm">
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-400">Order:</span>
-                      <span className="text-white">{category.display_order}</span>
-                    </div>
-
-                    {category.supports_wordpress && (
-                      <div className="flex items-center gap-2">
-                        <span className="text-blue-400">🌐 WordPress Support</span>
-                        {category.wordpress_preinstalled && <span className="text-green-400">Pre-installed</span>}
-                        {category.wordpress_managed_updates && <span className="text-green-400">Managed</span>}
-                      </div>
-                    )}
-
-                    {category.required_fields && category.required_fields.length > 0 && (
-                      <div className="flex items-center gap-2">
-                        <span className="text-gray-400">Required:</span>
-                        <span className="text-yellow-400">{category.required_fields.length} fields</span>
-                      </div>
-                    )}
+                  <p className="text-gray-300 mb-2">{category.description}</p>
+                  
+                  <div className="text-sm text-gray-400">
+                    Display order: {category.display_order}
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 ml-4">
                   <button
                     onClick={() => handleEdit(category)}
                     className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
