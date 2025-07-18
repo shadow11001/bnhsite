@@ -133,7 +133,7 @@ class SiteSettings(BaseModel):
 
 class HostingPlan(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    plan_type: str  # "ssd_shared", "hdd_shared", "standard_vps", "performance_vps", "standard_gameserver", "performance_gameserver"
+    plan_type: str  # "ssd_shared", "hdd_shared", "custom_shared", "wordpress", "standard_vps", "performance_vps", "standard_gameserver", "performance_gameserver"
     plan_name: str
     base_price: float
     cpu_cores: Optional[int] = None
@@ -152,6 +152,16 @@ class HostingPlan(BaseModel):
     addon_domains: Optional[str] = None  # e.g., "0", "5", "Unlimited"
     databases: Optional[str] = None  # e.g., "1", "10", "Unlimited"
     email_accounts: Optional[str] = None  # e.g., "5", "Unlimited"
+    # WordPress-specific fields
+    container_type: Optional[str] = None  # e.g., "docker", "kubernetes"
+    wp_version: Optional[str] = None  # e.g., "6.4", "latest"
+    php_version: Optional[str] = None  # e.g., "8.2", "8.3"
+    wp_themes: Optional[List[str]] = None  # Available WordPress themes
+    wp_plugins: Optional[List[str]] = None  # Pre-installed plugins
+    backup_frequency: Optional[str] = None  # e.g., "daily", "weekly", "hourly"
+    ssl_management: Optional[str] = None  # e.g., "automatic", "manual"
+    cdn_included: Optional[bool] = None  # Whether CDN is included
+    staging_environment: Optional[bool] = None  # Whether staging is available
 
 class PublicHostingPlan(BaseModel):
     """Public-facing hosting plan model without internal markup information"""
@@ -174,6 +184,16 @@ class PublicHostingPlan(BaseModel):
     addon_domains: Optional[str] = None
     databases: Optional[str] = None
     email_accounts: Optional[str] = None
+    # WordPress-specific fields (public fields only)
+    container_type: Optional[str] = None
+    wp_version: Optional[str] = None
+    php_version: Optional[str] = None
+    wp_themes: Optional[List[str]] = None
+    wp_plugins: Optional[List[str]] = None
+    backup_frequency: Optional[str] = None
+    ssl_management: Optional[str] = None
+    cdn_included: Optional[bool] = None
+    staging_environment: Optional[bool] = None
 
 class CompanyInfo(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -696,6 +716,29 @@ async def get_features():
             "Automatic Backups",
             "24/7 Support",
             "Custom Configurations"
+        ],
+        "custom_shared_features": [
+            "Build Your Own Plan",
+            "Flexible Resource Allocation",
+            "Custom Configuration Options",
+            "Scalable Pricing",
+            "Priority Support",
+            "Advanced Tools Access",
+            "White Label Options"
+        ],
+        "wordpress_features": [
+            "Managed WordPress Hosting",
+            "Automatic WordPress Updates",
+            "Security Hardening",
+            "WordPress Expert Support",
+            "Performance Optimization",
+            "One-Click Staging",
+            "WordPress-Specific Caching",
+            "Malware Scanning & Removal",
+            "Premium Theme & Plugin Library",
+            "Database Optimization",
+            "WordPress CLI Access",
+            "Git Integration"
         ]
     }
 
