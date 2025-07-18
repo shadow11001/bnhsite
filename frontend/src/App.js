@@ -411,22 +411,45 @@ const HeroSection = () => {
 };
 
 // Hosting Plans Component
-const HostingPlans = ({ plans, title, type, description }) => {
+const HostingPlans = ({ plans, title, type, description, categoryKey }) => {
   let filteredPlans = [];
   
-  // Filter plans based on type and sub_type from database (production format)
-  if (type === 'ssd_shared') {
-    filteredPlans = plans.filter(plan => plan.type === 'shared' && plan.sub_type === 'ssd');
-  } else if (type === 'hdd_shared') {
-    filteredPlans = plans.filter(plan => plan.type === 'shared' && plan.sub_type === 'hdd');
-  } else if (type === 'standard_vps') {
-    filteredPlans = plans.filter(plan => plan.type === 'vps' && plan.sub_type === 'standard');
-  } else if (type === 'performance_vps') {
-    filteredPlans = plans.filter(plan => plan.type === 'vps' && plan.sub_type === 'performance');
-  } else if (type === 'standard_gameserver') {
-    filteredPlans = plans.filter(plan => plan.type === 'gameserver' && plan.sub_type === 'standard');
-  } else if (type === 'performance_gameserver') {
-    filteredPlans = plans.filter(plan => plan.type === 'gameserver' && plan.sub_type === 'performance');
+  // If categoryKey is provided (new system), use category-based filtering
+  if (categoryKey) {
+    filteredPlans = plans.filter(plan => plan.category_key === categoryKey || plan.plan_type === categoryKey);
+  } else {
+    // Legacy filtering for backward compatibility
+    if (type === 'ssd_shared') {
+      filteredPlans = plans.filter(plan => 
+        (plan.type === 'shared' && plan.sub_type === 'ssd') || 
+        plan.plan_type === 'ssd_shared'
+      );
+    } else if (type === 'hdd_shared') {
+      filteredPlans = plans.filter(plan => 
+        (plan.type === 'shared' && plan.sub_type === 'hdd') || 
+        plan.plan_type === 'hdd_shared'
+      );
+    } else if (type === 'standard_vps') {
+      filteredPlans = plans.filter(plan => 
+        (plan.type === 'vps' && plan.sub_type === 'standard') || 
+        plan.plan_type === 'standard_vps'
+      );
+    } else if (type === 'performance_vps') {
+      filteredPlans = plans.filter(plan => 
+        (plan.type === 'vps' && plan.sub_type === 'performance') || 
+        plan.plan_type === 'performance_vps'
+      );
+    } else if (type === 'standard_gameserver') {
+      filteredPlans = plans.filter(plan => 
+        (plan.type === 'gameserver' && plan.sub_type === 'standard') || 
+        plan.plan_type === 'standard_gameserver'
+      );
+    } else if (type === 'performance_gameserver') {
+      filteredPlans = plans.filter(plan => 
+        (plan.type === 'gameserver' && plan.sub_type === 'performance') || 
+        plan.plan_type === 'performance_gameserver'
+      );
+    }
   }
   
   if (filteredPlans.length === 0) return null;
@@ -955,6 +978,7 @@ const Footer = () => {
 // Main App Component
 const Home = () => {
   const [hostingPlans, setHostingPlans] = useState([]);
+  const [hostingCategories, setHostingCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -962,6 +986,8 @@ const Home = () => {
       try {
         // Add cache-busting to ensure fresh data
         const timestamp = new Date().getTime();
+        
+        // Fetch hosting plans
         const plansResponse = await axios.get(`${API}/api/hosting-plans?_t=${timestamp}`, {
           headers: {
             'Cache-Control': 'no-cache',
@@ -969,6 +995,15 @@ const Home = () => {
           }
         });
         setHostingPlans(plansResponse.data);
+        
+        // Fetch hosting categories
+        const categoriesResponse = await axios.get(`${API}/api/hosting-categories?_t=${timestamp}`, {
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+          }
+        });
+        setHostingCategories(categoriesResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -1071,18 +1106,37 @@ const Home = () => {
             
             {/* Pricing Promo Banner */}
             <PromoCodeBanner location="pricing" />
-            <HostingPlans 
-              plans={hostingPlans} 
-              title="SSD Shared Hosting" 
-              type="ssd_shared"
-              description="Fast SSD-powered shared hosting with premium features"
-            />
-            <HostingPlans 
-              plans={hostingPlans} 
-              title="HDD Shared Hosting" 
-              type="hdd_shared"
-              description="Affordable shared hosting with reliable HDD storage"
-            />
+            
+            {/* Dynamic Category Rendering */}
+            {hostingCategories.length > 0 ? (
+              hostingCategories
+                .filter(category => category.type === 'shared')
+                .map(category => (
+                  <HostingPlans 
+                    key={category.key}
+                    plans={hostingPlans} 
+                    title={category.section_title || category.display_name}
+                    categoryKey={category.key}
+                    description={category.section_description || category.description}
+                  />
+                ))
+            ) : (
+              // Fallback to legacy hardcoded categories
+              <>
+                <HostingPlans 
+                  plans={hostingPlans} 
+                  title="SSD Shared Hosting" 
+                  type="ssd_shared"
+                  description="Fast SSD-powered shared hosting with premium features"
+                />
+                <HostingPlans 
+                  plans={hostingPlans} 
+                  title="HDD Shared Hosting" 
+                  type="hdd_shared"
+                  description="Affordable shared hosting with reliable HDD storage"
+                />
+              </>
+            )}
           </div>
         </section>
         
@@ -1096,18 +1150,36 @@ const Home = () => {
               </p>
             </div>
             
-            <HostingPlans 
-              plans={hostingPlans} 
-              title="Standard VPS" 
-              type="standard_vps"
-              description="Reliable VPS hosting with balanced performance and pricing"
-            />
-            <HostingPlans 
-              plans={hostingPlans} 
-              title="Performance VPS" 
-              type="performance_vps"
-              description="High-performance VPS with premium hardware and optimizations"
-            />
+            {/* Dynamic VPS Category Rendering */}
+            {hostingCategories.length > 0 ? (
+              hostingCategories
+                .filter(category => category.type === 'vps')
+                .map(category => (
+                  <HostingPlans 
+                    key={category.key}
+                    plans={hostingPlans} 
+                    title={category.section_title || category.display_name}
+                    categoryKey={category.key}
+                    description={category.section_description || category.description}
+                  />
+                ))
+            ) : (
+              // Fallback to legacy hardcoded categories
+              <>
+                <HostingPlans 
+                  plans={hostingPlans} 
+                  title="Standard VPS" 
+                  type="standard_vps"
+                  description="Reliable VPS hosting with balanced performance and pricing"
+                />
+                <HostingPlans 
+                  plans={hostingPlans} 
+                  title="Performance VPS" 
+                  type="performance_vps"
+                  description="High-performance VPS with premium hardware and optimizations"
+                />
+              </>
+            )}
           </div>
         </section>
         
@@ -1121,20 +1193,66 @@ const Home = () => {
               </p>
             </div>
             
-            <HostingPlans 
-              plans={hostingPlans} 
-              title="Standard GameServers" 
-              type="standard_gameserver"
-              description="Reliable game hosting with standard performance"
-            />
-            <HostingPlans 
-              plans={hostingPlans} 
-              title="Performance GameServers" 
-              type="performance_gameserver"
-              description="Premium game hosting with enhanced performance and priority support"
-            />
+            {/* Dynamic GameServer Category Rendering */}
+            {hostingCategories.length > 0 ? (
+              hostingCategories
+                .filter(category => category.type === 'gameserver')
+                .map(category => (
+                  <HostingPlans 
+                    key={category.key}
+                    plans={hostingPlans} 
+                    title={category.section_title || category.display_name}
+                    categoryKey={category.key}
+                    description={category.section_description || category.description}
+                  />
+                ))
+            ) : (
+              // Fallback to legacy hardcoded categories
+              <>
+                <HostingPlans 
+                  plans={hostingPlans} 
+                  title="Standard GameServers" 
+                  type="standard_gameserver"
+                  description="Reliable game hosting with standard performance"
+                />
+                <HostingPlans 
+                  plans={hostingPlans} 
+                  title="Performance GameServers" 
+                  type="performance_gameserver"
+                  description="Premium game hosting with enhanced performance and priority support"
+                />
+              </>
+            )}
           </div>
         </section>
+
+        {/* Custom Categories Section (Build Your Own Plan, Managed WordPress, etc.) */}
+        {hostingCategories.length > 0 && hostingCategories.some(cat => cat.type === 'custom') && (
+          <section id="custom-hosting" className="py-20 bg-gray-900/50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl font-bold text-white mb-4">Specialized Hosting Solutions</h2>
+                <p className="text-lg text-gray-300">
+                  Advanced hosting solutions for specific needs
+                </p>
+              </div>
+              
+              {/* Dynamic Custom Category Rendering */}
+              {hostingCategories
+                .filter(category => category.type === 'custom')
+                .map(category => (
+                  <HostingPlans 
+                    key={category.key}
+                    plans={hostingPlans} 
+                    title={category.section_title || category.display_name}
+                    categoryKey={category.key}
+                    description={category.section_description || category.description}
+                  />
+                ))
+              }
+            </div>
+          </section>
+        )}
         
         <AboutSection />
         <ContactSection />

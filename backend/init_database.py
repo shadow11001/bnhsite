@@ -28,6 +28,9 @@ async def init_database(migration_mode=False):
         await client.admin.command('ping')
         print("✅ Connected to MongoDB successfully")
         
+        # Initialize hosting categories
+        await init_hosting_categories(db, migration_mode)
+        
         # Initialize hosting plans
         await init_hosting_plans(db, migration_mode)
         
@@ -60,6 +63,161 @@ async def init_database(migration_mode=False):
     finally:
         client.close()
 
+async def init_hosting_categories(db, migration_mode=False):
+    print("📂 Setting up hosting categories...")
+    
+    if migration_mode:
+        # In migration mode, only update if no categories exist
+        existing_count = await db.hosting_categories.count_documents({})
+        if existing_count > 0:
+            print(f"📋 Found {existing_count} existing hosting categories - skipping initialization")
+            return
+    
+    # Check if categories already exist
+    existing_count = await db.hosting_categories.count_documents({})
+    if existing_count > 0:
+        print(f"⚠️  Found {existing_count} existing categories. Skipping category initialization.")
+        return
+    
+    # Default hosting categories to support existing and new plan types
+    default_categories = [
+        {
+            "id": str(uuid.uuid4()),
+            "key": "ssd_shared",
+            "display_name": "SSD Shared Hosting",
+            "description": "Fast SSD-powered shared hosting with premium features",
+            "section_title": "SSD Shared Hosting",
+            "section_description": "Fast SSD-powered shared hosting with premium features",
+            "type": "shared",
+            "sub_type": "ssd",
+            "is_active": True,
+            "display_order": 1,
+            "supports_custom_features": False,
+            "supports_containers": False,
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "key": "hdd_shared",
+            "display_name": "HDD Shared Hosting",
+            "description": "Affordable shared hosting with reliable HDD storage",
+            "section_title": "HDD Shared Hosting",
+            "section_description": "Affordable shared hosting with reliable HDD storage",
+            "type": "shared",
+            "sub_type": "hdd",
+            "is_active": True,
+            "display_order": 2,
+            "supports_custom_features": False,
+            "supports_containers": False,
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "key": "shared_byop",
+            "display_name": "Build Your Own Plan",
+            "description": "Customizable shared hosting with flexible resource allocation",
+            "section_title": "Build Your Own Plan",
+            "section_description": "Create a custom hosting plan tailored to your specific needs with flexible pricing and features",
+            "type": "shared",
+            "sub_type": "byop",
+            "is_active": True,
+            "display_order": 3,
+            "supports_custom_features": True,
+            "supports_containers": False,
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "key": "managed_wordpress",
+            "display_name": "Dockerized Managed WordPress Containers",
+            "description": "Container-based WordPress hosting with auto-scaling and managed updates",
+            "section_title": "Dockerized Managed WordPress",
+            "section_description": "Fully managed WordPress hosting in Docker containers with automatic scaling, updates, and security",
+            "type": "custom",
+            "sub_type": "managed",
+            "is_active": True,
+            "display_order": 4,
+            "supports_custom_features": False,
+            "supports_containers": True,
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "key": "standard_vps",
+            "display_name": "Standard VPS",
+            "description": "Reliable VPS hosting with balanced performance and pricing",
+            "section_title": "Standard VPS",
+            "section_description": "Reliable VPS hosting with balanced performance and pricing",
+            "type": "vps",
+            "sub_type": "standard",
+            "is_active": True,
+            "display_order": 5,
+            "supports_custom_features": False,
+            "supports_containers": False,
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "key": "performance_vps",
+            "display_name": "Performance VPS",
+            "description": "High-performance VPS with premium hardware and optimizations",
+            "section_title": "Performance VPS",
+            "section_description": "High-performance VPS with premium hardware and optimizations",
+            "type": "vps",
+            "sub_type": "performance",
+            "is_active": True,
+            "display_order": 6,
+            "supports_custom_features": False,
+            "supports_containers": False,
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "key": "standard_gameserver",
+            "display_name": "Standard GameServer",
+            "description": "Reliable game server hosting with Pterodactyl panel",
+            "section_title": "Standard GameServer",
+            "section_description": "Reliable game server hosting with Pterodactyl panel management",
+            "type": "gameserver",
+            "sub_type": "standard",
+            "is_active": True,
+            "display_order": 7,
+            "supports_custom_features": False,
+            "supports_containers": False,
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "key": "performance_gameserver",
+            "display_name": "Performance GameServer",
+            "description": "High-performance game servers with enterprise hardware",
+            "section_title": "Performance GameServer",
+            "section_description": "High-performance game servers with enterprise hardware and premium support",
+            "type": "gameserver",
+            "sub_type": "performance",
+            "is_active": True,
+            "display_order": 8,
+            "supports_custom_features": False,
+            "supports_containers": False,
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        }
+    ]
+    
+    try:
+        result = await db.hosting_categories.insert_many(default_categories)
+        print(f"✅ Created {len(result.inserted_ids)} hosting categories")
+    except Exception as e:
+        print(f"❌ Error creating hosting categories: {e}")
+        raise
+
 async def init_hosting_plans(db, migration_mode=False):
     print("🔧 Setting up hosting plans...")
     
@@ -81,6 +239,8 @@ async def init_hosting_plans(db, migration_mode=False):
         {
             "id": str(uuid.uuid4()),
             "name": "Opal",
+            "plan_type": "ssd_shared",  # For backward compatibility
+            "category_key": "ssd_shared",  # New category system
             "type": "shared",
             "sub_type": "ssd",
             "price": 1.00,
