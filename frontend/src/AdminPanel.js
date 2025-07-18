@@ -6,8 +6,10 @@ const API = BACKEND_URL; // BACKEND_URL should be the base URL (e.g., https://bl
 
 const AdminPanel = () => {
   const [hostingPlans, setHostingPlans] = useState([]);
+  const [hostingCategories, setHostingCategories] = useState([]);
   const [companyInfo, setCompanyInfo] = useState({});
   const [selectedPlan, setSelectedPlan] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('plans');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -113,6 +115,17 @@ const AdminPanel = () => {
         setHostingPlans(adminPlansResponse.data);
       } catch (error) {
         console.error('Error loading hosting plans:', error);
+      }
+      
+      // Fetch admin hosting categories
+      try {
+        const adminCategoriesResponse = await axios.get(`${API}/api/admin/hosting-categories?_t=${timestamp}`, { 
+          headers: { ...getAuthHeaders(), ...cacheHeaders }
+        });
+        console.log('Hosting categories loaded:', adminCategoriesResponse.data.length, 'categories');
+        setHostingCategories(adminCategoriesResponse.data);
+      } catch (error) {
+        console.error('Error loading hosting categories:', error);
       }
       
       // Fetch company info
@@ -271,6 +284,332 @@ const AdminPanel = () => {
     }
   };
 
+  // Category Manager Component
+  const CategoryManager = () => {
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [editingCategory, setEditingCategory] = useState(null);
+
+    const createCategory = async (categoryData) => {
+      try {
+        const response = await axios.post(`${API}/api/admin/hosting-categories`, categoryData, {
+          headers: getAuthHeaders()
+        });
+        
+        if (response.status === 200) {
+          alert('Category created successfully!');
+          setShowCreateForm(false);
+          await fetchData(); // Refresh data
+        }
+      } catch (error) {
+        console.error('Error creating category:', error);
+        alert('Error creating category: ' + (error.response?.data?.detail || error.message));
+      }
+    };
+
+    const updateCategory = async (categoryId, categoryData) => {
+      try {
+        const response = await axios.put(`${API}/api/admin/hosting-categories/${categoryId}`, categoryData, {
+          headers: getAuthHeaders()
+        });
+        
+        if (response.status === 200) {
+          alert('Category updated successfully!');
+          setEditingCategory(null);
+          await fetchData(); // Refresh data
+        }
+      } catch (error) {
+        console.error('Error updating category:', error);
+        alert('Error updating category: ' + (error.response?.data?.detail || error.message));
+      }
+    };
+
+    const deleteCategory = async (categoryId) => {
+      if (!confirm('Are you sure you want to delete this category? This will fail if there are plans associated with it.')) {
+        return;
+      }
+
+      try {
+        const response = await axios.delete(`${API}/api/admin/hosting-categories/${categoryId}`, {
+          headers: getAuthHeaders()
+        });
+        
+        if (response.status === 200) {
+          alert('Category deleted successfully!');
+          await fetchData(); // Refresh data
+        }
+      } catch (error) {
+        console.error('Error deleting category:', error);
+        alert('Error deleting category: ' + (error.response?.data?.detail || error.message));
+      }
+    };
+
+    return (
+      <div>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-white">Manage Hosting Categories</h2>
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+          >
+            Add New Category
+          </button>
+        </div>
+
+        {/* Categories List */}
+        <div className="grid gap-4">
+          {hostingCategories.map(category => (
+            <div key={category.id} className="bg-gray-800 p-4 rounded-lg border border-gray-700">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-white">{category.display_name}</h3>
+                  <p className="text-sm text-gray-400 mb-2">Key: {category.key}</p>
+                  <p className="text-sm text-gray-300 mb-2">{category.description}</p>
+                  <div className="flex gap-4 text-xs text-gray-400">
+                    <span>Type: {category.type}</span>
+                    {category.sub_type && <span>Sub-type: {category.sub_type}</span>}
+                    <span>Order: {category.display_order}</span>
+                    <span className={`px-2 py-1 rounded ${category.is_active ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300'}`}>
+                      {category.is_active ? 'Active' : 'Inactive'}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setEditingCategory(category)}
+                    className="bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded text-sm transition-colors"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => deleteCategory(category.id)}
+                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Create Category Modal */}
+        {showCreateForm && (
+          <CategoryEditor 
+            onSave={createCategory}
+            onCancel={() => setShowCreateForm(false)}
+          />
+        )}
+
+        {/* Edit Category Modal */}
+        {editingCategory && (
+          <CategoryEditor 
+            category={editingCategory}
+            onSave={(data) => updateCategory(editingCategory.id, data)}
+            onCancel={() => setEditingCategory(null)}
+          />
+        )}
+      </div>
+    );
+  };
+
+  // Category Editor Component
+  const CategoryEditor = ({ category, onSave, onCancel }) => {
+    const [formData, setFormData] = useState(category || {
+      key: '',
+      display_name: '',
+      description: '',
+      section_title: '',
+      section_description: '',
+      type: 'shared',
+      sub_type: '',
+      is_active: true,
+      display_order: 0,
+      supports_custom_features: false,
+      supports_containers: false
+    });
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      if (!formData.key || !formData.display_name) {
+        alert('Key and Display Name are required');
+        return;
+      }
+      onSave(formData);
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-gray-800 p-6 rounded-lg max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
+          <h3 className="text-xl font-bold text-white mb-4">
+            {category ? 'Edit Category' : 'Create New Category'}
+          </h3>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Category Key * (used in URLs and API)
+                </label>
+                <input
+                  type="text"
+                  value={formData.key}
+                  onChange={(e) => setFormData({...formData, key: e.target.value})}
+                  className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-white"
+                  placeholder="e.g., shared_byop, managed_wordpress"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Display Name *
+                </label>
+                <input
+                  type="text"
+                  value={formData.display_name}
+                  onChange={(e) => setFormData({...formData, display_name: e.target.value})}
+                  className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-white"
+                  placeholder="e.g., Build Your Own Plan"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Description
+              </label>
+              <textarea
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-white"
+                rows="2"
+                placeholder="Brief description of this category"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Section Title (for homepage display)
+              </label>
+              <input
+                type="text"
+                value={formData.section_title}
+                onChange={(e) => setFormData({...formData, section_title: e.target.value})}
+                className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-white"
+                placeholder="Title shown on homepage section"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Section Description (for homepage display)
+              </label>
+              <textarea
+                value={formData.section_description}
+                onChange={(e) => setFormData({...formData, section_description: e.target.value})}
+                className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-white"
+                rows="2"
+                placeholder="Description shown on homepage section"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Type
+                </label>
+                <select
+                  value={formData.type}
+                  onChange={(e) => setFormData({...formData, type: e.target.value})}
+                  className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-white"
+                >
+                  <option value="shared">Shared</option>
+                  <option value="vps">VPS</option>
+                  <option value="gameserver">GameServer</option>
+                  <option value="custom">Custom</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Sub-type
+                </label>
+                <input
+                  type="text"
+                  value={formData.sub_type}
+                  onChange={(e) => setFormData({...formData, sub_type: e.target.value})}
+                  className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-white"
+                  placeholder="e.g., ssd, hdd, byop, managed"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Display Order
+                </label>
+                <input
+                  type="number"
+                  value={formData.display_order}
+                  onChange={(e) => setFormData({...formData, display_order: parseInt(e.target.value)})}
+                  className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-white"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.is_active}
+                  onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
+                  className="mr-2"
+                />
+                <span className="text-gray-300">Active</span>
+              </label>
+              
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.supports_custom_features}
+                  onChange={(e) => setFormData({...formData, supports_custom_features: e.target.checked})}
+                  className="mr-2"
+                />
+                <span className="text-gray-300">Supports Custom Features</span>
+              </label>
+              
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.supports_containers}
+                  onChange={(e) => setFormData({...formData, supports_containers: e.target.checked})}
+                  className="mr-2"
+                />
+                <span className="text-gray-300">Supports Containers</span>
+              </label>
+            </div>
+
+            <div className="flex gap-4 pt-4">
+              <button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
+              >
+                {category ? 'Update Category' : 'Create Category'}
+              </button>
+              <button
+                type="button"
+                onClick={onCancel}
+                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
   const PlanEditor = ({ plan, onUpdate }) => {
     const [formData, setFormData] = useState(plan);
 
@@ -286,6 +625,23 @@ const AdminPanel = () => {
           <h3 className="text-xl font-bold text-white mb-4">Edit Plan: {plan.name}</h3>
           
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Category Selection */}
+            <div>
+              <label className="block text-gray-300 mb-2">Category</label>
+              <select
+                value={formData.category_key || formData.plan_type || ''}
+                onChange={(e) => setFormData({...formData, category_key: e.target.value, plan_type: e.target.value})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+              >
+                <option value="">Select a category</option>
+                {hostingCategories.map(category => (
+                  <option key={category.key} value={category.key}>
+                    {category.display_name} ({category.key})
+                  </option>
+                ))}
+              </select>
+            </div>
+            
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-gray-300 mb-2">Plan Name</label>
@@ -456,6 +812,53 @@ const AdminPanel = () => {
                 placeholder="https://billing.bluenebulahosting.com"
               />
               <p className="text-xs text-gray-400 mt-1">Leave empty to use default billing URL</p>
+            </div>
+            
+            {/* New Fields for Advanced Plan Types */}
+            <div className="border-t border-gray-600 pt-4">
+              <h4 className="text-lg font-semibold text-white mb-3">Advanced Features</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.is_customizable || false}
+                    onChange={(e) => setFormData({...formData, is_customizable: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <label className="text-gray-300">Customizable (Build Your Own Plan)</label>
+                </div>
+                
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.managed_wordpress || false}
+                    onChange={(e) => setFormData({...formData, managed_wordpress: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <label className="text-gray-300">Managed WordPress</label>
+                </div>
+                
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.auto_scaling || false}
+                    onChange={(e) => setFormData({...formData, auto_scaling: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <label className="text-gray-300">Auto Scaling</label>
+                </div>
+              </div>
+              
+              <div className="mt-4">
+                <label className="block text-gray-300 mb-2">Docker Image (for containerized plans)</label>
+                <input
+                  type="text"
+                  value={formData.docker_image || ''}
+                  onChange={(e) => setFormData({...formData, docker_image: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., wordpress:latest, mysql:8.0"
+                />
+              </div>
             </div>
             
             <div className="flex items-center">
@@ -1949,6 +2352,7 @@ const AdminPanel = () => {
           <nav className="flex flex-wrap gap-2">
             {[
               { key: 'plans', label: 'Hosting Plans', icon: '📦' },
+              { key: 'categories', label: 'Plan Categories', icon: '📂' },
               { key: 'content', label: 'Website Content', icon: '📝' },
               { key: 'navigation', label: 'Navigation Menu', icon: '🧭' },
               { key: 'company', label: 'Company Info', icon: '🏢' },
@@ -2053,6 +2457,7 @@ const AdminPanel = () => {
           </div>
         )}
         
+        {activeTab === 'categories' && <CategoryManager />}
         {activeTab === 'content' && <ContentEditor />}
         {activeTab === 'navigation' && <NavigationEditor />}
         {activeTab === 'company' && <CompanyEditor />}
