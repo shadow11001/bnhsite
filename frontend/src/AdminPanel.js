@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import CategoryManager from "./components/CategoryManager";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = BACKEND_URL; // BACKEND_URL should be the base URL (e.g., https://bluenebulahosting.com)
@@ -12,6 +13,7 @@ const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState('plans');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
   
   // Content management states
   const [websiteContent, setWebsiteContent] = useState({});
@@ -113,6 +115,26 @@ const AdminPanel = () => {
         setHostingPlans(adminPlansResponse.data);
       } catch (error) {
         console.error('Error loading hosting plans:', error);
+      }
+      
+      // Fetch categories
+      try {
+        const categoriesResponse = await axios.get(`${API}/api/admin/categories?_t=${timestamp}`, { 
+          headers: { ...getAuthHeaders(), ...cacheHeaders }
+        });
+        console.log('Categories loaded:', categoriesResponse.data);
+        setCategories(categoriesResponse.data);
+      } catch (error) {
+        console.error('Error loading categories, using default:', error);
+        // Set default categories if backend doesn't support it yet
+        setCategories([
+          {id: '1', name: 'SSD Shared', type: 'shared', sub_type: 'ssd', is_active: true, display_order: 1},
+          {id: '2', name: 'HDD Shared', type: 'shared', sub_type: 'hdd', is_active: true, display_order: 2},
+          {id: '3', name: 'Standard VPS', type: 'vps', sub_type: 'standard', is_active: true, display_order: 3},
+          {id: '4', name: 'Performance VPS', type: 'vps', sub_type: 'performance', is_active: true, display_order: 4},
+          {id: '5', name: 'Standard GameServer', type: 'gameserver', sub_type: 'standard', is_active: true, display_order: 5},
+          {id: '6', name: 'Performance GameServer', type: 'gameserver', sub_type: 'performance', is_active: true, display_order: 6}
+        ]);
       }
       
       // Fetch company info
@@ -274,6 +296,11 @@ const AdminPanel = () => {
   const PlanEditor = ({ plan, onUpdate }) => {
     const [formData, setFormData] = useState(plan);
 
+    // Find the category for this plan
+    const planCategory = categories.find(cat => 
+      cat.type === plan.type && cat.sub_type === plan.sub_type
+    );
+
     const handleSubmit = (e) => {
       e.preventDefault();
       onUpdate(plan.id, formData);
@@ -286,6 +313,23 @@ const AdminPanel = () => {
           <h3 className="text-xl font-bold text-white mb-4">Edit Plan: {plan.name}</h3>
           
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Category Information */}
+            {planCategory && (
+              <div className="bg-blue-900/30 border border-blue-600 rounded-lg p-4">
+                <h4 className="text-blue-200 font-semibold mb-2">Category: {planCategory.name}</h4>
+                <div className="text-blue-100 text-sm space-y-1">
+                  <p>Type: {planCategory.type} - {planCategory.sub_type}</p>
+                  {planCategory.description && <p>Description: {planCategory.description}</p>}
+                  {planCategory.supports_wordpress && (
+                    <p className="text-purple-200">✓ WordPress Container Support</p>
+                  )}
+                  {planCategory.category_fields && planCategory.category_fields.length > 0 && (
+                    <p>Available Fields: {planCategory.category_fields.join(', ')}</p>
+                  )}
+                </div>
+              </div>
+            )}
+            
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-gray-300 mb-2">Plan Name</label>
@@ -354,8 +398,52 @@ const AdminPanel = () => {
               </div>
             </div>
             
-            {/* Shared Hosting Specific Fields */}
-            {(formData.type === 'shared') && (
+            {/* Category-Specific Fields */}
+            {planCategory && planCategory.category_fields && planCategory.category_fields.length > 0 && (
+              <div className="bg-gray-700 p-4 rounded-lg">
+                <h4 className="text-lg font-semibold text-white mb-4">
+                  {planCategory.name} Specific Fields
+                </h4>
+                <div className="grid grid-cols-2 gap-4">
+                  {planCategory.category_fields.map(field => {
+                    const fieldName = field.replace('_', ' ').split(' ').map(word => 
+                      word.charAt(0).toUpperCase() + word.slice(1)
+                    ).join(' ');
+                    
+                    // Handle different field types
+                    if (['root_access', 'os_choice', 'backup_included', 'ssl_certificate', 'wordpress_support'].includes(field)) {
+                      return (
+                        <div key={field} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={formData[field] || false}
+                            onChange={(e) => setFormData({...formData, [field]: e.target.checked})}
+                            className="mr-2"
+                          />
+                          <label className="text-gray-300">{fieldName}</label>
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div key={field}>
+                          <label className="block text-gray-300 mb-2">{fieldName}</label>
+                          <input
+                            type="text"
+                            value={formData[field] || ''}
+                            onChange={(e) => setFormData({...formData, [field]: e.target.value})}
+                            className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                            placeholder={`e.g., ${field.includes('domains') || field.includes('databases') || field.includes('email') ? '1, 5, Unlimited' : 'Enter value'}`}
+                          />
+                        </div>
+                      );
+                    }
+                  })}
+                </div>
+              </div>
+            )}
+            
+            {/* Fallback: Show shared hosting fields if no category or category has no fields */}
+            {(!planCategory || !planCategory.category_fields || planCategory.category_fields.length === 0) && formData.type === 'shared' && (
               <div className="bg-gray-700 p-4 rounded-lg">
                 <h4 className="text-lg font-semibold text-white mb-4">Shared Hosting Limits</h4>
                 <div className="grid grid-cols-2 gap-4">
@@ -1949,6 +2037,7 @@ const AdminPanel = () => {
           <nav className="flex flex-wrap gap-2">
             {[
               { key: 'plans', label: 'Hosting Plans', icon: '📦' },
+              { key: 'categories', label: 'Categories', icon: '🏷️' },
               { key: 'content', label: 'Website Content', icon: '📝' },
               { key: 'navigation', label: 'Navigation Menu', icon: '🧭' },
               { key: 'company', label: 'Company Info', icon: '🏢' },
@@ -1993,66 +2082,128 @@ const AdminPanel = () => {
               </div>
             ) : (
               <div className="grid gap-6">
-                {[
-                  {key: 'ssd_shared', label: 'SSD Shared', filter: (p) => p.type === 'shared' && p.sub_type === 'ssd'},
-                  {key: 'hdd_shared', label: 'HDD Shared', filter: (p) => p.type === 'shared' && p.sub_type === 'hdd'},
-                  {key: 'standard_vps', label: 'Standard VPS', filter: (p) => p.type === 'vps' && p.sub_type === 'standard'},
-                  {key: 'performance_vps', label: 'Performance VPS', filter: (p) => p.type === 'vps' && p.sub_type === 'performance'},
-                  {key: 'standard_gameserver', label: 'Standard GameServer', filter: (p) => p.type === 'gameserver' && p.sub_type === 'standard'},
-                  {key: 'performance_gameserver', label: 'Performance GameServer', filter: (p) => p.type === 'gameserver' && p.sub_type === 'performance'}
-                ].map(planCategory => {
-                  const typePlans = hostingPlans.filter(planCategory.filter);
-                  if (typePlans.length === 0) return null;
-                  
-                  return (
-                    <div key={planCategory.key} className="bg-gray-800 rounded-lg p-6">
-                      <h3 className="text-xl font-bold text-white mb-4">
-                        {planCategory.label} ({typePlans.length} plans)
-                      </h3>
-                      
-                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {typePlans.map(plan => (
-                          <div key={plan.id} className="bg-gray-700 rounded-lg p-4">
-                            <div className="flex justify-between items-start mb-2">
-                              <h4 className="font-bold text-white">{plan.name}</h4>
-                              {plan.is_popular && (
-                                <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs">Popular</span>
-                              )}
+                {categories
+                  .filter(category => category.is_active)
+                  .sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
+                  .map(category => {
+                    const typePlans = hostingPlans.filter(plan => 
+                      plan.type === category.type && plan.sub_type === category.sub_type
+                    );
+                    if (typePlans.length === 0) return null;
+                    
+                    return (
+                      <div key={category.id} className="bg-gray-800 rounded-lg p-6">
+                        <h3 className="text-xl font-bold text-white mb-4">
+                          {category.name} ({typePlans.length} plans)
+                          {category.supports_wordpress && (
+                            <span className="ml-2 bg-purple-600 text-white px-2 py-1 rounded text-xs">
+                              WordPress Support
+                            </span>
+                          )}
+                        </h3>
+                        {category.description && (
+                          <p className="text-gray-300 text-sm mb-4">{category.description}</p>
+                        )}
+                        
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {typePlans.map(plan => (
+                            <div key={plan.id} className="bg-gray-700 rounded-lg p-4">
+                              <div className="flex justify-between items-start mb-2">
+                                <h4 className="font-bold text-white">{plan.name}</h4>
+                                {plan.is_popular && (
+                                  <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs">Popular</span>
+                                )}
+                              </div>
+                              
+                              <div className="text-blue-400 font-bold text-lg mb-2">
+                                ${plan.price}/mo
+                              </div>
+                              
+                              <div className="text-gray-300 text-sm mb-4">
+                                {plan.cpu && <div>CPU: {plan.cpu}</div>}
+                                {plan.ram && <div>RAM: {plan.ram}</div>}
+                                {plan.disk_space && <div>Storage: {plan.disk_space}</div>}
+                                {plan.bandwidth && <div>Bandwidth: {plan.bandwidth}</div>}
+                                {plan.markup_percentage > 0 && (
+                                  <div className="text-yellow-400 text-xs mt-1">
+                                    Markup: {plan.markup_percentage}%
+                                  </div>
+                                )}
+                              </div>
+                              
+                              <button
+                                onClick={() => setSelectedPlan(plan)}
+                                className="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                              >
+                                Edit Plan
+                              </button>
                             </div>
-                            
-                            <div className="text-blue-400 font-bold text-lg mb-2">
-                              ${plan.price}/mo
-                            </div>
-                            
-                            <div className="text-gray-300 text-sm mb-4">
-                              {plan.cpu && <div>CPU: {plan.cpu}</div>}
-                              {plan.ram && <div>RAM: {plan.ram}</div>}
-                              {plan.disk_space && <div>Storage: {plan.disk_space}</div>}
-                              {plan.bandwidth && <div>Bandwidth: {plan.bandwidth}</div>}
-                              {plan.markup_percentage > 0 && (
-                                <div className="text-yellow-400 text-xs mt-1">
-                                  Markup: {plan.markup_percentage}%
-                                </div>
-                              )}
-                            </div>
-                            
-                            <button
-                              onClick={() => setSelectedPlan(plan)}
-                              className="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                            >
-                              Edit Plan
-                            </button>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                  
+                {/* Show uncategorized plans if any */}
+                {(() => {
+                  const categorizedPlans = new Set();
+                  categories.forEach(category => {
+                    hostingPlans.forEach(plan => {
+                      if (plan.type === category.type && plan.sub_type === category.sub_type) {
+                        categorizedPlans.add(plan.id);
+                      }
+                    });
+                  });
+                  
+                  const uncategorizedPlans = hostingPlans.filter(plan => !categorizedPlans.has(plan.id));
+                  
+                  if (uncategorizedPlans.length > 0) {
+                    return (
+                      <div className="bg-gray-800 rounded-lg p-6 border-2 border-yellow-600">
+                        <h3 className="text-xl font-bold text-white mb-4">
+                          Uncategorized Plans ({uncategorizedPlans.length} plans)
+                          <span className="ml-2 bg-yellow-600 text-white px-2 py-1 rounded text-xs">
+                            Needs Category
+                          </span>
+                        </h3>
+                        <p className="text-gray-300 text-sm mb-4">
+                          These plans don't match any active category. Create categories for them or update their type/sub_type.
+                        </p>
+                        
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {uncategorizedPlans.map(plan => (
+                            <div key={plan.id} className="bg-gray-700 rounded-lg p-4">
+                              <div className="flex justify-between items-start mb-2">
+                                <h4 className="font-bold text-white">{plan.name}</h4>
+                                <span className="bg-yellow-600 text-white px-2 py-1 rounded text-xs">
+                                  {plan.type}-{plan.sub_type}
+                                </span>
+                              </div>
+                              
+                              <div className="text-blue-400 font-bold text-lg mb-2">
+                                ${plan.price}/mo
+                              </div>
+                              
+                              <button
+                                onClick={() => setSelectedPlan(plan)}
+                                className="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                              >
+                                Edit Plan
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
               </div>
             )}
           </div>
         )}
         
+        {activeTab === 'categories' && <CategoryManager />}
         {activeTab === 'content' && <ContentEditor />}
         {activeTab === 'navigation' && <NavigationEditor />}
         {activeTab === 'company' && <CompanyEditor />}
