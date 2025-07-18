@@ -10,6 +10,7 @@ const AdminPanel = () => {
   const [companyInfo, setCompanyInfo] = useState({});
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [isCreatingPlan, setIsCreatingPlan] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('plans');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -251,6 +252,26 @@ const AdminPanel = () => {
         handleLogout();
       } else {
         alert('Error updating plan: ' + error.message);
+      }
+    }
+  };
+
+  const createPlan = async (planData) => {
+    try {
+      const response = await axios.post(`${API}/api/admin/hosting-plans`, planData, {
+        headers: {
+          ...getAuthHeaders(),
+          'Cache-Control': 'no-cache'
+        }
+      });
+      await fetchData(true); // Force refresh after creation
+      alert('Plan created successfully!');
+      setIsCreatingPlan(false);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        handleLogout();
+      } else {
+        alert('Error creating plan: ' + (error.response?.data?.detail || error.message));
       }
     }
   };
@@ -881,6 +902,356 @@ const AdminPanel = () => {
               <button
                 type="button"
                 onClick={() => setSelectedPlan(null)}
+                className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
+  const PlanCreator = ({ onCreatePlan }) => {
+    const [formData, setFormData] = useState({
+      plan_type: '',
+      category_key: '',
+      plan_name: '',
+      base_price: 0,
+      cpu_cores: null,
+      memory_gb: null,
+      disk_gb: null,
+      disk_type: 'SSD',
+      bandwidth: '',
+      features: [],
+      popular: false,
+      markup_percentage: 0,
+      websites: '',
+      subdomains: '',
+      parked_domains: '',
+      addon_domains: '',
+      databases: '',
+      email_accounts: '',
+      is_customizable: false,
+      docker_image: '',
+      managed_wordpress: false,
+      auto_scaling: false
+    });
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      
+      // Validate required fields
+      if (!formData.plan_name || !formData.category_key || formData.base_price <= 0) {
+        alert('Please fill in all required fields (Plan Name, Category, and Price)');
+        return;
+      }
+      
+      // Prepare data for API
+      const planData = {
+        plan_type: formData.category_key,
+        category_key: formData.category_key,
+        plan_name: formData.plan_name,
+        base_price: parseFloat(formData.base_price),
+        cpu_cores: formData.cpu_cores || null,
+        memory_gb: formData.memory_gb || null,
+        disk_gb: formData.disk_gb || null,
+        disk_type: formData.disk_type,
+        bandwidth: formData.bandwidth || null,
+        features: formData.features.filter(f => f.trim()),
+        popular: formData.popular,
+        markup_percentage: parseFloat(formData.markup_percentage) || 0,
+        websites: formData.websites || null,
+        subdomains: formData.subdomains || null,
+        parked_domains: formData.parked_domains || null,
+        addon_domains: formData.addon_domains || null,
+        databases: formData.databases || null,
+        email_accounts: formData.email_accounts || null,
+        is_customizable: formData.is_customizable,
+        docker_image: formData.docker_image || null,
+        managed_wordpress: formData.managed_wordpress,
+        auto_scaling: formData.auto_scaling
+      };
+      
+      onCreatePlan(planData);
+    };
+
+    // Get the selected category to determine if it's a shared hosting type
+    const selectedCategory = hostingCategories.find(cat => cat.key === formData.category_key);
+    const isSharedHosting = selectedCategory?.type === 'shared';
+
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <h3 className="text-xl font-bold text-white mb-4">Create New Hosting Plan</h3>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Category Selection */}
+            <div>
+              <label className="block text-gray-300 mb-2">Category *</label>
+              <select
+                value={formData.category_key}
+                onChange={(e) => setFormData({...formData, category_key: e.target.value, plan_type: e.target.value})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                required
+              >
+                <option value="">Select a category</option>
+                {hostingCategories.map(category => (
+                  <option key={category.key} value={category.key}>
+                    {category.display_name} ({category.key})
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-300 mb-2">Plan Name *</label>
+                <input
+                  type="text"
+                  value={formData.plan_name}
+                  onChange={(e) => setFormData({...formData, plan_name: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 mb-2">Price ($) *</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={formData.base_price}
+                  onChange={(e) => setFormData({...formData, base_price: parseFloat(e.target.value)})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  required
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-300 mb-2">CPU Cores</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={formData.cpu_cores || ''}
+                  onChange={(e) => setFormData({...formData, cpu_cores: e.target.value ? parseInt(e.target.value) : null})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 1, 2, 4"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 mb-2">Memory (GB)</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={formData.memory_gb || ''}
+                  onChange={(e) => setFormData({...formData, memory_gb: e.target.value ? parseInt(e.target.value) : null})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 1, 2, 4"
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-gray-300 mb-2">Disk (GB)</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={formData.disk_gb || ''}
+                  onChange={(e) => setFormData({...formData, disk_gb: e.target.value ? parseInt(e.target.value) : null})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 10, 50, 100"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 mb-2">Disk Type</label>
+                <select
+                  value={formData.disk_type}
+                  onChange={(e) => setFormData({...formData, disk_type: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                >
+                  <option value="SSD">SSD</option>
+                  <option value="HDD">HDD</option>
+                  <option value="NVMe">NVMe</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-gray-300 mb-2">Bandwidth</label>
+                <input
+                  type="text"
+                  value={formData.bandwidth}
+                  onChange={(e) => setFormData({...formData, bandwidth: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., Unlimited, 1TB"
+                />
+              </div>
+            </div>
+            
+            {/* Shared Hosting Specific Fields */}
+            {isSharedHosting && (
+              <div className="bg-gray-700 p-4 rounded-lg">
+                <h4 className="text-lg font-semibold text-white mb-4">Shared Hosting Limits</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-300 mb-2">Websites</label>
+                    <input
+                      type="text"
+                      value={formData.websites}
+                      onChange={(e) => setFormData({...formData, websites: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                      placeholder="e.g., 1, 5, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Subdomains</label>
+                    <input
+                      type="text"
+                      value={formData.subdomains}
+                      onChange={(e) => setFormData({...formData, subdomains: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                      placeholder="e.g., 10, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Parked Domains</label>
+                    <input
+                      type="text"
+                      value={formData.parked_domains}
+                      onChange={(e) => setFormData({...formData, parked_domains: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                      placeholder="e.g., 5, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Addon Domains</label>
+                    <input
+                      type="text"
+                      value={formData.addon_domains}
+                      onChange={(e) => setFormData({...formData, addon_domains: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                      placeholder="e.g., 0, 5, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Databases</label>
+                    <input
+                      type="text"
+                      value={formData.databases}
+                      onChange={(e) => setFormData({...formData, databases: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                      placeholder="e.g., 1, 10, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Email Accounts</label>
+                    <input
+                      type="text"
+                      value={formData.email_accounts}
+                      onChange={(e) => setFormData({...formData, email_accounts: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                      placeholder="e.g., 5, Unlimited"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <div>
+              <label className="block text-gray-300 mb-2">Markup Percentage</label>
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                value={formData.markup_percentage}
+                onChange={(e) => setFormData({...formData, markup_percentage: parseFloat(e.target.value)})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                placeholder="e.g., 20, 40"
+              />
+              <p className="text-xs text-gray-400 mt-1">Markup percentage for internal pricing strategy</p>
+            </div>
+            
+            <div>
+              <label className="block text-gray-300 mb-2">Features (one per line)</label>
+              <textarea
+                rows={4}
+                value={formData.features.join('\n')}
+                onChange={(e) => setFormData({...formData, features: e.target.value.split('\n').filter(f => f.trim())})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                placeholder="Free SSL Certificate&#10;24/7 Support&#10;cPanel Access"
+              />
+            </div>
+            
+            {/* Advanced Features */}
+            <div className="border-t border-gray-600 pt-4">
+              <h4 className="text-lg font-semibold text-white mb-3">Advanced Features</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.is_customizable}
+                    onChange={(e) => setFormData({...formData, is_customizable: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <label className="text-gray-300">Customizable (Build Your Own Plan)</label>
+                </div>
+                
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.managed_wordpress}
+                    onChange={(e) => setFormData({...formData, managed_wordpress: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <label className="text-gray-300">Managed WordPress</label>
+                </div>
+                
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.auto_scaling}
+                    onChange={(e) => setFormData({...formData, auto_scaling: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <label className="text-gray-300">Auto Scaling</label>
+                </div>
+                
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.popular}
+                    onChange={(e) => setFormData({...formData, popular: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <label className="text-gray-300">Popular Plan</label>
+                </div>
+              </div>
+              
+              <div className="mt-4">
+                <label className="block text-gray-300 mb-2">Docker Image (for containerized plans)</label>
+                <input
+                  type="text"
+                  value={formData.docker_image}
+                  onChange={(e) => setFormData({...formData, docker_image: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., wordpress:latest, mysql:8.0"
+                />
+              </div>
+            </div>
+            
+            <div className="flex gap-4">
+              <button
+                type="submit"
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Create Plan
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsCreatingPlan(false)}
                 className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
               >
                 Cancel
@@ -2379,7 +2750,16 @@ const AdminPanel = () => {
         
         {activeTab === 'plans' && (
           <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Manage Hosting Plans</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-white">Manage Hosting Plans</h2>
+              <button
+                onClick={() => setIsCreatingPlan(true)}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center gap-2"
+              >
+                <span>+</span>
+                Create Plan
+              </button>
+            </div>
             
             {/* Debug info */}
             <div className="bg-gray-700 rounded p-2 mb-4 text-xs text-gray-300">
@@ -2465,6 +2845,10 @@ const AdminPanel = () => {
         {activeTab === 'contact' && <ContactSMTPEditor />}
         {activeTab === 'promo' && <PromoCodeManager />}
         {activeTab === 'settings' && <SiteSettings />}
+        
+        {isCreatingPlan && (
+          <PlanCreator onCreatePlan={createPlan} />
+        )}
         
         {selectedPlan && (
           <PlanEditor plan={selectedPlan} onUpdate={updatePlan} />
