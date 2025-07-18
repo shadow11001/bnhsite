@@ -1226,6 +1226,9 @@ async def migrate_database():
         collections = await db.list_collection_names()
         print(f"📋 Found existing collections: {collections}")
         
+        # Ensure hosting categories exist first
+        await init_hosting_categories(db, migration_mode=True)
+        
         # Migrate hosting plans if needed
         if "hosting_plans" in collections:
             await migrate_hosting_plans(db)
@@ -1258,6 +1261,49 @@ async def migrate_hosting_plans(db):
         # Ensure all plans have order_url
         if "order_url" not in plan:
             updates["order_url"] = "https://billing.bluenebulahosting.com"
+        
+        # Migrate to new category system - ensure category_key is set
+        if "category_key" not in plan or not plan.get("category_key"):
+            # Map old plan_type to category_key for backward compatibility
+            plan_type = plan.get("plan_type", "")
+            if plan_type:
+                updates["category_key"] = plan_type
+            else:
+                # Try to infer from type and sub_type
+                plan_main_type = plan.get("type", "shared")
+                plan_sub_type = plan.get("sub_type", "ssd")
+                
+                if plan_main_type == "shared":
+                    if plan_sub_type == "hdd":
+                        updates["category_key"] = "hdd_shared"
+                        updates["plan_type"] = "hdd_shared"  # For backward compatibility
+                    elif plan_sub_type == "byop":
+                        updates["category_key"] = "shared_byop"
+                        updates["plan_type"] = "shared_byop"
+                    else:
+                        updates["category_key"] = "ssd_shared"
+                        updates["plan_type"] = "ssd_shared"
+                elif plan_main_type == "vps":
+                    if plan_sub_type == "performance":
+                        updates["category_key"] = "performance_vps"
+                        updates["plan_type"] = "performance_vps"
+                    else:
+                        updates["category_key"] = "standard_vps"
+                        updates["plan_type"] = "standard_vps"
+                elif plan_main_type == "gameserver":
+                    if plan_sub_type == "performance":
+                        updates["category_key"] = "performance_gameserver"
+                        updates["plan_type"] = "performance_gameserver"
+                    else:
+                        updates["category_key"] = "standard_gameserver"
+                        updates["plan_type"] = "standard_gameserver"
+                elif plan_main_type == "custom":
+                    updates["category_key"] = "managed_wordpress"
+                    updates["plan_type"] = "managed_wordpress"
+                else:
+                    # Default fallback
+                    updates["category_key"] = "ssd_shared"
+                    updates["plan_type"] = "ssd_shared"
         
         # Ensure technical specs exist for non-shared plans
         if plan.get("plan_type") in ["standard_vps", "performance_vps", "standard_gameserver", "performance_gameserver"]:

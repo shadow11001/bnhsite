@@ -255,6 +255,29 @@ const AdminPanel = () => {
     }
   };
 
+  const createPlan = async (planData) => {
+    try {
+      const response = await axios.post(`${API}/api/admin/hosting-plans`, planData, {
+        headers: {
+          ...getAuthHeaders(),
+          'Cache-Control': 'no-cache'
+        }
+      });
+      await fetchData(true); // Force refresh after creation
+      alert('Plan created successfully!');
+      return response.data;
+    } catch (error) {
+      console.error('Error creating plan:', error);
+      if (error.response?.status === 401) {
+        handleLogout();
+      } else {
+        const errorMessage = error.response?.data?.detail || error.response?.data?.message || error.message;
+        alert('Error creating plan: ' + errorMessage);
+        throw error;
+      }
+    }
+  };
+
   const updateCompanyInfo = async (updates) => {
     try {
       // Try different endpoints and methods
@@ -610,19 +633,55 @@ const AdminPanel = () => {
     );
   };
 
-  const PlanEditor = ({ plan, onUpdate }) => {
-    const [formData, setFormData] = useState(plan);
+  const PlanEditor = ({ plan, onUpdate, onCreate }) => {
+    const isCreating = !plan.id; // If no ID, it's a creation
+    const [formData, setFormData] = useState(plan.id ? plan : {
+      name: '',
+      price: 0,
+      category_key: '',
+      plan_type: '',
+      type: 'shared',
+      cpu: '',
+      ram: '',
+      disk_space: '',
+      bandwidth: '',
+      features: [],
+      markup_percentage: 0,
+      is_popular: false,
+      websites: '',
+      subdomains: '',
+      parked_domains: '',
+      addon_domains: '',
+      databases: '',
+      email_accounts: '',
+      docker_image: '',
+      managed_wordpress: false,
+      auto_scaling: false,
+      is_customizable: false
+    });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
-      onUpdate(plan.id, formData);
-      setSelectedPlan(null);
+      
+      try {
+        if (isCreating) {
+          await createPlan(formData);
+        } else {
+          onUpdate(plan.id, formData);
+        }
+        setSelectedPlan(null);
+      } catch (error) {
+        // Error handling is done in the create/update functions
+        console.error('Error in plan form submit:', error);
+      }
     };
 
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          <h3 className="text-xl font-bold text-white mb-4">Edit Plan: {plan.name}</h3>
+          <h3 className="text-xl font-bold text-white mb-4">
+            {isCreating ? 'Create New Plan' : `Edit Plan: ${plan.name}`}
+          </h3>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Category Selection */}
@@ -876,7 +935,7 @@ const AdminPanel = () => {
                 type="submit"
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               >
-                Update Plan
+                {isCreating ? 'Create Plan' : 'Update Plan'}
               </button>
               <button
                 type="button"
@@ -2379,7 +2438,15 @@ const AdminPanel = () => {
         
         {activeTab === 'plans' && (
           <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Manage Hosting Plans</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-white">Manage Hosting Plans</h2>
+              <button
+                onClick={() => setSelectedPlan({})} // Empty object indicates creation mode
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                Create New Plan
+              </button>
+            </div>
             
             {/* Debug info */}
             <div className="bg-gray-700 rounded p-2 mb-4 text-xs text-gray-300">
@@ -2467,7 +2534,7 @@ const AdminPanel = () => {
         {activeTab === 'settings' && <SiteSettings />}
         
         {selectedPlan && (
-          <PlanEditor plan={selectedPlan} onUpdate={updatePlan} />
+          <PlanEditor plan={selectedPlan} onUpdate={updatePlan} onCreate={createPlan} />
         )}
       </div>
     </div>

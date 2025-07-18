@@ -594,6 +594,58 @@ async def update_hosting_plan(plan_id: str, plan_update: dict, current_user: str
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.post("/admin/hosting-plans")
+async def create_hosting_plan(plan_data: dict, current_user: str = Depends(get_current_user)):
+    """Create new hosting plan - admin only"""
+    try:
+        # Map frontend field names to database field names
+        db_plan = {}
+        for key, value in plan_data.items():
+            if key == "type":
+                db_plan["plan_type"] = value
+            elif key == "name":
+                db_plan["plan_name"] = value
+            elif key == "price":
+                db_plan["base_price"] = value
+            elif key == "is_popular":
+                db_plan["popular"] = value
+            else:
+                db_plan[key] = value
+        
+        # Ensure required fields are present
+        if not db_plan.get("plan_name"):
+            raise HTTPException(status_code=400, detail="Plan name is required")
+        if not db_plan.get("base_price"):
+            raise HTTPException(status_code=400, detail="Plan price is required")
+        if not db_plan.get("plan_type") and not db_plan.get("category_key"):
+            raise HTTPException(status_code=400, detail="Plan type or category is required")
+        
+        # Generate unique ID for the plan
+        db_plan["id"] = str(uuid.uuid4())
+        
+        # Set default values for optional fields
+        if "features" not in db_plan:
+            db_plan["features"] = []
+        if "markup_percentage" not in db_plan:
+            db_plan["markup_percentage"] = 0
+        if "popular" not in db_plan:
+            db_plan["popular"] = False
+        
+        # Remove any _id field to avoid conflicts
+        if "_id" in db_plan:
+            del db_plan["_id"]
+        
+        # Insert the new plan
+        result = await db.hosting_plans.insert_one(db_plan)
+        if not result.inserted_id:
+            raise HTTPException(status_code=400, detail="Failed to create plan")
+        
+        return {"message": "Plan created successfully", "id": db_plan["id"]}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Hosting Category Management Endpoints
 
 @api_router.get("/admin/hosting-categories")
