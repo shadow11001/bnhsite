@@ -420,6 +420,9 @@ async def get_admin_hosting_plans(current_user: str = Depends(get_current_user))
 async def create_hosting_plan(plan_data: dict, current_user: str = Depends(get_current_user)):
     """Create a new hosting plan - admin only"""
     try:
+        print(f"Plan creation request from user: {current_user}")
+        print(f"Plan data received: {plan_data}")
+        
         # Map frontend field names to database field names
         db_plan = {}
         
@@ -484,15 +487,20 @@ async def create_hosting_plan(plan_data: dict, current_user: str = Depends(get_c
         if "_id" in db_plan:
             del db_plan["_id"]
         
+        print(f"Final plan data for database: {db_plan}")
+        
         # Insert the new plan
         result = await db.hosting_plans.insert_one(db_plan)
         if not result.inserted_id:
             raise HTTPException(status_code=400, detail="Failed to create hosting plan")
         
+        print(f"Plan created successfully with ID: {db_plan['id']}")
         return {"message": "Hosting plan created successfully", "id": db_plan["id"]}
     except ValueError as e:
+        print(f"Validation error in plan creation: {e}")
         raise HTTPException(status_code=400, detail=f"Invalid numeric value: {str(e)}")
     except Exception as e:
+        print(f"Error in plan creation: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/hosting-plans", response_model=List[dict])
@@ -636,6 +644,9 @@ async def get_hosting_categories():
 async def create_hosting_category(category_data: HostingCategory, current_user: str = Depends(get_current_user)):
     """Create a new hosting category - admin only"""
     try:
+        print(f"Category creation request from user: {current_user}")
+        print(f"Category data received: {category_data.dict()}")
+        
         # Check if category key already exists
         existing = await db.hosting_categories.find_one({"key": category_data.key})
         if existing:
@@ -645,12 +656,16 @@ async def create_hosting_category(category_data: HostingCategory, current_user: 
         category_dict["created_at"] = datetime.utcnow()
         category_dict["updated_at"] = datetime.utcnow()
         
+        print(f"Final category data for database: {category_dict}")
+        
         result = await db.hosting_categories.insert_one(category_dict)
         if not result.inserted_id:
             raise HTTPException(status_code=400, detail="Failed to create category")
         
+        print(f"Category created successfully with ID: {category_data.id}")
         return {"message": "Category created successfully", "id": category_data.id}
     except Exception as e:
+        print(f"Error in category creation: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.put("/admin/hosting-categories/{category_id}")

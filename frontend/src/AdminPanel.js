@@ -257,6 +257,10 @@ const AdminPanel = () => {
 
   const createPlan = async (planData) => {
     try {
+      console.log('Creating plan with data:', planData);
+      console.log('API URL:', `${API}/api/admin/hosting-plans`);
+      console.log('Auth headers:', getAuthHeaders());
+      
       const response = await axios.post(`${API}/api/admin/hosting-plans`, planData, {
         headers: {
           ...getAuthHeaders(),
@@ -264,16 +268,30 @@ const AdminPanel = () => {
         }
       });
       
+      console.log('Plan creation response:', response);
+      
       if (response.status === 200) {
         alert('Plan created successfully!');
         await fetchData(true); // Force refresh after creation
       }
     } catch (error) {
       console.error('Error creating plan:', error);
+      console.error('Error response:', error.response);
+      console.error('Error config:', error.config);
+      
+      let errorMessage = 'Error creating plan: ';
+      if (error.response) {
+        errorMessage += error.response.data?.detail || error.response.data?.message || `HTTP ${error.response.status}`;
+      } else if (error.request) {
+        errorMessage += 'No response from server. Check if backend is running.';
+      } else {
+        errorMessage += error.message;
+      }
+      
       if (error.response?.status === 401) {
         handleLogout();
       } else {
-        alert('Error creating plan: ' + (error.response?.data?.detail || error.message));
+        alert(errorMessage);
       }
     }
   };
@@ -314,9 +332,15 @@ const AdminPanel = () => {
 
     const createCategory = async (categoryData) => {
       try {
+        console.log('Creating category with data:', categoryData);
+        console.log('API URL:', `${API}/api/admin/hosting-categories`);
+        console.log('Auth headers:', getAuthHeaders());
+        
         const response = await axios.post(`${API}/api/admin/hosting-categories`, categoryData, {
           headers: getAuthHeaders()
         });
+        
+        console.log('Category creation response:', response);
         
         if (response.status === 200) {
           alert('Category created successfully!');
@@ -325,7 +349,19 @@ const AdminPanel = () => {
         }
       } catch (error) {
         console.error('Error creating category:', error);
-        alert('Error creating category: ' + (error.response?.data?.detail || error.message));
+        console.error('Error response:', error.response);
+        console.error('Error config:', error.config);
+        
+        let errorMessage = 'Error creating category: ';
+        if (error.response) {
+          errorMessage += error.response.data?.detail || error.response.data?.message || `HTTP ${error.response.status}`;
+        } else if (error.request) {
+          errorMessage += 'No response from server. Check if backend is running.';
+        } else {
+          errorMessage += error.message;
+        }
+        
+        alert(errorMessage);
       }
     };
 
