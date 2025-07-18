@@ -566,6 +566,57 @@ async def get_hosting_plan(plan_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.post("/admin/hosting-plans")
+async def create_hosting_plan(plan_data: dict, current_user: str = Depends(get_current_user)):
+    """Create a new hosting plan - admin only"""
+    try:
+        # Map frontend field names to database field names
+        db_plan = {}
+        for key, value in plan_data.items():
+            if key == "type":
+                db_plan["plan_type"] = value
+            elif key == "name":
+                db_plan["plan_name"] = value
+            elif key == "price":
+                db_plan["base_price"] = value
+            elif key == "is_popular":
+                db_plan["popular"] = value
+            else:
+                db_plan[key] = value
+        
+        # Ensure required fields have default values
+        db_plan["id"] = str(uuid.uuid4())
+        if "plan_type" not in db_plan and "category_key" in db_plan:
+            db_plan["plan_type"] = db_plan["category_key"]
+        elif "plan_type" not in db_plan:
+            db_plan["plan_type"] = "shared"
+        if "plan_name" not in db_plan:
+            raise HTTPException(status_code=400, detail="Plan name is required")
+        if "base_price" not in db_plan:
+            raise HTTPException(status_code=400, detail="Plan price is required")
+        if "markup_percentage" not in db_plan:
+            db_plan["markup_percentage"] = 0
+        if "popular" not in db_plan:
+            db_plan["popular"] = False
+        if "features" not in db_plan:
+            db_plan["features"] = []
+        
+        # Set proper base_price field name for database consistency
+        if "base_price" in db_plan:
+            db_plan["price"] = db_plan["base_price"]  # Store both for compatibility
+        
+        # Add timestamps
+        db_plan["created_at"] = datetime.utcnow()
+        db_plan["updated_at"] = datetime.utcnow()
+        
+        result = await db.hosting_plans.insert_one(db_plan)
+        if not result.inserted_id:
+            raise HTTPException(status_code=400, detail="Failed to create plan")
+        
+        return {"message": "Plan created successfully", "id": db_plan["id"]}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.put("/hosting-plans/{plan_id}")
 async def update_hosting_plan(plan_id: str, plan_update: dict, current_user: str = Depends(get_current_user)):
     """Update hosting plan - for admin use"""
@@ -583,6 +634,9 @@ async def update_hosting_plan(plan_id: str, plan_update: dict, current_user: str
                 db_update["popular"] = value
             else:
                 db_update[key] = value
+        
+        # Add updated timestamp
+        db_update["updated_at"] = datetime.utcnow()
         
         result = await db.hosting_plans.update_one(
             {"id": plan_id}, 

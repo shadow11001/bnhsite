@@ -265,6 +265,8 @@ async def init_hosting_plans(db, migration_mode=False):
         {
             "id": str(uuid.uuid4()),
             "name": "Topaz",
+            "plan_type": "ssd_shared",  # For backward compatibility
+            "category_key": "ssd_shared",  # New category system
             "type": "shared",
             "sub_type": "ssd",
             "price": 10.00,
@@ -289,6 +291,8 @@ async def init_hosting_plans(db, migration_mode=False):
         {
             "id": str(uuid.uuid4()),
             "name": "Diamond",
+            "plan_type": "ssd_shared",  # For backward compatibility
+            "category_key": "ssd_shared",  # New category system
             "type": "shared",
             "sub_type": "ssd",
             "price": 15.00,
@@ -315,6 +319,8 @@ async def init_hosting_plans(db, migration_mode=False):
         {
             "id": str(uuid.uuid4()),
             "name": "Quartz",
+            "plan_type": "hdd_shared",  # For backward compatibility
+            "category_key": "hdd_shared",  # New category system
             "type": "shared",
             "sub_type": "hdd",
             "price": 1.00,
@@ -339,6 +345,8 @@ async def init_hosting_plans(db, migration_mode=False):
         {
             "id": str(uuid.uuid4()),
             "name": "Granite",
+            "plan_type": "hdd_shared",  # For backward compatibility
+            "category_key": "hdd_shared",  # New category system
             "type": "shared",
             "sub_type": "hdd",
             "price": 50.00,
@@ -363,6 +371,8 @@ async def init_hosting_plans(db, migration_mode=False):
         {
             "id": str(uuid.uuid4()),
             "name": "Marble",
+            "plan_type": "hdd_shared",  # For backward compatibility
+            "category_key": "hdd_shared",  # New category system
             "type": "shared",
             "sub_type": "hdd",
             "price": 100.00,
@@ -389,6 +399,8 @@ async def init_hosting_plans(db, migration_mode=False):
         {
             "id": str(uuid.uuid4()),
             "name": "Meteor",
+            "plan_type": "standard_vps",  # For backward compatibility
+            "category_key": "standard_vps",  # New category system
             "type": "vps",
             "sub_type": "standard",
             "price": 1.00,
@@ -407,6 +419,8 @@ async def init_hosting_plans(db, migration_mode=False):
         {
             "id": str(uuid.uuid4()),
             "name": "Asteroid",
+            "plan_type": "standard_vps",  # For backward compatibility
+            "category_key": "standard_vps",  # New category system
             "type": "vps",
             "sub_type": "standard",
             "price": 10.00,

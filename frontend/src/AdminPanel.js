@@ -10,6 +10,7 @@ const AdminPanel = () => {
   const [companyInfo, setCompanyInfo] = useState({});
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [showPlanCreator, setShowPlanCreator] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('plans');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -26,9 +27,39 @@ const AdminPanel = () => {
     checkAuthentication();
   }, []);
 
+  // Network connectivity test
+  const testNetworkConnectivity = async () => {
+    try {
+      console.log('Testing network connectivity to:', `${API}/api/debug`);
+      const response = await axios.get(`${API}/api/debug`, { timeout: 5000 });
+      console.log('Network test successful:', response.data);
+      return true;
+    } catch (error) {
+      console.error('Network test failed:', error);
+      if (error.code === 'ECONNABORTED') {
+        console.error('Request timed out - server may be unreachable');
+      } else if (error.response) {
+        console.error('Server responded with error:', error.response.status, error.response.data);
+      } else if (error.request) {
+        console.error('No response from server - check network connection and server status');
+      } else {
+        console.error('Request setup error:', error.message);
+      }
+      return false;
+    }
+  };
+
   const checkAuthentication = async () => {
     const token = localStorage.getItem('admin_token');
     if (!token) {
+      setAuthLoading(false);
+      return;
+    }
+
+    // First test network connectivity
+    const networkOk = await testNetworkConnectivity();
+    if (!networkOk) {
+      console.error('Network connectivity test failed - authentication check skipped');
       setAuthLoading(false);
       return;
     }
@@ -45,6 +76,7 @@ const AdminPanel = () => {
         localStorage.removeItem('admin_token');
       }
     } catch (error) {
+      console.error('Authentication check failed:', error);
       localStorage.removeItem('admin_token');
     } finally {
       setAuthLoading(false);
@@ -255,6 +287,47 @@ const AdminPanel = () => {
     }
   };
 
+  const createPlan = async (planData) => {
+    try {
+      console.log('Creating plan with data:', planData);
+      console.log('API URL:', `${API}/api/admin/hosting-plans`);
+      console.log('Auth headers:', getAuthHeaders());
+      
+      const response = await axios.post(`${API}/api/admin/hosting-plans`, planData, {
+        headers: {
+          ...getAuthHeaders(),
+          'Cache-Control': 'no-cache'
+        }
+      });
+      
+      if (response.status === 200) {
+        alert('Plan created successfully!');
+        setShowPlanCreator(false);
+        await fetchData(true); // Force refresh after creation
+      }
+    } catch (error) {
+      console.error('Error creating plan:', error);
+      console.error('Error response:', error.response);
+      console.error('Error request:', error.request);
+      console.error('Error config:', error.config);
+      
+      let errorMessage = 'Unknown error';
+      if (error.response) {
+        errorMessage = `${error.response.status}: ${error.response.data?.detail || error.response.statusText}`;
+      } else if (error.request) {
+        errorMessage = 'Network error: Could not reach the server';
+      } else {
+        errorMessage = error.message;
+      }
+      
+      if (error.response?.status === 401) {
+        handleLogout();
+      } else {
+        alert('Error creating plan: ' + errorMessage);
+      }
+    }
+  };
+
   const updateCompanyInfo = async (updates) => {
     try {
       // Try different endpoints and methods
@@ -291,6 +364,10 @@ const AdminPanel = () => {
 
     const createCategory = async (categoryData) => {
       try {
+        console.log('Creating category with data:', categoryData);
+        console.log('API URL:', `${API}/api/admin/hosting-categories`);
+        console.log('Auth headers:', getAuthHeaders());
+        
         const response = await axios.post(`${API}/api/admin/hosting-categories`, categoryData, {
           headers: getAuthHeaders()
         });
@@ -302,7 +379,20 @@ const AdminPanel = () => {
         }
       } catch (error) {
         console.error('Error creating category:', error);
-        alert('Error creating category: ' + (error.response?.data?.detail || error.message));
+        console.error('Error response:', error.response);
+        console.error('Error request:', error.request);
+        console.error('Error config:', error.config);
+        
+        let errorMessage = 'Unknown error';
+        if (error.response) {
+          errorMessage = `${error.response.status}: ${error.response.data?.detail || error.response.statusText}`;
+        } else if (error.request) {
+          errorMessage = 'Network error: Could not reach the server';
+        } else {
+          errorMessage = error.message;
+        }
+        
+        alert('Error creating category: ' + errorMessage);
       }
     };
 
@@ -600,6 +690,318 @@ const AdminPanel = () => {
                 type="button"
                 onClick={onCancel}
                 className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
+  // Plan Creator Component
+  const PlanCreator = ({ onSave, onCancel }) => {
+    const [formData, setFormData] = useState({
+      name: '',
+      category_key: '',
+      plan_type: 'shared',
+      price: 0,
+      cpu: '',
+      ram: '',
+      disk_space: '',
+      bandwidth: '',
+      websites: '',
+      subdomains: '',
+      parked_domains: '',
+      addon_domains: '',
+      databases: '',
+      email_accounts: '',
+      features: [],
+      markup_percentage: 0,
+      is_popular: false,
+      is_customizable: false,
+      docker_image: '',
+      managed_wordpress: false,
+      auto_scaling: false,
+      order_url: ''
+    });
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      if (!formData.name || !formData.price) {
+        alert('Plan name and price are required');
+        return;
+      }
+      onSave(formData);
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="bg-gray-800 rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <h3 className="text-xl font-bold text-white mb-4">Create New Hosting Plan</h3>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Category Selection */}
+            <div>
+              <label className="block text-gray-300 mb-2">Category *</label>
+              <select
+                value={formData.category_key}
+                onChange={(e) => setFormData({...formData, category_key: e.target.value, plan_type: e.target.value})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                required
+              >
+                <option value="">Select a category</option>
+                {hostingCategories.map(category => (
+                  <option key={category.key} value={category.key}>
+                    {category.display_name} ({category.key})
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-300 mb-2">Plan Name *</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 mb-2">Price ($) *</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={formData.price}
+                  onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  required
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-300 mb-2">CPU</label>
+                <input
+                  type="text"
+                  value={formData.cpu}
+                  onChange={(e) => setFormData({...formData, cpu: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 1 vCPU"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 mb-2">RAM</label>
+                <input
+                  type="text"
+                  value={formData.ram}
+                  onChange={(e) => setFormData({...formData, ram: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 1 GB RAM"
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-300 mb-2">Disk Space</label>
+                <input
+                  type="text"
+                  value={formData.disk_space}
+                  onChange={(e) => setFormData({...formData, disk_space: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., 10 GB SSD"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 mb-2">Bandwidth</label>
+                <input
+                  type="text"
+                  value={formData.bandwidth}
+                  onChange={(e) => setFormData({...formData, bandwidth: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., Unlimited"
+                />
+              </div>
+            </div>
+            
+            {/* Shared Hosting Specific Fields */}
+            {(formData.category_key?.includes('shared') || formData.plan_type === 'shared') && (
+              <div className="bg-gray-700 p-4 rounded-lg">
+                <h4 className="text-lg font-semibold text-white mb-4">Shared Hosting Limits</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-300 mb-2">Websites</label>
+                    <input
+                      type="text"
+                      value={formData.websites}
+                      onChange={(e) => setFormData({...formData, websites: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                      placeholder="e.g., 1, 5, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Subdomains</label>
+                    <input
+                      type="text"
+                      value={formData.subdomains}
+                      onChange={(e) => setFormData({...formData, subdomains: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                      placeholder="e.g., 10, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Parked Domains</label>
+                    <input
+                      type="text"
+                      value={formData.parked_domains}
+                      onChange={(e) => setFormData({...formData, parked_domains: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                      placeholder="e.g., 5, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Addon Domains</label>
+                    <input
+                      type="text"
+                      value={formData.addon_domains}
+                      onChange={(e) => setFormData({...formData, addon_domains: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                      placeholder="e.g., 0, 5, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Databases</label>
+                    <input
+                      type="text"
+                      value={formData.databases}
+                      onChange={(e) => setFormData({...formData, databases: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                      placeholder="e.g., 1, 10, Unlimited"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Email Accounts</label>
+                    <input
+                      type="text"
+                      value={formData.email_accounts}
+                      onChange={(e) => setFormData({...formData, email_accounts: e.target.value})}
+                      className="w-full px-3 py-2 bg-gray-600 text-white rounded border border-gray-500"
+                      placeholder="e.g., 5, Unlimited"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <div>
+              <label className="block text-gray-300 mb-2">Features (one per line)</label>
+              <textarea
+                rows={4}
+                value={Array.isArray(formData.features) ? formData.features.join('\n') : ''}
+                onChange={(e) => setFormData({...formData, features: e.target.value.split('\n').filter(f => f.trim())})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-gray-300 mb-2">Markup Percentage</label>
+              <input
+                type="number"
+                step="0.01"
+                value={formData.markup_percentage}
+                onChange={(e) => setFormData({...formData, markup_percentage: parseFloat(e.target.value) || 0})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                placeholder="e.g., 20, 40"
+              />
+              <p className="text-xs text-gray-400 mt-1">Markup percentage for internal pricing strategy</p>
+            </div>
+            
+            <div>
+              <label className="block text-gray-300 mb-2">Order URL</label>
+              <input
+                type="url"
+                value={formData.order_url}
+                onChange={(e) => setFormData({...formData, order_url: e.target.value})}
+                className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                placeholder="https://billing.bluenebulahosting.com"
+              />
+              <p className="text-xs text-gray-400 mt-1">Leave empty to use default billing URL</p>
+            </div>
+            
+            {/* Advanced Features */}
+            <div className="border-t border-gray-600 pt-4">
+              <h4 className="text-lg font-semibold text-white mb-3">Advanced Features</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.is_customizable}
+                    onChange={(e) => setFormData({...formData, is_customizable: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <label className="text-gray-300">Customizable (Build Your Own Plan)</label>
+                </div>
+                
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.managed_wordpress}
+                    onChange={(e) => setFormData({...formData, managed_wordpress: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <label className="text-gray-300">Managed WordPress</label>
+                </div>
+                
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.auto_scaling}
+                    onChange={(e) => setFormData({...formData, auto_scaling: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <label className="text-gray-300">Auto Scaling</label>
+                </div>
+                
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.is_popular}
+                    onChange={(e) => setFormData({...formData, is_popular: e.target.checked})}
+                    className="mr-2"
+                  />
+                  <label className="text-gray-300">Popular Plan</label>
+                </div>
+              </div>
+              
+              <div className="mt-4">
+                <label className="block text-gray-300 mb-2">Docker Image (for containerized plans)</label>
+                <input
+                  type="text"
+                  value={formData.docker_image}
+                  onChange={(e) => setFormData({...formData, docker_image: e.target.value})}
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
+                  placeholder="e.g., wordpress:latest, mysql:8.0"
+                />
+              </div>
+            </div>
+            
+            <div className="flex gap-4">
+              <button
+                type="submit"
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Create Plan
+              </button>
+              <button
+                type="button"
+                onClick={onCancel}
+                className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
               >
                 Cancel
               </button>
@@ -2379,7 +2781,15 @@ const AdminPanel = () => {
         
         {activeTab === 'plans' && (
           <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Manage Hosting Plans</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-white">Manage Hosting Plans</h2>
+              <button
+                onClick={() => setShowPlanCreator(true)}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                Create New Plan
+              </button>
+            </div>
             
             {/* Debug info */}
             <div className="bg-gray-700 rounded p-2 mb-4 text-xs text-gray-300">
@@ -2468,6 +2878,13 @@ const AdminPanel = () => {
         
         {selectedPlan && (
           <PlanEditor plan={selectedPlan} onUpdate={updatePlan} />
+        )}
+
+        {showPlanCreator && (
+          <PlanCreator 
+            onSave={createPlan}
+            onCancel={() => setShowPlanCreator(false)}
+          />
         )}
       </div>
     </div>
