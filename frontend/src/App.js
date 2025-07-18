@@ -59,8 +59,33 @@ const LegalPage = ({ type }) => {
   );
 };
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = BACKEND_URL; // BACKEND_URL should be the base URL (e.g., http://localhost:8001)
+// Dynamic API URL configuration based on environment
+const getApiUrl = () => {
+  // Check for explicit backend URL environment variable first
+  if (process.env.REACT_APP_BACKEND_URL) {
+    console.log('Using explicit REACT_APP_BACKEND_URL:', process.env.REACT_APP_BACKEND_URL);
+    return process.env.REACT_APP_BACKEND_URL;
+  }
+  
+  // Auto-detect based on current hostname
+  const hostname = window.location.hostname;
+  
+  if (hostname.includes('dev.') || hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
+    // Development environment
+    console.log('Development environment detected from hostname:', hostname);
+    return 'https://dev.bluenebulahosting.com';
+  } else {
+    // Production environment
+    console.log('Production environment detected from hostname:', hostname);
+    return 'https://bluenebulahosting.com';
+  }
+};
+
+const BACKEND_URL = getApiUrl();
+const API = BACKEND_URL;
+
+// Log the final API URL for debugging
+console.log('API URL configured:', API);
 
 // Promo Code Component
 const PromoCodeBanner = ({ location = "hero" }) => {

@@ -61,10 +61,16 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        REACT_APP_BACKEND_URL: ${BLUE_NEBULA_BACKEND_URL:-}
+        NODE_ENV: ${NODE_ENV:-production}
+        ENVIRONMENT: ${ENVIRONMENT:-dev}
     container_name: bnhsite-frontend
     restart: unless-stopped
     environment:
-      - REACT_APP_BACKEND_URL=${BLUE_NEBULA_BACKEND_URL:-http://localhost:8001}
+      - REACT_APP_BACKEND_URL=${BLUE_NEBULA_BACKEND_URL:-}
+      - NODE_ENV=${NODE_ENV:-production}
+      - ENVIRONMENT=${ENVIRONMENT:-dev}
     ports:
       - "${BLUE_NEBULA_FRONTEND_PORT:-3000}:3000"
     depends_on:
