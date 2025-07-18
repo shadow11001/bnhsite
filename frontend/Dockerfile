@@ -13,6 +13,16 @@ RUN yarn install --frozen-lockfile --network-timeout 300000
 # Copy all source code including public folder
 COPY . .
 
+# Accept build arguments for environment variables
+ARG REACT_APP_BACKEND_URL
+ARG NODE_ENV=production
+ARG ENVIRONMENT=dev
+
+# Set environment variables for build
+ENV REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL}
+ENV NODE_ENV=${NODE_ENV}
+ENV ENVIRONMENT=${ENVIRONMENT}
+
 # Build the application for production
 RUN yarn build
 
