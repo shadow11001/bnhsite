@@ -51,77 +51,6 @@ async def debug_endpoints():
 # Create a router without prefix (Caddy will handle the /api routing)
 api_router = APIRouter()
 
-# Content management endpoints - moved to api_router for consistency
-@api_router.get("/admin/content/{section}")
-async def get_admin_content_direct(section: str, authorization: str = Header(None)):
-    """Get website content by section for admin editing - direct endpoint"""
-    try:
-        # Simple auth check
-        if not authorization or not authorization.startswith("Bearer "):
-            raise HTTPException(status_code=401, detail="Authentication required")
-        
-        token = authorization.split(" ")[1]
-        # Basic token validation (you can enhance this)
-        
-        content = await db.website_content.find_one({"section": section})
-        if not content:
-            # Return default editable content structure
-            default_content = {
-                "section": section,
-                "title": f"Default {section.title()} Title",
-                "subtitle": "",
-                "description": f"This is the default {section} content. Edit this in the admin panel.",
-                "button_text": "Learn More",
-                "button_url": "#"
-            }
-            return default_content
-        
-        # Remove MongoDB _id field
-        if "_id" in content:
-            del content["_id"]
-        
-        return content
-    except Exception as e:
-        print(f"Error in get_admin_content_direct: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-@api_router.post("/admin/content/{section}")
-async def save_admin_content_direct(section: str, content_data: dict, authorization: str = Header(None)):
-    """Save website content by section - direct endpoint"""
-    try:
-        # Simple auth check
-        if not authorization or not authorization.startswith("Bearer "):
-            raise HTTPException(status_code=401, detail="Authentication required")
-        
-        # Add section and timestamps
-        content_data["section"] = section
-        content_data["updated_at"] = datetime.utcnow()
-        
-        # Check if content already exists
-        existing = await db.website_content.find_one({"section": section})
-        
-        if existing:
-            # Update existing content
-            content_data["id"] = existing.get("id", str(uuid.uuid4()))
-            result = await db.website_content.update_one(
-                {"section": section},
-                {"$set": content_data}
-            )
-            if result.modified_count == 0:
-                raise HTTPException(status_code=400, detail="Failed to update content")
-        else:
-            # Create new content
-            content_data["id"] = str(uuid.uuid4())
-            content_data["created_at"] = datetime.utcnow()
-            result = await db.website_content.insert_one(content_data)
-            if not result.inserted_id:
-                raise HTTPException(status_code=400, detail="Failed to create content")
-        
-        return {"message": f"Content for {section} saved successfully", "section": section}
-    except Exception as e:
-        print(f"Error in save_admin_content_direct: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
 # Define Models
 class SiteSettings(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -487,6 +416,93 @@ async def get_admin_hosting_plans(current_user: str = Depends(get_current_user))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.post("/admin/hosting-plans")
+async def create_hosting_plan(plan_data: dict, current_user: str = Depends(get_current_user)):
+    """Create a new hosting plan - admin only"""
+    try:
+        print(f"Plan creation request from user: {current_user}")
+        print(f"Plan data received: {plan_data}")
+        
+        # Map frontend field names to database field names
+        db_plan = {}
+        
+        # Required fields mapping
+        if "name" in plan_data:
+            db_plan["plan_name"] = plan_data["name"]
+        elif "plan_name" in plan_data:
+            db_plan["plan_name"] = plan_data["plan_name"]
+        else:
+            raise HTTPException(status_code=400, detail="Plan name is required")
+        
+        if "price" in plan_data:
+            db_plan["base_price"] = float(plan_data["price"])
+        elif "base_price" in plan_data:
+            db_plan["base_price"] = float(plan_data["base_price"])
+        else:
+            raise HTTPException(status_code=400, detail="Plan price is required")
+        
+        if "type" in plan_data:
+            db_plan["plan_type"] = plan_data["type"]
+        elif "plan_type" in plan_data:
+            db_plan["plan_type"] = plan_data["plan_type"]
+        else:
+            raise HTTPException(status_code=400, detail="Plan type is required")
+        
+        # Map other fields
+        field_mappings = {
+            "is_popular": "popular",
+            "category_key": "category_key",
+            "cpu_cores": "cpu_cores",
+            "memory_gb": "memory_gb", 
+            "disk_gb": "disk_gb",
+            "disk_type": "disk_type",
+            "bandwidth": "bandwidth",
+            "supported_games": "supported_games",
+            "features": "features",
+            "markup_percentage": "markup_percentage",
+            "websites": "websites",
+            "subdomains": "subdomains",
+            "parked_domains": "parked_domains", 
+            "addon_domains": "addon_domains",
+            "databases": "databases",
+            "email_accounts": "email_accounts",
+            "is_customizable": "is_customizable",
+            "docker_image": "docker_image",
+            "managed_wordpress": "managed_wordpress",
+            "auto_scaling": "auto_scaling"
+        }
+        
+        for frontend_key, backend_key in field_mappings.items():
+            if frontend_key in plan_data:
+                db_plan[backend_key] = plan_data[frontend_key]
+        
+        # Set default values
+        db_plan["id"] = str(uuid.uuid4())
+        db_plan["popular"] = db_plan.get("popular", False)
+        db_plan["features"] = db_plan.get("features", [])
+        db_plan["markup_percentage"] = db_plan.get("markup_percentage", 0)
+        db_plan["disk_type"] = db_plan.get("disk_type", "SSD")
+        
+        # Remove any _id field to avoid conflicts
+        if "_id" in db_plan:
+            del db_plan["_id"]
+        
+        print(f"Final plan data for database: {db_plan}")
+        
+        # Insert the new plan
+        result = await db.hosting_plans.insert_one(db_plan)
+        if not result.inserted_id:
+            raise HTTPException(status_code=400, detail="Failed to create hosting plan")
+        
+        print(f"Plan created successfully with ID: {db_plan['id']}")
+        return {"message": "Hosting plan created successfully", "id": db_plan["id"]}
+    except ValueError as e:
+        print(f"Validation error in plan creation: {e}")
+        raise HTTPException(status_code=400, detail=f"Invalid numeric value: {str(e)}")
+    except Exception as e:
+        print(f"Error in plan creation: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/hosting-plans", response_model=List[dict])
 async def get_hosting_plans(plan_type: Optional[str] = None):
     """Get all hosting plans or filter by type"""
@@ -628,6 +644,9 @@ async def get_hosting_categories():
 async def create_hosting_category(category_data: HostingCategory, current_user: str = Depends(get_current_user)):
     """Create a new hosting category - admin only"""
     try:
+        print(f"Category creation request from user: {current_user}")
+        print(f"Category data received: {category_data.dict()}")
+        
         # Check if category key already exists
         existing = await db.hosting_categories.find_one({"key": category_data.key})
         if existing:
@@ -637,12 +656,16 @@ async def create_hosting_category(category_data: HostingCategory, current_user: 
         category_dict["created_at"] = datetime.utcnow()
         category_dict["updated_at"] = datetime.utcnow()
         
+        print(f"Final category data for database: {category_dict}")
+        
         result = await db.hosting_categories.insert_one(category_dict)
         if not result.inserted_id:
             raise HTTPException(status_code=400, detail="Failed to create category")
         
+        print(f"Category created successfully with ID: {category_data.id}")
         return {"message": "Category created successfully", "id": category_data.id}
     except Exception as e:
+        print(f"Error in category creation: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.put("/admin/hosting-categories/{category_id}")

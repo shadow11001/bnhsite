@@ -255,6 +255,47 @@ const AdminPanel = () => {
     }
   };
 
+  const createPlan = async (planData) => {
+    try {
+      console.log('Creating plan with data:', planData);
+      console.log('API URL:', `${API}/api/admin/hosting-plans`);
+      console.log('Auth headers:', getAuthHeaders());
+      
+      const response = await axios.post(`${API}/api/admin/hosting-plans`, planData, {
+        headers: {
+          ...getAuthHeaders(),
+          'Cache-Control': 'no-cache'
+        }
+      });
+      
+      console.log('Plan creation response:', response);
+      
+      if (response.status === 200) {
+        alert('Plan created successfully!');
+        await fetchData(true); // Force refresh after creation
+      }
+    } catch (error) {
+      console.error('Error creating plan:', error);
+      console.error('Error response:', error.response);
+      console.error('Error config:', error.config);
+      
+      let errorMessage = 'Error creating plan: ';
+      if (error.response) {
+        errorMessage += error.response.data?.detail || error.response.data?.message || `HTTP ${error.response.status}`;
+      } else if (error.request) {
+        errorMessage += 'No response from server. Check if backend is running.';
+      } else {
+        errorMessage += error.message;
+      }
+      
+      if (error.response?.status === 401) {
+        handleLogout();
+      } else {
+        alert(errorMessage);
+      }
+    }
+  };
+
   const updateCompanyInfo = async (updates) => {
     try {
       // Try different endpoints and methods
@@ -291,9 +332,15 @@ const AdminPanel = () => {
 
     const createCategory = async (categoryData) => {
       try {
+        console.log('Creating category with data:', categoryData);
+        console.log('API URL:', `${API}/api/admin/hosting-categories`);
+        console.log('Auth headers:', getAuthHeaders());
+        
         const response = await axios.post(`${API}/api/admin/hosting-categories`, categoryData, {
           headers: getAuthHeaders()
         });
+        
+        console.log('Category creation response:', response);
         
         if (response.status === 200) {
           alert('Category created successfully!');
@@ -302,7 +349,19 @@ const AdminPanel = () => {
         }
       } catch (error) {
         console.error('Error creating category:', error);
-        alert('Error creating category: ' + (error.response?.data?.detail || error.message));
+        console.error('Error response:', error.response);
+        console.error('Error config:', error.config);
+        
+        let errorMessage = 'Error creating category: ';
+        if (error.response) {
+          errorMessage += error.response.data?.detail || error.response.data?.message || `HTTP ${error.response.status}`;
+        } else if (error.request) {
+          errorMessage += 'No response from server. Check if backend is running.';
+        } else {
+          errorMessage += error.message;
+        }
+        
+        alert(errorMessage);
       }
     };
 
@@ -610,19 +669,26 @@ const AdminPanel = () => {
     );
   };
 
-  const PlanEditor = ({ plan, onUpdate }) => {
+  const PlanEditor = ({ plan, onUpdate, onCreate }) => {
     const [formData, setFormData] = useState(plan);
+    const isCreating = !plan.id; // If no ID, we're creating a new plan
 
     const handleSubmit = (e) => {
       e.preventDefault();
-      onUpdate(plan.id, formData);
+      if (isCreating) {
+        onCreate(formData);
+      } else {
+        onUpdate(plan.id, formData);
+      }
       setSelectedPlan(null);
     };
 
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          <h3 className="text-xl font-bold text-white mb-4">Edit Plan: {plan.name}</h3>
+          <h3 className="text-xl font-bold text-white mb-4">
+            {isCreating ? 'Create New Plan' : `Edit Plan: ${plan.name}`}
+          </h3>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Category Selection */}
@@ -876,7 +942,7 @@ const AdminPanel = () => {
                 type="submit"
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               >
-                Update Plan
+                {isCreating ? 'Create Plan' : 'Update Plan'}
               </button>
               <button
                 type="button"
@@ -2379,7 +2445,37 @@ const AdminPanel = () => {
         
         {activeTab === 'plans' && (
           <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Manage Hosting Plans</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-white">Manage Hosting Plans</h2>
+              <button
+                onClick={() => setSelectedPlan({ 
+                  id: null, // null ID indicates new plan
+                  name: '',
+                  price: 0,
+                  type: 'shared',
+                  cpu: '',
+                  ram: '',
+                  disk_space: '',
+                  bandwidth: '',
+                  features: [],
+                  is_popular: false,
+                  markup_percentage: 0,
+                  websites: '',
+                  subdomains: '',
+                  parked_domains: '',
+                  addon_domains: '',
+                  databases: '',
+                  email_accounts: '',
+                  is_customizable: false,
+                  managed_wordpress: false,
+                  auto_scaling: false,
+                  docker_image: ''
+                })}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                Add New Plan
+              </button>
+            </div>
             
             {/* Debug info */}
             <div className="bg-gray-700 rounded p-2 mb-4 text-xs text-gray-300">
@@ -2467,7 +2563,7 @@ const AdminPanel = () => {
         {activeTab === 'settings' && <SiteSettings />}
         
         {selectedPlan && (
-          <PlanEditor plan={selectedPlan} onUpdate={updatePlan} />
+          <PlanEditor plan={selectedPlan} onUpdate={updatePlan} onCreate={createPlan} />
         )}
       </div>
     </div>
