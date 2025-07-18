@@ -1336,6 +1336,44 @@ async def migrate_hosting_plans(db):
         if "order_url" not in plan:
             updates["order_url"] = "https://billing.bluenebulahosting.com"
         
+        # Migrate old type/sub_type format to plan_type if needed
+        if "type" in plan and "sub_type" in plan and "plan_type" not in plan:
+            plan_type_map = {
+                ("shared", "ssd"): "ssd_shared",
+                ("shared", "hdd"): "hdd_shared", 
+                ("shared", "custom"): "custom_shared",
+                ("vps", "standard"): "standard_vps",
+                ("vps", "performance"): "performance_vps",
+                ("gameserver", "standard"): "standard_gameserver",
+                ("gameserver", "performance"): "performance_gameserver",
+                ("wordpress", "managed"): "wordpress",
+                ("wordpress", "multisite"): "wordpress"
+            }
+            
+            old_key = (plan.get("type"), plan.get("sub_type"))
+            if old_key in plan_type_map:
+                updates["plan_type"] = plan_type_map[old_key]
+                # Keep the old fields for compatibility during transition
+                # They can be removed in a future migration
+        
+        # Ensure WordPress plans have all WordPress-specific fields with defaults
+        if plan.get("plan_type") == "wordpress":
+            wp_defaults = {
+                "container_type": "docker",
+                "wp_version": "latest",
+                "php_version": "8.3",
+                "wp_themes": [],
+                "wp_plugins": [],
+                "backup_frequency": "daily",
+                "ssl_management": "automatic",
+                "cdn_included": True,
+                "staging_environment": False
+            }
+            
+            for field, default_value in wp_defaults.items():
+                if field not in plan:
+                    updates[field] = default_value
+        
         # Ensure technical specs exist for non-shared plans
         if plan.get("plan_type") in ["standard_vps", "performance_vps", "standard_gameserver", "performance_gameserver"]:
             if "cpu" not in plan and "cpu_cores" in plan:
