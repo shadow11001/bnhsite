@@ -718,19 +718,38 @@ const AdminPanel = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Category Selection */}
             <div>
-              <label className="block text-gray-300 mb-2">Category</label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="text-gray-300">Category</label>
+                <button
+                  type="button"
+                  onClick={() => fetchData()}
+                  className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded transition-colors"
+                  disabled={loading}
+                >
+                  {loading ? '⏳' : '🔄'} Refresh
+                </button>
+              </div>
               <select
                 value={formData.category_key || formData.plan_type || ''}
                 onChange={(e) => setFormData({...formData, category_key: e.target.value, plan_type: e.target.value})}
                 className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600"
               >
-                <option value="">Select a category</option>
+                <option value="">
+                  {loading ? "Loading categories..." : 
+                   hostingCategories.length === 0 ? "No categories available" : 
+                   "Select a category"}
+                </option>
                 {hostingCategories.map(category => (
                   <option key={category.key} value={category.key}>
                     {category.display_name} ({category.key})
                   </option>
                 ))}
               </select>
+              {hostingCategories.length === 0 && !loading && (
+                <div className="text-sm text-yellow-400 mt-1">
+                  ⚠️ No categories found. Categories will be created automatically when you refresh or restart the backend.
+                </div>
+              )}
             </div>
             
             <div className="grid grid-cols-2 gap-4">

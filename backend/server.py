@@ -202,6 +202,126 @@ class HostingCategory(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
+# Utility functions
+async def initialize_default_categories():
+    """Initialize default hosting categories if none exist"""
+    try:
+        # Check if categories already exist
+        existing_count = await db.hosting_categories.count_documents({})
+        if existing_count > 0:
+            print(f"Categories already exist ({existing_count}), skipping initialization")
+            return
+        
+        hosting_categories = [
+            # Shared Hosting Categories
+            {
+                "id": str(uuid.uuid4()),
+                "key": "ssd_shared",
+                "display_name": "SSD Shared Hosting",
+                "description": "Fast SSD-powered shared hosting with premium features",
+                "section_title": "SSD Shared Hosting",
+                "section_description": "Fast SSD-powered shared hosting with premium features",
+                "type": "shared",
+                "sub_type": "ssd",
+                "is_active": True,
+                "display_order": 1,
+                "supports_custom_features": False,
+                "supports_containers": False,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "key": "hdd_shared",
+                "display_name": "HDD Shared Hosting",
+                "description": "Affordable shared hosting with reliable HDD storage",
+                "section_title": "HDD Shared Hosting", 
+                "section_description": "Affordable shared hosting with reliable HDD storage",
+                "type": "shared",
+                "sub_type": "hdd",
+                "is_active": True,
+                "display_order": 2,
+                "supports_custom_features": False,
+                "supports_containers": False,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            },
+            # VPS Hosting Categories
+            {
+                "id": str(uuid.uuid4()),
+                "key": "standard_vps",
+                "display_name": "Standard VPS",
+                "description": "Reliable VPS hosting with balanced performance and pricing",
+                "section_title": "Standard VPS",
+                "section_description": "Reliable VPS hosting with balanced performance and pricing",
+                "type": "vps",
+                "sub_type": "standard",
+                "is_active": True,
+                "display_order": 3,
+                "supports_custom_features": False,
+                "supports_containers": False,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "key": "performance_vps",
+                "display_name": "Performance VPS",
+                "description": "High-performance VPS with premium hardware and optimizations",
+                "section_title": "Performance VPS",
+                "section_description": "High-performance VPS with premium hardware and optimizations",
+                "type": "vps",
+                "sub_type": "performance",
+                "is_active": True,
+                "display_order": 4,
+                "supports_custom_features": False,
+                "supports_containers": False,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            },
+            # GameServer Hosting Categories
+            {
+                "id": str(uuid.uuid4()),
+                "key": "standard_gameserver",
+                "display_name": "Standard GameServers",
+                "description": "Reliable game hosting with standard performance",
+                "section_title": "Standard GameServers",
+                "section_description": "Reliable game hosting with standard performance",
+                "type": "gameserver",
+                "sub_type": "standard",
+                "is_active": True,
+                "display_order": 5,
+                "supports_custom_features": False,
+                "supports_containers": False,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "key": "performance_gameserver",
+                "display_name": "Performance GameServers",
+                "description": "Premium game hosting with enhanced performance and priority support",
+                "section_title": "Performance GameServers",
+                "section_description": "Premium game hosting with enhanced performance and priority support",
+                "type": "gameserver",
+                "sub_type": "performance",
+                "is_active": True,
+                "display_order": 6,
+                "supports_custom_features": False,
+                "supports_containers": False,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            }
+        ]
+        
+        # Insert hosting categories
+        result = await db.hosting_categories.insert_many(hosting_categories)
+        print(f"✅ Initialized {len(result.inserted_ids)} default hosting categories")
+        
+    except Exception as e:
+        print(f"❌ Error initializing default categories: {e}")
+        raise
+
 # Authentication functions
 def hash_password(password: str) -> str:
     """Hash password using SHA256"""
@@ -617,6 +737,13 @@ async def get_admin_hosting_categories(current_user: str = Depends(get_current_u
     """Get all hosting categories - admin only"""
     try:
         categories = await db.hosting_categories.find().to_list(1000)
+        
+        # If no categories exist, initialize default ones
+        if not categories:
+            print("No hosting categories found, initializing default categories...")
+            await initialize_default_categories()
+            categories = await db.hosting_categories.find().to_list(1000)
+        
         # Convert ObjectIds to strings for JSON serialization
         for category in categories:
             if "_id" in category:
@@ -630,6 +757,13 @@ async def get_hosting_categories():
     """Get all active hosting categories - public endpoint"""
     try:
         categories = await db.hosting_categories.find({"is_active": True}).sort("display_order", 1).to_list(1000)
+        
+        # If no categories exist, initialize default ones
+        if not categories:
+            print("No hosting categories found, initializing default categories...")
+            await initialize_default_categories()
+            categories = await db.hosting_categories.find({"is_active": True}).sort("display_order", 1).to_list(1000)
+        
         # Convert ObjectIds to strings and remove internal fields
         public_categories = []
         for category in categories:
