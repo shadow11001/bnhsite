@@ -248,16 +248,21 @@ async def run_migration_operation(args):
                 return 1
         
         elif args.migration_command == "migrate":
-            # Perform migration
-            print(f"🔄 Migrating hosting plans collection (dry_run={args.dry_run})")
+            # Perform migration with consistent field mapping
+            preserve_data_only = not getattr(args, 'full_migration', False)
+            operation_type = "Field mapping (preserve data)" if preserve_data_only else "Full migration with data normalization"
+            print(f"🔄 {operation_type} for hosting plans collection (dry_run={args.dry_run})")
             
-            results = await migration.migrate_hosting_plans_collection(dry_run=args.dry_run)
+            results = await migration.migrate_hosting_plans_collection(
+                dry_run=args.dry_run, 
+                preserve_data_only=preserve_data_only
+            )
             
-            print(f"\n📊 Migration Results:")
+            print(f"\n📊 {results.get('operation_type', 'Migration')} Results:")
             print(f"Total documents: {results['total_documents']}")
-            print(f"Migrated documents: {results['migrated_documents']}")
+            print(f"Processed documents: {results['migrated_documents']}")
             print(f"Errors: {results['error_count']}")
-            print(f"Changes: {len(results['changes_preview'])}")
+            print(f"Documents with changes: {len(results['changes_preview'])}")
             
             if args.dry_run:
                 print("\n📋 This was a dry run. No changes were made.")
@@ -266,9 +271,13 @@ async def run_migration_operation(args):
                     for doc_id, changes in list(results['changes_preview'].items())[:5]:
                         print(f"\n  Document {doc_id}:")
                         for field, change in changes.items():
-                            print(f"    {field}: {change['old']} → {change['new']}")
+                            change_type = change.get('type', 'unknown')
+                            if change_type == 'field_rename':
+                                print(f"    + {field}: {change['new']} (new field)")
+                            else:
+                                print(f"    {field}: {change['old']} → {change['new']}")
             else:
-                print("\n✅ Migration completed.")
+                print(f"\n✅ {results.get('operation_type', 'Migration')} completed.")
                 
                 # Validate after migration
                 if args.validate_after:
@@ -387,8 +396,11 @@ Examples:
   # Create backup
   python run_db_reorganization.py backup create --collections hosting_plans
   
-  # Migrate schema (dry run)
+  # Field mapping only (safe - only renames fields, preserves data)
   python run_db_reorganization.py migrate migrate --dry-run
+  
+  # Full migration with data normalization
+  python run_db_reorganization.py migrate migrate --full-migration --dry-run
   
   # Analyze current schema
   python run_db_reorganization.py migrate analyze
@@ -470,6 +482,10 @@ Examples:
     migrate_migrate.add_argument("--dry-run", action="store_true", help="Dry run mode")
     migrate_migrate.add_argument("--show-changes", action="store_true", help="Show sample changes")
     migrate_migrate.add_argument("--validate-after", action="store_true", help="Validate after migration")
+    migrate_migrate.add_argument("--preserve-data-only", action="store_true", default=True, 
+                                help="Only rename fields without changing data values (default: True)")
+    migrate_migrate.add_argument("--full-migration", action="store_true", 
+                                help="Perform full migration with data normalization (overrides --preserve-data-only)")
     
     # Migration deduplicate
     migrate_dedup = migrate_subparsers.add_parser("deduplicate", help="Remove duplicates")

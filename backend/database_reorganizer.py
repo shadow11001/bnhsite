@@ -305,8 +305,11 @@ class DatabaseReorganizer:
             dedup_results = await self.migration_system.remove_duplicate_hosting_plans(dry_run=False)
             migration_results["deduplication"] = dedup_results
             
-            # Then migrate schema
-            migration_results["hosting_plans"] = await self.migration_system.migrate_hosting_plans_collection(dry_run=False)
+            # Then perform field mapping migration (preserves data, only renames fields)
+            migration_results["hosting_plans"] = await self.migration_system.migrate_hosting_plans_collection(
+                dry_run=False, 
+                preserve_data_only=True
+            )
             migration_results["hosting_plans"]["success"] = True
             
         except Exception as e:

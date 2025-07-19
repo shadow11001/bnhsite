@@ -6,6 +6,7 @@ and other MongoDB collections with field mapping and data validation.
 """
 
 import os
+import sys
 import asyncio
 import logging
 from datetime import datetime, timezone
@@ -13,6 +14,8 @@ from typing import Dict, List, Optional, Any, Tuple
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 import uuid
+
+# Schema migration now uses direct field standardization instead of complex mapping
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -184,46 +187,84 @@ class SchemaMigration:
         
         return len(errors) == 0, errors
     
-    def migrate_hosting_plan_document(self, document: Dict) -> Dict:
+    def migrate_hosting_plan_document(self, document: Dict, preserve_data_only=True) -> Dict:
         """
-        Migrate a single hosting plan document to the standard schema
+        Migrate a single hosting plan document to the standardized schema.
+        
+        Standardizes on frontend-expected schema:
+        - name (plan name)
+        - type (plan type)  
+        - sub_type (plan subtype)
+        - price (plan price)
+        - is_popular (popularity flag)
         
         Args:
             document: Original document
+            preserve_data_only: If True, only rename fields without changing data values
             
         Returns:
-            Migrated document
+            Migrated document with standardized field names
         """
-        migrated = {}
+        migrated = document.copy()
         
-        # Apply field mappings
-        for old_field, new_field in self.field_mappings.items():
-            if old_field in document:
-                migrated[new_field] = document[old_field]
+        # Standardize plan name field
+        if "plan_name" in document and "name" not in document:
+            migrated["name"] = document["plan_name"]
+            
+        # Standardize plan type field  
+        if "plan_type" in document and "type" not in document:
+            migrated["type"] = document["plan_type"]
+            
+        # Merge price fields: use "price" field name but prefer "base_price" value when available
+        if "base_price" in document:
+            # Always use base_price value when it exists (preferred field)
+            migrated["price"] = document["base_price"]
+            # Remove base_price field to avoid confusion after migration
+            if "base_price" in migrated:
+                del migrated["base_price"]
+        elif "price" not in document:
+            # Neither field exists, set a default
+            migrated["price"] = 0.0
+            
+        # Standardize popularity field
+        if "popular" in document and "is_popular" not in document:
+            migrated["is_popular"] = document["popular"]
+        elif "is_popular" not in document:
+            migrated["is_popular"] = False
+            
+        # Ensure required fields have defaults
+        if "type" not in migrated and "plan_type" not in migrated:
+            migrated["type"] = "shared"  # Default type
+            
+        if "sub_type" not in migrated:
+            if migrated.get("type") == "shared":
+                migrated["sub_type"] = "ssd"
+            elif migrated.get("type") == "vps":
+                migrated["sub_type"] = "standard"
+            elif migrated.get("type") == "gameserver":
+                migrated["sub_type"] = "standard"
         
-        # Copy unmapped fields that are in the standard schema
-        for field_name in self.standard_hosting_plan_schema.keys():
-            if field_name not in migrated and field_name in document:
-                migrated[field_name] = document[field_name]
-        
-        # Ensure required fields exist
-        if "id" not in migrated:
+        # Only add essential missing fields without changing existing data
+        if "id" not in migrated and "_id" in document:
+            migrated["id"] = str(document["_id"])
+        elif "id" not in migrated:
             migrated["id"] = str(uuid.uuid4())
         
-        # Normalize data types and values
-        migrated = self._normalize_hosting_plan_data(migrated)
-        
-        # Set default values for missing fields
-        for field_name, field_def in self.standard_hosting_plan_schema.items():
-            if "default" in field_def and field_name not in migrated:
-                migrated[field_name] = field_def["default"]
-        
-        # Add timestamps if missing
+        # Only add timestamps if they don't exist, without modifying existing ones
         now = datetime.now(timezone.utc)
         if "created_at" not in migrated:
             migrated["created_at"] = now
         if "updated_at" not in migrated:
             migrated["updated_at"] = now
+        
+        # If preserve_data_only is False, apply data normalization (optional)
+        if not preserve_data_only:
+            migrated = self._normalize_hosting_plan_data(migrated)
+            
+            # Set default values for missing fields
+            for field_name, field_def in self.standard_hosting_plan_schema.items():
+                if "default" in field_def and field_name not in migrated:
+                    migrated[field_name] = field_def["default"]
         
         return migrated
     
@@ -400,12 +441,13 @@ class SchemaMigration:
             "validated_at": datetime.now(timezone.utc).isoformat()
         }
     
-    async def migrate_hosting_plans_collection(self, dry_run: bool = True) -> Dict:
+    async def migrate_hosting_plans_collection(self, dry_run: bool = True, preserve_data_only: bool = True) -> Dict:
         """
-        Migrate the entire hosting_plans collection to the standard schema
+        Migrate the entire hosting_plans collection to the standard schema using consistent field mapping.
         
         Args:
             dry_run: If True, only analyze what would be changed without making changes
+            preserve_data_only: If True, only rename fields without changing data values
             
         Returns:
             Migration results
@@ -413,7 +455,8 @@ class SchemaMigration:
         collection = self.db.hosting_plans
         
         total_docs = await collection.count_documents({})
-        logger.info(f"🔄 Migrating {total_docs} hosting plans (dry_run={dry_run})")
+        operation_type = "Field mapping" if preserve_data_only else "Full migration"
+        logger.info(f"🔄 {operation_type} for {total_docs} hosting plans (dry_run={dry_run})")
         
         migrated_count = 0
         error_count = 0
@@ -426,17 +469,21 @@ class SchemaMigration:
             doc_id = str(doc.get("id", doc.get("_id", "unknown")))
             
             try:
-                # Migrate the document
-                migrated_doc = self.migrate_hosting_plan_document(doc)
+                # Migrate the document with field mapping consistency
+                migrated_doc = self.migrate_hosting_plan_document(doc, preserve_data_only=preserve_data_only)
                 
                 # Track changes for preview
                 changes = {}
                 for field, new_value in migrated_doc.items():
                     if field not in doc or doc[field] != new_value:
-                        changes[field] = {
-                            "old": doc.get(field, None),
-                            "new": new_value
-                        }
+                        old_value = doc.get(field, None)
+                        # Skip internal MongoDB fields and timestamp updates
+                        if field not in ["_id", "created_at", "updated_at"] or old_value is None:
+                            changes[field] = {
+                                "old": old_value,
+                                "new": new_value,
+                                "type": "field_rename" if preserve_data_only and old_value is None else "value_change"
+                            }
                 
                 if changes:
                     changes_preview[doc_id] = changes
@@ -469,20 +516,22 @@ class SchemaMigration:
         
         results = {
             "collection_name": "hosting_plans",
+            "operation_type": operation_type,
             "total_documents": total_docs,
             "migrated_documents": migrated_count,
             "error_count": error_count,
             "migration_errors": migration_errors,
             "changes_preview": changes_preview,
             "dry_run": dry_run,
+            "preserve_data_only": preserve_data_only,
             "validation_results": validation_results,
             "migrated_at": datetime.now(timezone.utc).isoformat()
         }
         
         if dry_run:
-            logger.info(f"📋 Dry run complete. Would migrate {migrated_count} documents with {len(changes_preview)} changes")
+            logger.info(f"📋 Dry run complete. Would process {migrated_count} documents with {len(changes_preview)} that have changes")
         else:
-            logger.info(f"✅ Migration complete. Migrated {migrated_count} documents successfully")
+            logger.info(f"✅ {operation_type} complete. Processed {migrated_count} documents successfully")
             if validation_results:
                 logger.info(f"📊 Validation: {validation_results['valid_documents']}/{validation_results['total_documents']} documents valid")
         
