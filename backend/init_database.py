@@ -239,8 +239,6 @@ async def init_hosting_plans(db, migration_mode=False):
         {
             "id": str(uuid.uuid4()),
             "name": "Opal",
-            "plan_type": "ssd_shared",  # For backward compatibility
-            "category_key": "ssd_shared",  # New category system
             "type": "shared",
             "sub_type": "ssd",
             "price": 1.00,

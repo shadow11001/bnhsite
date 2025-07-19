@@ -14,8 +14,7 @@ import jwt
 import hashlib
 import httpx
 
-# Import field mapping utility
-from field_mapping_utils import map_hosting_plan_fields
+# Removed field mapping utility import - now using direct database access
 
 
 ROOT_DIR = Path(__file__).parent
@@ -510,77 +509,73 @@ async def update_site_settings(settings_data: dict, current_user: str = Depends(
 
 @api_router.get("/admin/hosting-plans")
 async def get_admin_hosting_plans(current_user: str = Depends(get_current_user)):
-    """Get all hosting plans with markup data - admin only"""
+    """Get all hosting plans with markup data - admin only, fully database-driven"""
     try:
         plans = await db.hosting_plans.find().to_list(1000)
         # Convert ObjectIds to strings for JSON serialization
-        # Use bidirectional field mapping for frontend compatibility
-        mapped_plans = []
+        admin_plans = []
         for plan in plans:
             if "_id" in plan:
                 del plan["_id"]
-            
-            # Use the new bidirectional field mapping function
-            mapped_plan = map_hosting_plan_fields(plan, to_frontend=True)
-            mapped_plans.append(mapped_plan)
+            admin_plans.append(plan)
         
-        return mapped_plans
+        return admin_plans
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.post("/admin/hosting-plans")
 async def create_hosting_plan(plan_data: dict, current_user: str = Depends(get_current_user)):
-    """Create a new hosting plan - admin only"""
+    """Create a new hosting plan - admin only, using standardized schema"""
     try:
         print(f"Plan creation request from user: {current_user}")
         print(f"Plan data received: {plan_data}")
         
-        # Use bidirectional field mapping to convert frontend fields to database fields
-        db_plan = map_hosting_plan_fields(plan_data, to_frontend=False)
-        
-        # Validate required fields (check for both old and new field names)
-        required_fields = ["plan_name", "base_price", "plan_type"]
+        # Validate required fields using standardized schema
+        required_fields = ["name", "price", "type"]
         for field in required_fields:
-            if field not in db_plan or db_plan[field] is None:
+            if field not in plan_data or plan_data[field] is None:
                 field_display_name = {
-                    "plan_name": "Plan name",
-                    "base_price": "Plan price", 
-                    "plan_type": "Plan type"
+                    "name": "Plan name",
+                    "price": "Plan price", 
+                    "type": "Plan type"
                 }.get(field, field)
                 raise HTTPException(status_code=400, detail=f"{field_display_name} is required")
         
-        # Ensure base_price is a float
+        # Ensure price is a float
         try:
-            db_plan["base_price"] = float(db_plan["base_price"])
+            plan_data["price"] = float(plan_data["price"])
         except (ValueError, TypeError):
             raise HTTPException(status_code=400, detail="Invalid price value")
         
         # Set default values
-        db_plan["id"] = str(uuid.uuid4())
-        db_plan["popular"] = db_plan.get("popular", False)
-        db_plan["features"] = db_plan.get("features", [])
-        db_plan["markup_percentage"] = db_plan.get("markup_percentage", 0)
-        db_plan["disk_type"] = db_plan.get("disk_type", "SSD")
+        plan_data["id"] = str(uuid.uuid4())
+        plan_data["is_popular"] = plan_data.get("is_popular", False)
+        plan_data["features"] = plan_data.get("features", [])
+        plan_data["markup_percentage"] = plan_data.get("markup_percentage", 0)
+        plan_data["disk_type"] = plan_data.get("disk_type", "SSD")
+        
+        # Set default sub_type if not provided
+        if "sub_type" not in plan_data:
+            if plan_data["type"] == "shared":
+                plan_data["sub_type"] = "ssd"  # Default to SSD for shared hosting
+            elif plan_data["type"] == "vps":
+                plan_data["sub_type"] = "standard"  # Default to standard for VPS
+            elif plan_data["type"] == "gameserver":
+                plan_data["sub_type"] = "standard"  # Default to standard for gameservers
         
         # Remove any _id field to avoid conflicts
-        if "_id" in db_plan:
-            del db_plan["_id"]
+        if "_id" in plan_data:
+            del plan_data["_id"]
         
-        # Remove temporary frontend fields that were already mapped
-        frontend_fields_to_remove = ["name", "type", "price", "is_popular"]
-        for field in frontend_fields_to_remove:
-            if field in db_plan:
-                del db_plan[field]
-        
-        print(f"Final plan data for database: {db_plan}")
+        print(f"Final plan data for database: {plan_data}")
         
         # Insert the new plan
-        result = await db.hosting_plans.insert_one(db_plan)
+        result = await db.hosting_plans.insert_one(plan_data)
         if not result.inserted_id:
             raise HTTPException(status_code=400, detail="Failed to create hosting plan")
         
-        print(f"Plan created successfully with ID: {db_plan['id']}")
-        return {"message": "Hosting plan created successfully", "id": db_plan["id"]}
+        print(f"Plan created successfully with ID: {plan_data['id']}")
+        return {"message": "Hosting plan created successfully", "id": plan_data["id"]}
     except ValueError as e:
         print(f"Validation error in plan creation: {e}")
         raise HTTPException(status_code=400, detail=f"Invalid numeric value: {str(e)}")
@@ -590,22 +585,24 @@ async def create_hosting_plan(plan_data: dict, current_user: str = Depends(get_c
 
 @api_router.get("/hosting-plans", response_model=List[dict])
 async def get_hosting_plans(plan_type: Optional[str] = None):
-    """Get all hosting plans or filter by type"""
+    """Get all hosting plans or filter by type - fully database-driven"""
     try:
         query = {}
         if plan_type:
-            # Check both old and new field names for filtering
+            # Support filtering by type or sub_type for dynamic categories
             query = {
                 "$or": [
-                    {"plan_type": plan_type},  # New schema
-                    {"type": plan_type}        # Old schema
+                    {"type": plan_type},
+                    {"sub_type": plan_type},
+                    # Support composite type filtering (e.g., "ssd_shared")
+                    {"$expr": {"$eq": [{"$concat": ["$sub_type", "_", "$type"]}, plan_type]}},
+                    {"$expr": {"$eq": [{"$concat": ["$type", "_", "$sub_type"]}, plan_type]}}
                 ]
             }
         
         plans = await db.hosting_plans.find(query).to_list(1000)
         
-        # Convert ObjectIds to strings and return clean data without markup_percentage
-        # Use bidirectional field mapping for frontend compatibility
+        # Return clean data directly from database without complex mapping
         public_plans = []
         for plan in plans:
             if "_id" in plan:
@@ -614,9 +611,7 @@ async def get_hosting_plans(plan_type: Optional[str] = None):
             if "markup_percentage" in plan:
                 del plan["markup_percentage"]
             
-            # Use the new bidirectional field mapping function
-            mapped_plan = map_hosting_plan_fields(plan, to_frontend=True)
-            public_plans.append(mapped_plan)
+            public_plans.append(plan)
         
         return public_plans
     except Exception as e:
@@ -624,7 +619,7 @@ async def get_hosting_plans(plan_type: Optional[str] = None):
 
 @api_router.get("/hosting-plans/{plan_id}")
 async def get_hosting_plan(plan_id: str):
-    """Get specific hosting plan by ID"""
+    """Get specific hosting plan by ID - fully database-driven"""
     try:
         plan = await db.hosting_plans.find_one({"id": plan_id})
         if not plan:
@@ -636,29 +631,28 @@ async def get_hosting_plan(plan_id: str):
         if "markup_percentage" in plan:
             del plan["markup_percentage"]
         
-        # Use the new bidirectional field mapping function
-        mapped_plan = map_hosting_plan_fields(plan, to_frontend=True)
-        
-        return mapped_plan
+        return plan
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.put("/hosting-plans/{plan_id}")
 async def update_hosting_plan(plan_id: str, plan_update: dict, current_user: str = Depends(get_current_user)):
-    """Update hosting plan - for admin use"""
+    """Update hosting plan - for admin use, using standardized schema"""
     try:
-        # Use bidirectional field mapping to convert frontend fields to database fields
-        db_update = map_hosting_plan_fields(plan_update, to_frontend=False)
+        # Ensure price is a float if provided
+        if "price" in plan_update:
+            try:
+                plan_update["price"] = float(plan_update["price"])
+            except (ValueError, TypeError):
+                raise HTTPException(status_code=400, detail="Invalid price value")
         
-        # Remove the temporary frontend fields that were already mapped
-        frontend_fields_to_remove = ["name", "type", "price", "is_popular"]
-        for field in frontend_fields_to_remove:
-            if field in db_update:
-                del db_update[field]
+        # Remove any _id field to avoid conflicts
+        if "_id" in plan_update:
+            del plan_update["_id"]
         
         result = await db.hosting_plans.update_one(
             {"id": plan_id}, 
-            {"$set": db_update}
+            {"$set": plan_update}
         )
         if result.matched_count == 0:
             raise HTTPException(status_code=404, detail="Plan not found")

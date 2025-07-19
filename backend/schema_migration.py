@@ -15,8 +15,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 import uuid
 
-# Import the consistent field mapping function from utility module
-from field_mapping_utils import map_hosting_plan_fields
+# Schema migration now uses direct field standardization instead of complex mapping
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -190,23 +189,53 @@ class SchemaMigration:
     
     def migrate_hosting_plan_document(self, document: Dict, preserve_data_only=True) -> Dict:
         """
-        Migrate a single hosting plan document to the standard schema using consistent field mapping.
+        Migrate a single hosting plan document to the standardized schema.
+        
+        Standardizes on frontend-expected schema:
+        - name (plan name)
+        - type (plan type)  
+        - sub_type (plan subtype)
+        - price (plan price)
+        - is_popular (popularity flag)
         
         Args:
             document: Original document
             preserve_data_only: If True, only rename fields without changing data values
             
         Returns:
-            Migrated document with renamed fields
+            Migrated document with standardized field names
         """
-        # Use the consistent field mapping function from server.py
-        # First map from database format to frontend format (standard format)
-        migrated = map_hosting_plan_fields(document, to_frontend=True)
+        migrated = document.copy()
         
-        # Preserve original data - copy any fields that weren't mapped
-        for field_name, value in document.items():
-            if field_name not in migrated and field_name != "_id":
-                migrated[field_name] = value
+        # Standardize plan name field
+        if "plan_name" in document and "name" not in document:
+            migrated["name"] = document["plan_name"]
+            
+        # Standardize plan type field  
+        if "plan_type" in document and "type" not in document:
+            migrated["type"] = document["plan_type"]
+            
+        # Standardize price field
+        if "base_price" in document and "price" not in document:
+            migrated["price"] = document["base_price"]
+            
+        # Standardize popularity field
+        if "popular" in document and "is_popular" not in document:
+            migrated["is_popular"] = document["popular"]
+        elif "is_popular" not in document:
+            migrated["is_popular"] = False
+            
+        # Ensure required fields have defaults
+        if "type" not in migrated and "plan_type" not in migrated:
+            migrated["type"] = "shared"  # Default type
+            
+        if "sub_type" not in migrated:
+            if migrated.get("type") == "shared":
+                migrated["sub_type"] = "ssd"
+            elif migrated.get("type") == "vps":
+                migrated["sub_type"] = "standard"
+            elif migrated.get("type") == "gameserver":
+                migrated["sub_type"] = "standard"
         
         # Only add essential missing fields without changing existing data
         if "id" not in migrated and "_id" in document:
