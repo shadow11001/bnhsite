@@ -215,9 +215,16 @@ class SchemaMigration:
         if "plan_type" in document and "type" not in document:
             migrated["type"] = document["plan_type"]
             
-        # Standardize price field
-        if "base_price" in document and "price" not in document:
+        # Merge price fields: use "price" field name but prefer "base_price" value when available
+        if "base_price" in document:
+            # Always use base_price value when it exists (preferred field)
             migrated["price"] = document["base_price"]
+            # Remove base_price field to avoid confusion after migration
+            if "base_price" in migrated:
+                del migrated["base_price"]
+        elif "price" not in document:
+            # Neither field exists, set a default
+            migrated["price"] = 0.0
             
         # Standardize popularity field
         if "popular" in document and "is_popular" not in document:
