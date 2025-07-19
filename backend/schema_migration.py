@@ -214,6 +214,10 @@ class SchemaMigration:
         # Standardize plan type field  
         if "plan_type" in document and "type" not in document:
             migrated["type"] = document["plan_type"]
+        
+        # Keep plan_type field for frontend compatibility (fallback filtering)
+        if "type" in migrated and "plan_type" not in migrated:
+            migrated["plan_type"] = migrated["type"]
             
         # Merge price fields: use "price" field name but prefer "base_price" value when available
         if "base_price" in document:
@@ -235,6 +239,25 @@ class SchemaMigration:
         # Ensure required fields have defaults
         if "type" not in migrated and "plan_type" not in migrated:
             migrated["type"] = "shared"  # Default type
+        if "category_key" not in migrated or migrated["category_key"] is None:
+            plan_type = migrated.get("type", "")
+            sub_type = migrated.get("sub_type", "")
+            
+            # Set category_key based on type and sub_type combinations
+            if plan_type == "shared":
+                if sub_type == "ssd":
+                    migrated["category_key"] = "ssd_shared"
+                elif sub_type == "hdd":  
+                    migrated["category_key"] = "hdd_shared"
+                else:
+                    migrated["category_key"] = "shared"
+            elif plan_type == "vps":
+                migrated["category_key"] = "vps"
+            elif plan_type == "gameserver":
+                migrated["category_key"] = "gameserver"
+            else:
+                # For other types, use the plan_type as category_key
+                migrated["category_key"] = migrated.get("plan_type", plan_type)
             
         if "sub_type" not in migrated:
             if migrated.get("type") == "shared":
