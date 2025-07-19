@@ -203,6 +203,91 @@ class HostingCategory(BaseModel):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 # Utility functions
+def map_hosting_plan_fields(plan, to_frontend=True):
+    """
+    Bidirectional field mapping for hosting plans to handle both database schemas.
+    
+    Database might contain either:
+    - Old schema: name, type, price, sub_type
+    - New schema: plan_name, plan_type, base_price, popular
+    
+    Frontend expects: name, type, price, is_popular
+    
+    Args:
+        plan (dict): Plan document from database
+        to_frontend (bool): If True, map to frontend format. If False, map to database format.
+    
+    Returns:
+        dict: Plan with correctly mapped field names
+    """
+    if not plan:
+        return plan
+    
+    mapped_plan = plan.copy()
+    
+    if to_frontend:
+        # Map database fields to frontend expected fields
+        # Handle both old and new database schemas
+        
+        # Map plan name
+        if "plan_name" in plan and "name" not in plan:
+            mapped_plan["name"] = plan["plan_name"]
+        elif "name" in plan:
+            mapped_plan["name"] = plan["name"]
+        
+        # Map plan type 
+        if "plan_type" in plan and "type" not in plan:
+            mapped_plan["type"] = plan["plan_type"]
+        elif "type" in plan:
+            mapped_plan["type"] = plan["type"]
+        
+        # Map price
+        if "base_price" in plan and "price" not in plan:
+            mapped_plan["price"] = plan["base_price"]
+        elif "price" in plan:
+            mapped_plan["price"] = plan["price"]
+        
+        # Map popular flag
+        if "popular" in plan:
+            mapped_plan["is_popular"] = plan["popular"]
+        elif "is_popular" in plan:
+            mapped_plan["is_popular"] = plan["is_popular"]
+        else:
+            mapped_plan["is_popular"] = False
+        
+        # Ensure we have sub_type field for frontend filtering
+        if "sub_type" in plan:
+            mapped_plan["sub_type"] = plan["sub_type"]
+            
+    else:
+        # Map frontend fields to database fields (for create/update operations)
+        
+        # Map name to plan_name for database storage
+        if "name" in plan:
+            mapped_plan["plan_name"] = plan["name"]
+        elif "plan_name" in plan:
+            mapped_plan["plan_name"] = plan["plan_name"]
+        
+        # Map type to plan_type for database storage
+        if "type" in plan:
+            mapped_plan["plan_type"] = plan["type"]
+        elif "plan_type" in plan:
+            mapped_plan["plan_type"] = plan["plan_type"]
+        
+        # Map price to base_price for database storage
+        if "price" in plan:
+            mapped_plan["base_price"] = plan["price"]
+        elif "base_price" in plan:
+            mapped_plan["base_price"] = plan["base_price"]
+        
+        # Map is_popular to popular for database storage
+        if "is_popular" in plan:
+            mapped_plan["popular"] = plan["is_popular"]
+        elif "popular" in plan:
+            mapped_plan["popular"] = plan["popular"]
+    
+    return mapped_plan
+
 async def initialize_default_categories():
     """Initialize default hosting categories if none exist"""
     try:
@@ -510,26 +595,14 @@ async def get_admin_hosting_plans(current_user: str = Depends(get_current_user))
     try:
         plans = await db.hosting_plans.find().to_list(1000)
         # Convert ObjectIds to strings for JSON serialization
-        # Also map old field names to new field names for frontend compatibility
+        # Use bidirectional field mapping for frontend compatibility
         mapped_plans = []
         for plan in plans:
             if "_id" in plan:
                 del plan["_id"]
             
-            # Map old field names to new field names for frontend compatibility
-            mapped_plan = {}
-            for key, value in plan.items():
-                if key == "plan_type":
-                    mapped_plan["type"] = value
-                elif key == "plan_name":
-                    mapped_plan["name"] = value
-                elif key == "base_price":
-                    mapped_plan["price"] = value
-                elif key == "popular":
-                    mapped_plan["is_popular"] = value
-                else:
-                    mapped_plan[key] = value
-            
+            # Use the new bidirectional field mapping function
+            mapped_plan = map_hosting_plan_fields(plan, to_frontend=True)
             mapped_plans.append(mapped_plan)
         
         return mapped_plans
@@ -543,58 +616,25 @@ async def create_hosting_plan(plan_data: dict, current_user: str = Depends(get_c
         print(f"Plan creation request from user: {current_user}")
         print(f"Plan data received: {plan_data}")
         
-        # Map frontend field names to database field names
-        db_plan = {}
+        # Use bidirectional field mapping to convert frontend fields to database fields
+        db_plan = map_hosting_plan_fields(plan_data, to_frontend=False)
         
-        # Required fields mapping
-        if "name" in plan_data:
-            db_plan["plan_name"] = plan_data["name"]
-        elif "plan_name" in plan_data:
-            db_plan["plan_name"] = plan_data["plan_name"]
-        else:
-            raise HTTPException(status_code=400, detail="Plan name is required")
+        # Validate required fields (check for both old and new field names)
+        required_fields = ["plan_name", "base_price", "plan_type"]
+        for field in required_fields:
+            if field not in db_plan or db_plan[field] is None:
+                field_display_name = {
+                    "plan_name": "Plan name",
+                    "base_price": "Plan price", 
+                    "plan_type": "Plan type"
+                }.get(field, field)
+                raise HTTPException(status_code=400, detail=f"{field_display_name} is required")
         
-        if "price" in plan_data:
-            db_plan["base_price"] = float(plan_data["price"])
-        elif "base_price" in plan_data:
-            db_plan["base_price"] = float(plan_data["base_price"])
-        else:
-            raise HTTPException(status_code=400, detail="Plan price is required")
-        
-        if "type" in plan_data:
-            db_plan["plan_type"] = plan_data["type"]
-        elif "plan_type" in plan_data:
-            db_plan["plan_type"] = plan_data["plan_type"]
-        else:
-            raise HTTPException(status_code=400, detail="Plan type is required")
-        
-        # Map other fields
-        field_mappings = {
-            "is_popular": "popular",
-            "category_key": "category_key",
-            "cpu_cores": "cpu_cores",
-            "memory_gb": "memory_gb", 
-            "disk_gb": "disk_gb",
-            "disk_type": "disk_type",
-            "bandwidth": "bandwidth",
-            "supported_games": "supported_games",
-            "features": "features",
-            "markup_percentage": "markup_percentage",
-            "websites": "websites",
-            "subdomains": "subdomains",
-            "parked_domains": "parked_domains", 
-            "addon_domains": "addon_domains",
-            "databases": "databases",
-            "email_accounts": "email_accounts",
-            "is_customizable": "is_customizable",
-            "docker_image": "docker_image",
-            "managed_wordpress": "managed_wordpress",
-            "auto_scaling": "auto_scaling"
-        }
-        
-        for frontend_key, backend_key in field_mappings.items():
-            if frontend_key in plan_data:
-                db_plan[backend_key] = plan_data[frontend_key]
+        # Ensure base_price is a float
+        try:
+            db_plan["base_price"] = float(db_plan["base_price"])
+        except (ValueError, TypeError):
+            raise HTTPException(status_code=400, detail="Invalid price value")
         
         # Set default values
         db_plan["id"] = str(uuid.uuid4())
@@ -606,6 +646,12 @@ async def create_hosting_plan(plan_data: dict, current_user: str = Depends(get_c
         # Remove any _id field to avoid conflicts
         if "_id" in db_plan:
             del db_plan["_id"]
+        
+        # Remove temporary frontend fields that were already mapped
+        frontend_fields_to_remove = ["name", "type", "price", "is_popular"]
+        for field in frontend_fields_to_remove:
+            if field in db_plan:
+                del db_plan[field]
         
         print(f"Final plan data for database: {db_plan}")
         
@@ -629,12 +675,18 @@ async def get_hosting_plans(plan_type: Optional[str] = None):
     try:
         query = {}
         if plan_type:
-            query["plan_type"] = plan_type  # Fixed: database field is 'plan_type' not 'type'
+            # Check both old and new field names for filtering
+            query = {
+                "$or": [
+                    {"plan_type": plan_type},  # New schema
+                    {"type": plan_type}        # Old schema
+                ]
+            }
         
         plans = await db.hosting_plans.find(query).to_list(1000)
         
         # Convert ObjectIds to strings and return clean data without markup_percentage
-        # Also map old field names to new field names expected by frontend
+        # Use bidirectional field mapping for frontend compatibility
         public_plans = []
         for plan in plans:
             if "_id" in plan:
@@ -643,27 +695,8 @@ async def get_hosting_plans(plan_type: Optional[str] = None):
             if "markup_percentage" in plan:
                 del plan["markup_percentage"]
             
-            # Map old field names to new field names for frontend compatibility
-            mapped_plan = {}
-            for key, value in plan.items():
-                if key == "plan_type":
-                    mapped_plan["type"] = value
-                elif key == "plan_name":
-                    mapped_plan["name"] = value
-                elif key == "base_price":
-                    mapped_plan["price"] = value
-                elif key == "popular":
-                    mapped_plan["is_popular"] = value
-                else:
-                    mapped_plan[key] = value
-
-            # Ensure both 'type' and 'sub_type' are present for frontend filtering
-            # If your db uses 'type' and 'sub_type', make sure to copy them to the mapped_plan
-            if "type" in plan:
-                mapped_plan["type"] = plan["type"]
-            if "sub_type" in plan:
-                mapped_plan["sub_type"] = plan["sub_type"]
-            
+            # Use the new bidirectional field mapping function
+            mapped_plan = map_hosting_plan_fields(plan, to_frontend=True)
             public_plans.append(mapped_plan)
         
         return public_plans
@@ -684,19 +717,8 @@ async def get_hosting_plan(plan_id: str):
         if "markup_percentage" in plan:
             del plan["markup_percentage"]
         
-        # Map old field names to new field names for frontend compatibility
-        mapped_plan = {}
-        for key, value in plan.items():
-            if key == "plan_type":
-                mapped_plan["type"] = value
-            elif key == "plan_name":
-                mapped_plan["name"] = value
-            elif key == "base_price":
-                mapped_plan["price"] = value
-            elif key == "popular":
-                mapped_plan["is_popular"] = value
-            else:
-                mapped_plan[key] = value
+        # Use the new bidirectional field mapping function
+        mapped_plan = map_hosting_plan_fields(plan, to_frontend=True)
         
         return mapped_plan
     except Exception as e:
@@ -706,19 +728,14 @@ async def get_hosting_plan(plan_id: str):
 async def update_hosting_plan(plan_id: str, plan_update: dict, current_user: str = Depends(get_current_user)):
     """Update hosting plan - for admin use"""
     try:
-        # Map frontend field names back to database field names
-        db_update = {}
-        for key, value in plan_update.items():
-            if key == "type":
-                db_update["plan_type"] = value
-            elif key == "name":
-                db_update["plan_name"] = value
-            elif key == "price":
-                db_update["base_price"] = value
-            elif key == "is_popular":
-                db_update["popular"] = value
-            else:
-                db_update[key] = value
+        # Use bidirectional field mapping to convert frontend fields to database fields
+        db_update = map_hosting_plan_fields(plan_update, to_frontend=False)
+        
+        # Remove the temporary frontend fields that were already mapped
+        frontend_fields_to_remove = ["name", "type", "price", "is_popular"]
+        for field in frontend_fields_to_remove:
+            if field in db_update:
+                del db_update[field]
         
         result = await db.hosting_plans.update_one(
             {"id": plan_id}, 
