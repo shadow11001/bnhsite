@@ -1583,6 +1583,168 @@ logger = logging.getLogger(__name__)
 async def shutdown_db_client():
     client.close()
 
+# Database Status and Management Endpoints
+@api_router.get("/admin/database-status")
+async def get_database_status(current_user: str = Depends(get_current_user)):
+    """Get database status and reorganization information - admin only"""
+    try:
+        # Check reorganization status
+        reorganization_marker = await db.reorganization_status.find_one({"type": "reorganization_marker"})
+        
+        # Get collection statistics
+        collection_stats = {}
+        target_collections = ["hosting_plans", "hosting_categories", "website_content", "navigation_items", "company_info", "site_settings"]
+        
+        for collection_name in target_collections:
+            try:
+                collection = db[collection_name]
+                doc_count = await collection.count_documents({})
+                
+                # Get sample document to check schema
+                sample_doc = await collection.find_one()
+                has_data = sample_doc is not None
+                
+                collection_stats[collection_name] = {
+                    "document_count": doc_count,
+                    "has_data": has_data,
+                    "status": "healthy" if has_data and doc_count > 0 else "empty"
+                }
+                
+                # Special checks for hosting_plans
+                if collection_name == "hosting_plans" and has_data:
+                    # Check for field consistency
+                    old_schema_count = await collection.count_documents({"plan_name": {"$exists": True}, "name": {"$exists": False}})
+                    new_schema_count = await collection.count_documents({"name": {"$exists": True}})
+                    
+                    collection_stats[collection_name].update({
+                        "old_schema_documents": old_schema_count,
+                        "new_schema_documents": new_schema_count,
+                        "schema_consistent": old_schema_count == 0
+                    })
+                    
+            except Exception as e:
+                collection_stats[collection_name] = {
+                    "error": str(e),
+                    "status": "error"
+                }
+        
+        # Overall database health
+        total_docs = sum([stats.get("document_count", 0) for stats in collection_stats.values() if "error" not in stats])
+        healthy_collections = len([stats for stats in collection_stats.values() if stats.get("status") == "healthy"])
+        
+        database_health = {
+            "overall_status": "healthy" if healthy_collections == len(target_collections) else "needs_attention",
+            "total_documents": total_docs,
+            "healthy_collections": healthy_collections,
+            "total_collections": len(target_collections)
+        }
+        
+        return {
+            "database_health": database_health,
+            "collection_stats": collection_stats,
+            "reorganization_status": {
+                "completed": reorganization_marker is not None,
+                "last_reorganization": reorganization_marker.get("completed_at") if reorganization_marker else None,
+                "version": reorganization_marker.get("version") if reorganization_marker else None
+            },
+            "checked_at": datetime.utcnow().isoformat()
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/database-reorganization")
+async def trigger_database_reorganization(request: Request, current_user: str = Depends(get_current_user)):
+    """Trigger database reorganization - admin only"""
+    try:
+        # Parse request body
+        body = await request.json()
+        force = body.get("force", False)
+        
+        # Import reorganization modules
+        import sys
+        from pathlib import Path
+        backend_dir = Path(__file__).parent
+        sys.path.insert(0, str(backend_dir))
+        
+        from database_reorganizer import DatabaseReorganizer
+        
+        # Initialize reorganizer
+        reorganizer = DatabaseReorganizer(
+            mongo_url, 
+            os.environ.get('DB_NAME', 'blue_nebula_hosting'),
+            "/tmp/database_backups"
+        )
+        
+        await reorganizer.connect()
+        
+        try:
+            # Run reorganization
+            results = await reorganizer.perform_full_reorganization(force=force)
+            
+            return {
+                "success": results.get("success", False),
+                "message": "Database reorganization completed" if results.get("success") else "Database reorganization failed",
+                "results": results,
+                "triggered_by": current_user,
+                "triggered_at": datetime.utcnow().isoformat()
+            }
+            
+        finally:
+            await reorganizer.disconnect()
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Reorganization failed: {str(e)}")
+
+@api_router.get("/admin/database-backup-status")
+async def get_backup_status(current_user: str = Depends(get_current_user)):
+    """Get database backup status - admin only"""
+    try:
+        import sys
+        from pathlib import Path
+        backend_dir = Path(__file__).parent
+        sys.path.insert(0, str(backend_dir))
+        
+        from database_backup import DatabaseBackup
+        
+        # Initialize backup system
+        backup_system = DatabaseBackup(
+            mongo_url,
+            os.environ.get('DB_NAME', 'blue_nebula_hosting'),
+            "/tmp/database_backups"
+        )
+        
+        # List recent backups
+        backups = backup_system.list_backups()
+        
+        # Group by collection
+        backup_summary = {}
+        for backup in backups:
+            collection = backup.get("collection_name", "unknown")
+            if collection not in backup_summary:
+                backup_summary[collection] = {
+                    "count": 0,
+                    "latest_backup": None,
+                    "total_size": 0
+                }
+            
+            backup_summary[collection]["count"] += 1
+            backup_summary[collection]["total_size"] += backup.get("file_size", 0)
+            
+            if not backup_summary[collection]["latest_backup"]:
+                backup_summary[collection]["latest_backup"] = backup
+        
+        return {
+            "backup_summary": backup_summary,
+            "total_backups": len(backups),
+            "recent_backups": backups[:10],  # Last 10 backups
+            "backup_directory": "/tmp/database_backups",
+            "checked_at": datetime.utcnow().isoformat()
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Debug endpoint
 @api_router.get("/debug")
 async def debug():
