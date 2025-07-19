@@ -1,9 +1,9 @@
 #!/bin/bash
-"""
-Database Reorganization Shell Script
-Wrapper script for database reorganization operations with environment handling
-and comprehensive error checking.
-"""
+#
+# Database Reorganization Shell Script
+# Wrapper script for database reorganization operations with environment handling
+# and comprehensive error checking.
+#
 
 set -euo pipefail
 
